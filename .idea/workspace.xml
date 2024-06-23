@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/abbyy/Downloads/testtest&quot;
+  }
+}</component>
+  <component name="RunManager" selected="Application.BasicDemo">
+    <configuration name="BasicDemo" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="framework.view.BasicDemo" />
+      <module name="CSC207-Time-Management-Project" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="framework.view.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TodoListUI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="framework.view.TodoListUI" />
+      <module name="CSC207-Time-Management-Project" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="framework.view.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.BasicDemo" />
+        <item itemvalue="Application.TodoListUI" />
+      </list>
+    </recent_temporary>
+  </component>
+</project>

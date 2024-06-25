@@ -6,6 +6,7 @@ import entity.Course;
 import interface_adapter.controller.TodoListController;
 import interface_adapter.presenter.TaskPresenter;
 import use_case.AddTaskUseCase;
+import entity.Task;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,13 +17,14 @@ import java.time.LocalDateTime;
  */
 public class TodoListUI {
     private JFrame frame;
-    private JPanel panel;
+    private JPanel inputPanel;
+    private JPanel taskPanel;
     private JTextField taskTitleField;
     private JTextField taskDescriptionField;
+    private JTextField taskCourseField; // Field for entering the course
     private DateTimePicker startDateTimePicker;
     private DateTimePicker deadlineDateTimePicker;
     private JButton addButton;
-    private JTextArea taskListArea;
     private TodoList todoList;
     private AddTaskUseCase addTaskUseCase;
     private TaskPresenter taskPresenter;
@@ -44,40 +46,43 @@ public class TodoListUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
-        // Create and configure panels
-        panel = new JPanel(new GridLayout(0, 1));
-        JPanel taskPanel = new JPanel(new BorderLayout());
+        // Create and configure input panels
+        inputPanel = new JPanel(new GridLayout(0, 1));
+        taskPanel = new JPanel();
+        taskPanel.setLayout(new BoxLayout(taskPanel, BoxLayout.Y_AXIS));
 
-        // Initialize UI components
+        // Initialize UI components for input
         taskTitleField = new JTextField("Enter task title...");
         taskDescriptionField = new JTextField("Enter task description (optional)...");
+        taskCourseField = new JTextField("Enter course (optional, max 8 characters)..."); // Course input field
         startDateTimePicker = new DateTimePicker();
         deadlineDateTimePicker = new DateTimePicker();
 
         addButton = new JButton("Add Task");
         addButton.addActionListener(e -> addTask());
 
-        taskListArea = new JTextArea(20, 40);
-        taskListArea.setEditable(false);
-
-        // Add components to the task panel
-        panel.add(new JLabel("Task Title:"));
-        panel.add(taskTitleField);
-        panel.add(new JLabel("Task Description:"));
-        panel.add(taskDescriptionField);
-        panel.add(new JLabel("Start Date and Time:"));
-        panel.add(startDateTimePicker);
-        panel.add(new JLabel("Deadline Date and Time:"));
-        panel.add(deadlineDateTimePicker);
-        panel.add(addButton);
+        // Add input components to the input panel
+        inputPanel.add(new JLabel("Task Title:"));
+        inputPanel.add(taskTitleField);
+        inputPanel.add(new JLabel("Task Description:"));
+        inputPanel.add(taskDescriptionField);
+        inputPanel.add(new JLabel("Course:"));
+        inputPanel.add(taskCourseField); // Add course field to the panel
+        inputPanel.add(new JLabel("Start Date and Time:"));
+        inputPanel.add(startDateTimePicker);
+        inputPanel.add(new JLabel("Deadline Date and Time:"));
+        inputPanel.add(deadlineDateTimePicker);
+        inputPanel.add(addButton);
 
         // Add components to the main frame
-        frame.add(panel, BorderLayout.WEST);
-        taskPanel.add(new JScrollPane(taskListArea), BorderLayout.CENTER);
-        frame.add(taskPanel, BorderLayout.CENTER);
+        frame.add(inputPanel, BorderLayout.WEST);
+        frame.add(new JScrollPane(taskPanel), BorderLayout.CENTER);
 
         frame.pack();
         frame.setVisible(true);
+
+        // Set the size of the frame
+        frame.setSize(1000, 800);
     }
 
     /**
@@ -86,6 +91,7 @@ public class TodoListUI {
     private void addTask() {
         String title = taskTitleField.getText();
         String description = taskDescriptionField.getText();
+        String courseName = taskCourseField.getText(); // Get course name from input field
         LocalDateTime startDate = startDateTimePicker.getDateTimePermissive();
         LocalDateTime deadline = deadlineDateTimePicker.getDateTimePermissive();
 
@@ -104,15 +110,36 @@ public class TodoListUI {
             return;
         }
 
+        if (courseName != null && courseName.length() > 8) {
+            JOptionPane.showMessageDialog(frame, "Course name must be 8 characters or less", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Create a course object if a course name is provided
+        Course course = (courseName != null && !courseName.trim().isEmpty()) ? new Course(courseName, "") : null;
+
         // Add task to the list using the controller
-        todoListController.addTask(title, description, startDate, deadline, currentCourse);
-        taskListArea.setText(taskPresenter.getFormattedTasks());
+        todoListController.addTask(title, description, startDate, deadline, course);
+        refreshTaskList();
 
         // Clear input fields after adding the task
         taskTitleField.setText("");
         taskDescriptionField.setText("");
+        taskCourseField.setText(""); // Clear course field
         startDateTimePicker.clear();
         deadlineDateTimePicker.clear();
+    }
+
+    /**
+     * Refreshes the task list display.
+     */
+    private void refreshTaskList() {
+        taskPanel.removeAll();
+        for (Task task : todoList.getTasks()) {
+            taskPanel.add(new TaskCard(task));
+        }
+        taskPanel.revalidate();
+        taskPanel.repaint();
     }
 
     /**

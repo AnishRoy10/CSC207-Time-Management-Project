@@ -22,7 +22,7 @@ public class Task {
     // The deadline date and time for the task
     private LocalDateTime deadline;
 
-    // The course associated with the task
+    // The course associated with the task (nullable)
     private Course course;
 
     /**
@@ -117,6 +117,9 @@ public class Task {
      */
     @Override
     public String toString() {
-        return title + (description.isEmpty() ? "" : ": " + description) + " - Start: " + startDate + ", Deadline: " + deadline;
+        return title + (description.isEmpty() ? "" : ": " + description) +
+                " - Start: " + startDate +
+                ", Deadline: " + deadline +
+                ", Course: " + (course != null ? course.getName() : "None");
     }
 }

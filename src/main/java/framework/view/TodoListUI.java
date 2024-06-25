@@ -1,55 +1,68 @@
 package framework.view;
 
-import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DateTimePicker;
-import com.github.lgooddatepicker.components.TimePicker;
 import entity.TodoList;
-import entity.Task;
+import entity.Course;
+import interface_adapter.controller.TodoListController;
+import use_case.AddTaskUseCase;
+import interface_adapter.presenter.TaskPresenter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDateTime;
 
 /**
- * The TodoListUI class provides a graphical user interface for managing a to-do list.
- * It allows users to add tasks with descriptions, start dates, and deadlines using LGoodDatePicker components.
+ * User interface for managing a to-do list.
  */
 public class TodoListUI {
     private JFrame frame;
     private JPanel panel;
+    private JTextField taskTitleField;
+    private JTextField taskDescriptionField;
     private DateTimePicker startDateTimePicker;
     private DateTimePicker deadlineDateTimePicker;
-    private JTextField taskDescriptionField;
     private JButton addButton;
     private JTextArea taskListArea;
     private TodoList todoList;
+    private AddTaskUseCase addTaskUseCase;
+    private TaskPresenter taskPresenter;
+    private TodoListController todoListController;
+    private Course currentCourse; // Currently selected course for the task
 
     /**
      * Constructs a new TodoListUI and initializes the user interface components.
      */
     public TodoListUI() {
-        // Initialize the TodoList
+        // Initialize the domain and use case components
         todoList = new TodoList();
+        addTaskUseCase = new AddTaskUseCase(todoList);
+        taskPresenter = new TaskPresenter(todoList);
+        todoListController = new TodoListController(addTaskUseCase);
 
         // Set up the main frame
         frame = new JFrame("Todo List");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
 
-        // Create a panel with a grid layout
+        // Create and configure panels
         panel = new JPanel(new GridLayout(0, 1));
+        JPanel taskPanel = new JPanel(new BorderLayout());
 
         // Initialize UI components
-        taskDescriptionField = new JTextField("Enter task description...");
+        taskTitleField = new JTextField("Enter task title...");
+        taskDescriptionField = new JTextField("Enter task description (optional)...");
         startDateTimePicker = new DateTimePicker();
         deadlineDateTimePicker = new DateTimePicker();
 
         addButton = new JButton("Add Task");
         addButton.addActionListener(e -> addTask());
 
-        taskListArea = new JTextArea(10, 30);
+        taskListArea = new JTextArea(20, 40);
         taskListArea.setEditable(false);
 
-        // Add components to the panel
+        // Add components to the task panel
+        panel.add(new JLabel("Task Title:"));
+        panel.add(taskTitleField);
         panel.add(new JLabel("Task Description:"));
         panel.add(taskDescriptionField);
         panel.add(new JLabel("Start Date and Time:"));
@@ -57,10 +70,12 @@ public class TodoListUI {
         panel.add(new JLabel("Deadline Date and Time:"));
         panel.add(deadlineDateTimePicker);
         panel.add(addButton);
-        panel.add(new JScrollPane(taskListArea));
 
-        // Add panel to the frame
-        frame.add(panel);
+        // Add components to the main frame
+        frame.add(panel, BorderLayout.WEST);
+        taskPanel.add(new JScrollPane(taskListArea), BorderLayout.CENTER);
+        frame.add(taskPanel, BorderLayout.CENTER);
+
         frame.pack();
         frame.setVisible(true);
     }
@@ -69,14 +84,14 @@ public class TodoListUI {
      * Adds a new task to the to-do list based on user input from the UI components.
      */
     private void addTask() {
-        // Get task details from UI components
+        String title = taskTitleField.getText();
         String description = taskDescriptionField.getText();
         LocalDateTime startDate = startDateTimePicker.getDateTimePermissive();
         LocalDateTime deadline = deadlineDateTimePicker.getDateTimePermissive();
 
-        // Validate input
-        if (description == null || description.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(frame, "Task description cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+        // Validate task input
+        if (title == null || title.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "Task title cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (startDate == null) {
@@ -88,14 +103,12 @@ public class TodoListUI {
             return;
         }
 
-        // Create a new task and add it to the TodoList
-        Task task = new Task(description, startDate, deadline, null);
-        todoList.addTask(task);
+        // Add task to the list using the controller
+        todoListController.addTask(title, description, startDate, deadline, currentCourse);
+        taskListArea.setText(taskPresenter.getFormattedTasks());
 
-        // Update the task list display
-        taskListArea.setText(todoList.toString());
-
-        // Clear input fields
+        // Clear input fields after adding the task
+        taskTitleField.setText("");
         taskDescriptionField.setText("");
         startDateTimePicker.clear();
         deadlineDateTimePicker.clear();

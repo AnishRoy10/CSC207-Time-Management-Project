@@ -4,8 +4,8 @@ import com.github.lgooddatepicker.components.DateTimePicker;
 import entity.TodoList;
 import entity.Course;
 import interface_adapter.controller.TodoListController;
-import use_case.AddTaskUseCase;
 import interface_adapter.presenter.TaskPresenter;
+import use_case.AddTaskUseCase;
 
 import javax.swing.*;
 import java.awt.*;
@@ -94,12 +94,13 @@ public class TodoListUI {
             JOptionPane.showMessageDialog(frame, "Task title cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+
         if (startDate == null) {
-            JOptionPane.showMessageDialog(frame, "Start date and time cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+            startDate = LocalDateTime.now(); // Set start time to current time if not provided
         }
-        if (deadline == null) {
-            JOptionPane.showMessageDialog(frame, "Deadline date and time cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+
+        if (deadline != null && deadline.isBefore(startDate)) {
+            JOptionPane.showMessageDialog(frame, "Deadline must be after the start date and time", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 

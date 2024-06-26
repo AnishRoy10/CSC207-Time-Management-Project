@@ -1,11 +1,13 @@
 package entity;
-
+/*
+A Timer class that represents a timer.
+ */
 public class Timer {
     private long start_time;
     private long end_time;
     private long elapsed_time;
 
-    // timer length is in seconds
+    // timer length is in milliseconds
     public Timer(long timer_length) {
         start_time = System.currentTimeMillis();
         end_time = start_time + timer_length;

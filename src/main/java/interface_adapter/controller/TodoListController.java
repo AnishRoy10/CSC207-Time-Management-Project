@@ -22,12 +22,13 @@ public class TodoListController {
     /**
      * Adds a task using the use case.
      *
+     * @param title       The title of the task
      * @param description The description of the task
      * @param startDate   The start date and time of the task
      * @param deadline    The deadline date and time for the task
      * @param course      The course associated with the task
      */
-    public void addTask(String description, LocalDateTime startDate, LocalDateTime deadline, Course course) {
-        addTaskUseCase.addTask(description, startDate, deadline, course);
+    public void addTask(String title, String description, LocalDateTime startDate, LocalDateTime deadline, Course course) {
+        addTaskUseCase.addTask(title, description, startDate, deadline, course);
     }
 }

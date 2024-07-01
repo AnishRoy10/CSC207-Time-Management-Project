@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="55b629e4-8302-40b0-b235-ed838e6fc376" name="Changes" comment="added mongodb dependencies to pom.xml">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="55b629e4-8302-40b0-b235-ed838e6fc376" name="Changes" comment="added mongodb dependencies to pom.xml and wrote code snippets for MongoConnector">
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/data_access/MongoConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/data_access/MongoConnector.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,7 +181,7 @@
       <updated>1719869033625</updated>
       <workItem from="1719869036846" duration="354000" />
       <workItem from="1719869405690" duration="1089000" />
-      <workItem from="1719870606612" duration="762000" />
+      <workItem from="1719870606612" duration="920000" />
     </task>
     <task id="LOCAL-00001" summary="added mongodb dependencies to pom.xml">
       <option name="closed" value="true" />
@@ -193,7 +191,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719870664621</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="added mongodb dependencies to pom.xml and wrote code snippets for MongoConnector">
+      <option name="closed" value="true" />
+      <created>1719871450400</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1719871450401</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -212,6 +218,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="added mongodb dependencies to pom.xml" />
-    <option name="LAST_COMMIT_MESSAGE" value="added mongodb dependencies to pom.xml" />
+    <MESSAGE value="added mongodb dependencies to pom.xml and wrote code snippets for MongoConnector" />
+    <option name="LAST_COMMIT_MESSAGE" value="added mongodb dependencies to pom.xml and wrote code snippets for MongoConnector" />
   </component>
 </project>

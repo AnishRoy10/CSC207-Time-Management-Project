@@ -27,12 +27,12 @@
             <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
-        <!-- Add other dependencies here -->
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-sync</artifactId>
             <version>5.1.1</version>
         </dependency>
+        <!-- Add other dependencies here -->
     </dependencies>
 
     <build>

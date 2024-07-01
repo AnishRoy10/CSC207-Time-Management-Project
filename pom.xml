@@ -28,6 +28,11 @@
             <scope>test</scope>
         </dependency>
         <!-- Add other dependencies here -->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>4.0.5</version>
+        </dependency>
     </dependencies>
 
     <build>

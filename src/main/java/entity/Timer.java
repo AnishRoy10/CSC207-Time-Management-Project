@@ -18,6 +18,10 @@ public class Timer {
         return elapsed_time;
     }
 
+    public long getStart_time() {
+        return start_time;
+    }
+
     public void updateElapsed_time() {
         elapsed_time = System.currentTimeMillis() - start_time;
     }

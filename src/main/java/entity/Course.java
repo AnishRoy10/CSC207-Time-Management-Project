@@ -2,8 +2,6 @@ package entity;
 
 import java.util.ArrayList;
 
-class User {}  // for reference purposes
-
 /**
  * The Course class represents a course that users can join.
  */

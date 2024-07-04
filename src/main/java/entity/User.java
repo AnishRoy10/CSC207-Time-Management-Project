@@ -11,24 +11,25 @@ public class User {
   private String username;
 
   // Friends list of this user
-  private FriendsList friends;
+  private final FriendsList friends;
 
   // Courses this user is in
-  private ArrayList<Course> courses;
+  private final ArrayList<Course> courses;
 
   // Todolist associated with this user
-  private TodoList todo;
+  private final TodoList todo;
 
   /**
    * Construct a new User object.
    * 
    * @param username username for this user
+   * @param friends  friends for this user
    * @param courses  courses this user is in
    */
   public User(String username, User[] friends, Course[] courses) {
       this.username = username;
       this.friends = new FriendsList(friends);
-      this.courses = new ArrayList<Course>;
+      this.courses = new ArrayList<>();
       this.courses.addAll(Arrays.asList(courses));
       this.todo = new TodoList();
   }
@@ -57,7 +58,7 @@ public class User {
    * @param user the new friend for this user
    */
   public void addFriend(User user) {
-      this.FriendsList.addFriend(user);
+      this.friends.addFriend(user);
   }
 
   /**
@@ -66,7 +67,7 @@ public class User {
    * @param user the friend to remove
    */
   public void removeFriend(User user) {
-      this.FriendsList.removeFriend(user);
+      this.friends.removeFriend(user);
   }
 
   /**
@@ -94,6 +95,9 @@ public class User {
    */
   public void addCourse(Course course) {
       course.addUser(this);
+      if (!this.courses.contains(course)) {
+          this.courses.add(course);
+      }
   }
 
   /**
@@ -101,6 +105,7 @@ public class User {
    * Returns whether the removal was successful.
    * 
    * @param course the course to remove this user from
+   * @return       success value of the method
    */
   public boolean removeCourse(Course course) {
       if (this.courses.contains(course)) {

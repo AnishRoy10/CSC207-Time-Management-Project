@@ -8,7 +8,7 @@ public class FriendsList {
      * An ArrayList of Users whom a User has added as friends
      */
     // The list of User objects
-    public ArrayList<User> friends;
+    private ArrayList<User> friends;
 
     /**
      * Constructs the users friend list using imported data from the db
@@ -32,7 +32,7 @@ public class FriendsList {
         this.friends.remove(user);
     }
 
-    //Convert the FriendsList ArrayList into an Array for updating the db
+    //Convert the FriendsList ArrayList into an Array
     public Object[] exportFriendsList() {
         return this.friends.toArray();
     }

@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="55b629e4-8302-40b0-b235-ed838e6fc376" name="Changes" comment="added mongodb dependencies to pom.xml and wrote code snippets for MongoConnector">
-      <change afterPath="$PROJECT_DIR$/src/main/java/entity/FriendsList.java" afterDir="false" />
+    <list default="true" id="55b629e4-8302-40b0-b235-ed838e6fc376" name="Changes" comment="added .idea and target to .gitignore">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/data_access/MongoConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/data_access/MongoConnector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/entity/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/Course.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,22 +41,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.MongoConnector.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;eric-db&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.Java&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.MongoConnector.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "eric-db",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ercx3\IdeaProjects\CSC207-Time-Management-Project-Master" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="MongoConnector" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="data_access.MongoConnector" />
@@ -189,7 +195,7 @@
       <updated>1719869033625</updated>
       <workItem from="1719869036846" duration="354000" />
       <workItem from="1719869405690" duration="1089000" />
-      <workItem from="1719870606612" duration="1817000" />
+      <workItem from="1719870606612" duration="4109000" />
     </task>
     <task id="LOCAL-00001" summary="added mongodb dependencies to pom.xml">
       <option name="closed" value="true" />
@@ -215,7 +221,23 @@
       <option name="project" value="LOCAL" />
       <updated>1719871540697</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Added the FriendsList class along with it's relevant attributes and methods">
+      <option name="closed" value="true" />
+      <created>1719872837981</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1719872837981</updated>
+    </task>
+    <task id="LOCAL-00005" summary="added .idea and target to .gitignore">
+      <option name="closed" value="true" />
+      <created>1720133531199</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1720133531199</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -235,6 +257,12 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="added mongodb dependencies to pom.xml" />
     <MESSAGE value="added mongodb dependencies to pom.xml and wrote code snippets for MongoConnector" />
-    <option name="LAST_COMMIT_MESSAGE" value="added mongodb dependencies to pom.xml and wrote code snippets for MongoConnector" />
+    <MESSAGE value="Added the FriendsList class along with it's relevant attributes and methods" />
+    <MESSAGE value="added .idea and target to .gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="added .idea and target to .gitignore" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

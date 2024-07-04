@@ -1,6 +1,8 @@
 /.idea/
-/workspace.xml
+/.idea/workspace.xml
 /compiler.xml
 /jarRepositories.xml
 /misc.xml
+/vcs.xml
+/modules.xml
 /vcs.xml

@@ -3,26 +3,35 @@ package use_case;
 import entity.Task;
 import entity.TodoList;
 import entity.Course;
+
 import java.time.LocalDateTime;
 
 /**
- * The AddTaskUseCase class handles the business logic of adding a task to the TodoList.
+ * Use case for adding a task to the to-do list.
  */
 public class AddTaskUseCase {
-    private final TodoList todoList;
+    private TodoList todoList;
 
+    /**
+     * Constructs an AddTaskUseCase with the specified to-do list.
+     *
+     * @param todoList The to-do list to which tasks will be added
+     */
     public AddTaskUseCase(TodoList todoList) {
         this.todoList = todoList;
     }
 
-    public void addTask(String description, LocalDateTime startDate, LocalDateTime deadline, Course course) {
-        if (description == null || description.isEmpty()) {
-            throw new IllegalArgumentException("Task description cannot be null or empty");
-        }
-        if (startDate == null) {
-            throw new IllegalArgumentException("Start date cannot be null");
-        }
-        Task task = new Task(description, startDate, deadline, course);
+    /**
+     * Adds a task to the to-do list.
+     *
+     * @param title       The title of the task
+     * @param description The description of the task (optional)
+     * @param startDate   The start date and time of the task
+     * @param deadline    The deadline date and time for the task
+     * @param course      The course associated with the task (optional)
+     */
+    public void addTask(String title, String description, LocalDateTime startDate, LocalDateTime deadline, Course course) {
+        Task task = new Task(title, description, startDate, deadline, course);
         todoList.addTask(task);
     }
 }

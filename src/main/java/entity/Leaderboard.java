@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /* The Leaderboard class represents a leaderboard that users can view their scores
-
-and others scores.*/
+    and others scores.
+*/
 
 public abstract class Leaderboard {
     //Name of the leaderboard
@@ -23,6 +23,11 @@ public abstract class Leaderboard {
     // A method to add a user score
     public void addScore(String username, int score) {
         scores.put(username, score);
+    }
+
+    // Updates a user score in the leaderboard
+    public void updateScore(String username, int score) {
+        scores.put(username, score + scores.get(score));
     }
 
     // An abstract method to be implemented by subclasses

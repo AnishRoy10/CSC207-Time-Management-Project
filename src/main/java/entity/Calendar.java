@@ -16,8 +16,8 @@ public class Calendar {
         this.events = events;
         this.calendarToDoList = calendarToDoList;
     }
-    private conflictChecker(CalendarEvent eventOne, CalendarEvent eventTwo) {}
-    public addEvent(CalendarEvent event) {
+    public ArrayList<CalendarEvent> conflictChecker(CalendarEvent eventOne, CalendarEvent eventTwo) {}
+    public void addEvent(CalendarEvent event) {
         events.add(event);
     }
 

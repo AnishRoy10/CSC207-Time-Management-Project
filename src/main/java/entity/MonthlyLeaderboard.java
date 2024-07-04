@@ -22,7 +22,13 @@ public class MonthlyLeaderboard extends Leaderboard {
 
     }
 
+    // Getter to get current month
     public LocalDate getCurrentMonth() {
         return month;
+    }
+
+    // Setter for current month
+    public void setCurrentMonth(LocalDate month) {
+        this.month = month;
     }
 }

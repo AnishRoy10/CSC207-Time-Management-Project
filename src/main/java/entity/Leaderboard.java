@@ -25,9 +25,19 @@ public abstract class Leaderboard {
         scores.put(username, score);
     }
 
+    // Removes a score from the leaderboard
+    public void removeScore(String username) {
+        scores.remove(username);
+    }
+
     // Updates a user score in the leaderboard
     public void updateScore(String username, int score) {
         scores.put(username, score + scores.get(score));
+    }
+
+    // Clearing all scores from the leaderboard
+    public void clearScores() {
+        scores.clear();
     }
 
     // An abstract method to be implemented by subclasses
@@ -39,9 +49,13 @@ public abstract class Leaderboard {
         return scores;
     }
 
-    // A method to get the leaderboard's name
+    // Getter for the leaderboard's name
     public String getName() {
         return name;
+    }
+     // Setter for the leaderboard's name
+    public void setName(String name) {
+        this.name = name;
     }
 
 

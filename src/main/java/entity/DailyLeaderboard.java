@@ -15,7 +15,13 @@ public class DailyLeaderboard extends Leaderboard {
 
     }
 
+    // Getter for local date
     public LocalDate getCurrentDate() {
         return currentDate;
+    }
+
+    // Setter for date
+    public void setCurrentDate(LocalDate currentDate) {
+        this.currentDate = currentDate;
     }
 }

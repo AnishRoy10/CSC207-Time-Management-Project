@@ -21,18 +21,19 @@ public abstract class Leaderboard {
     }
 
     // A method to add a user score
-    public void addScore(String username, int score) {
-        scores.put(username, score);
+    public void addScore(User user, int score) {
+        scores.put(user.username, score);
     }
 
     // Removes a score from the leaderboard
-    public void removeScore(String username) {
-        scores.remove(username);
+    public void removeScore(User user) {
+        scores.remove(user.username);
     }
 
     // Updates a user score in the leaderboard
-    public void updateScore(String username, int score) {
-        scores.put(username, score + scores.get(score));
+    public void updateScore(User user, int newScore) {
+        int score = user.score;
+        scores.put(user.username, score + newScore);
     }
 
     // Clearing all scores from the leaderboard
@@ -57,6 +58,15 @@ public abstract class Leaderboard {
     public void setName(String name) {
         this.name = name;
     }
+
+    // Checking if the tasks is completed to add scores, if completed adds a certain score.
+    public void taskCompleted(User user, Task task) {
+        if (task.isCompleted()) {
+            updateScore(user, 500);
+        }
+    }
+
+    //
 
 
 

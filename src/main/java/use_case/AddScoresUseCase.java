@@ -1,6 +1,7 @@
 package use_case;
 
 import entity.Leaderboard;
+import entity.User;
 
 public class AddScoresUseCase {
     private final Leaderboard leaderboard;
@@ -10,16 +11,16 @@ public class AddScoresUseCase {
         this.leaderboard = leaderboard;
     }
 
-    public void addScore(String username, int score) {
-        leaderboard.addScore(username, score);
+    public void addScore(User user, int score) {
+        leaderboard.addScore(user.username, score);
     }
 
-    public void removeScore(String username, int score) {
-        leaderboard.removeScore(username);
+    public void removeScore(User user, int score) {
+        leaderboard.removeScore(user.username);
     }
 
-    public void updateScore(String username, int score) {
-        leaderboard.updateScore(username, score);
+    public void updateScore(User user, int score) {
+        leaderboard.updateScore(user.username, score);
     }
 
     public void clearScores() {
@@ -29,4 +30,6 @@ public class AddScoresUseCase {
     public void displayLeaderboard() {
         leaderboard.displayLeaderboard();
     }
+
+
 }

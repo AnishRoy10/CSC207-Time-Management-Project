@@ -74,9 +74,10 @@ public class Course {
      */
     public void addUser(User user) {
         // prevent duplicate users in a course
-        if (!users.contains(user)) {
-            users.add(user);
+        if (users.contains((user))) {
+            return;
         }
+        users.add(user);
     }
 
     /**

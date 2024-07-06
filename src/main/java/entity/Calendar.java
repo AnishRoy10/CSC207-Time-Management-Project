@@ -19,7 +19,7 @@ public class Calendar {
     // Returns a list of the events in the order that they start, the order staying the same
     // if the start dates are the same. Helper method for conflict checker.
     private ArrayList<CalendarEvent> orderEvents(CalendarEvent eventOne, CalendarEvent eventTwo) {
-        boolean preconditionOne = eventOne.getStartDate().getHour() = eventTwo.getStartDate().getHour();
+        boolean preconditionOne = eventOne.getStartDate().getHour() == eventTwo.getStartDate().getHour();
         boolean conditionOne = eventOne.getStartDate().getMinute() < eventTwo.getStartDate().getMinute();
         boolean conditionTwo = eventOne.getStartDate().getHour() < eventTwo.getStartDate().getHour();
         if ((preconditionOne && conditionOne) || conditionTwo) {

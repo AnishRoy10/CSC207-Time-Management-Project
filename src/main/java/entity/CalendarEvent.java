@@ -137,6 +137,16 @@ public class CalendarEvent {
         this.priorityLevel = priorityLevel;
     }
 
+    // Setter method for the start date and time of the event
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    // Setter method for the end date and time of the event
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
+    }
+
     /**
      * Returns a string representation of the event.
      *
@@ -147,7 +157,7 @@ public class CalendarEvent {
         return name + ": " + description +
                 ", Status: " + status +
                 ", Priority Level: " + priorityLevel +
-                ", Start Date: " + String(startDate) +
+                ", Start Date: " + String(local date time startDate) +
                 ", End Date: " + (endDate != null ? endDate.toString() : "N/A");
     }
 

@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0f567f34-d70a-499f-803f-dacb336715ed" name="Changes" comment="Fixed skeleton for conflictChecker and addEvent methods due to return type errors">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/entity/Calendar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/Calendar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/entity/CalendarEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/CalendarEvent.java" afterDir="false" />
-    </list>
+    <list default="true" id="0f567f34-d70a-499f-803f-dacb336715ed" name="Changes" comment="Fixed bug in helper function" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -38,22 +34,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.BasicDemo.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "Alex-Calendar-branch-off-dev",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/abbyy/Downloads/testtest",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.BasicDemo.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Alex-Calendar-branch-off-dev&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/abbyy/Downloads/testtest&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\sunsh\IdeaProjects\-" />
@@ -148,6 +144,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Basis of Calendar and CalendarEvent class" />
     <MESSAGE value="Fixed skeleton for conflictChecker and addEvent methods due to return type errors" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed skeleton for conflictChecker and addEvent methods due to return type errors" />
+    <MESSAGE value="Fixed bug in helper function" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed bug in helper function" />
   </component>
 </project>

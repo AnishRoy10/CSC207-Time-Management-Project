@@ -157,8 +157,7 @@ public class CalendarEvent {
         return name + ": " + description +
                 ", Status: " + status +
                 ", Priority Level: " + priorityLevel +
-                ", Start Date: " + String(local date time startDate) +
+                ", Start Date: " + startDate.toString() +
                 ", End Date: " + (endDate != null ? endDate.toString() : "N/A");
     }
-
 }

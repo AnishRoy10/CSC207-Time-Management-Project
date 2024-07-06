@@ -92,9 +92,9 @@ public class Course {
         return users.remove(user);
     }
 
-    private abstract void resetDailyLeaderboard() {}
-
-    private abstract void resetMonthlyLeaderboard() {}
-
-    private abstract void resetAlltimeLeaderboard() {}
+//    private abstract void resetDailyLeaderboard() {}
+//
+//    private abstract void resetMonthlyLeaderboard() {}
+//
+//    private abstract void resetAlltimeLeaderboard() {}
 }

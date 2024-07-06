@@ -2,7 +2,6 @@ package use_case;
 
 import entity.Task;
 import entity.TodoList;
-import entity.Course;
 
 import java.time.LocalDateTime;
 
@@ -28,9 +27,9 @@ public class AddTaskUseCase {
      * @param description The description of the task (optional)
      * @param startDate   The start date and time of the task
      * @param deadline    The deadline date and time for the task
-     * @param course      The course associated with the task (optional)
+     * @param course      The course associated with the task (optional, as a string)
      */
-    public void addTask(String title, String description, LocalDateTime startDate, LocalDateTime deadline, Course course) {
+    public void addTask(String title, String description, LocalDateTime startDate, LocalDateTime deadline, String course) {
         Task task = new Task(title, description, startDate, deadline, course);
         todoList.addTask(task);
     }

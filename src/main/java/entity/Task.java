@@ -23,7 +23,10 @@ public class Task {
     private LocalDateTime deadline;
 
     // The course associated with the task (nullable)
-    private Course course;
+    private String course;
+
+    // The completion date of the task
+    private LocalDateTime completionDate;
 
     /**
      * Constructs a new Task with the specified details.
@@ -34,13 +37,14 @@ public class Task {
      * @param deadline    The deadline date and time for the task
      * @param course      The course associated with the task (nullable)
      */
-    public Task(String title, String description, LocalDateTime startDate, LocalDateTime deadline, Course course) {
+    public Task(String title, String description, LocalDateTime startDate, LocalDateTime deadline, String course) {
         this.title = title;
         this.description = description != null ? description : "";
         this.completed = false; // By default, a new task is not completed
         this.startDate = startDate;
         this.deadline = deadline;
         this.course = course;
+        this.completionDate = null;
     }
 
     // Getter for the title
@@ -94,20 +98,31 @@ public class Task {
     }
 
     // Getter for the course
-    public Course getCourse() {
+    public String getCourse() {
         return course;
     }
 
     // Setter for the course
-    public void setCourse(Course course) {
+    public void setCourse(String course) {
         this.course = course;
     }
 
+    // Getter for the completion date
+    public LocalDateTime getCompletionDate() {
+        return completionDate;
+    }
+
+    // Setter for the completion date
+    public void setCompletionDate(LocalDateTime completionDate) {
+        this.completionDate = completionDate;
+    }
+
     /**
-     * Marks the task as completed.
+     * Marks the task as completed and sets the completion date.
      */
     public void completeTask() {
         this.completed = true;
+        this.completionDate = LocalDateTime.now();
     }
 
     /**
@@ -120,6 +135,8 @@ public class Task {
         return title + (description.isEmpty() ? "" : ": " + description) +
                 " - Start: " + startDate +
                 ", Deadline: " + deadline +
-                ", Course: " + (course != null ? course.getName() : "None");
+                ", Course: " + (course != null ? course : "None") +
+                ", Completed: " + (completed ? "Yes" : "No") +
+                (completed ? ", Completion Date: " + completionDate : "");
     }
 }

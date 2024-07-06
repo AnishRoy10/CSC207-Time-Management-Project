@@ -1,6 +1,5 @@
 package interface_adapter.presenter;
 
-
 import entity.TodoList;
 import entity.Task;
 
@@ -48,8 +47,11 @@ public class TaskPresenter {
         }
         sb.append("Start Date: ").append(task.getStartDate()).append("\n");
         sb.append("Deadline: ").append(task.getDeadline()).append("\n");
-        sb.append("Course: ").append(task.getCourse() != null ? task.getCourse().getName() : "None").append("\n");
+        sb.append("Course: ").append(task.getCourse() != null ? task.getCourse() : "None").append("\n");
         sb.append("Completed: ").append(task.isCompleted() ? "Yes" : "No");
+        if (task.isCompleted()) {
+            sb.append("\nCompletion Date: ").append(task.getCompletionDate());
+        }
         return sb.toString();
     }
 }

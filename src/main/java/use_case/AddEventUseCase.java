@@ -3,6 +3,7 @@ package use_case;
 import entity.Calendar;
 import entity.CalendarEvent;
 import java.time.LocalDateTime;
+import entity.Task;
 
 /**
  * Use case for adding events to the calendar.
@@ -45,6 +46,25 @@ public class AddEventUseCase implements AddEventInputBoundary {
         CalendarEvent event = new CalendarEvent(name, description, "Upcoming", priority, startDate, endDate);
 
         // Add the event to the calendar
+        calendar.addEvent(event);
+    }
+
+    /**
+     * Converts a Task to a CalendarEvent and adds it to the calendar.
+     *
+     * @param task The task to convert to a calendar event
+     */
+    public void convertTaskToEvent(Task task) {
+        LocalDateTime eventStartDate = task.isCompleted() ? task.getCompletionDate() : task.getStartDate();
+        LocalDateTime eventEndDate = task.isCompleted() ? task.getCompletionDate() : task.getDeadline();
+        CalendarEvent event = new CalendarEvent(
+                task.getTitle(),
+                task.getDescription(),
+                task.isCompleted() ? "Completed" : "Upcoming",
+                "normal",
+                eventStartDate,
+                eventEndDate
+        );
         calendar.addEvent(event);
     }
 }

@@ -1,6 +1,8 @@
 /.idea/
-/.idea/.gitignore
-/.idea/compiler.xml
-/.idea/jarRepositories.xml
-/.idea/misc.xml
 /.idea/workspace.xml
+/compiler.xml
+/jarRepositories.xml
+/misc.xml
+/vcs.xml
+/modules.xml
+/target/

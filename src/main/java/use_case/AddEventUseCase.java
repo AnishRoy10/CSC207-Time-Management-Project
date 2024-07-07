@@ -28,9 +28,10 @@ public class AddEventUseCase {
      * @param description The description of the event (optional)
      * @param startDate   The start date and time of the event
      * @param endDate     The end date and time for the event
+     * @param priority    The priority level of the event
      */
-    public void addEvent(String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
-        CalendarEvent event = new CalendarEvent(name, description, "Upcoming", "normal", startDate, endDate);
+    public void addEvent(String name, String description, LocalDateTime startDate, LocalDateTime endDate, String priority) {
+        CalendarEvent event = new CalendarEvent(name, description, "Upcoming", priority, startDate, endDate);
         calendar.addEvent(event);
     }
 

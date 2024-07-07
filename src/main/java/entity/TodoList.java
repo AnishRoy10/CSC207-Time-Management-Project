@@ -1,5 +1,6 @@
 package entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,28 +8,56 @@ import java.util.List;
  * The TodoList class represents a list of tasks.
  * It allows adding, removing, and retrieving tasks.
  */
-public class TodoList {
+public class TodoList implements Serializable {
+    private static final long serialVersionUID = 1L; // Add a serial version UID
+
     private List<Task> tasks;
 
     public TodoList() {
         this.tasks = new ArrayList<>();
     }
 
-    // Adds a task to the to-do list
+    /**
+     * Adds a task to the to-do list.
+     *
+     * @param task The task to be added.
+     */
     public void addTask(Task task) {
         tasks.add(task);
     }
 
-    // Removes a task from the to-do list
+    /**
+     * Removes a task from the to-do list.
+     *
+     * @param task The task to be removed.
+     */
     public void removeTask(Task task) {
         tasks.remove(task);
     }
 
-    // Returns the list of tasks
+    /**
+     * Returns the list of tasks.
+     *
+     * @return A list of tasks.
+     */
     public List<Task> getTasks() {
         return tasks;
     }
 
+    /**
+     * Sets the list of tasks.
+     *
+     * @param tasks The list of tasks to set.
+     */
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    /**
+     * Returns a string representation of the to-do list.
+     *
+     * @return A string representation of the to-do list.
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

@@ -50,4 +50,13 @@ public class AddTaskUseCase {
         );
         todoList.addTask(task);
     }
+
+    /**
+     * Gets the to-do list.
+     *
+     * @return The to-do list
+     */
+    public TodoList getTodoList() {
+        return todoList;
+    }
 }

@@ -3,24 +3,27 @@ package use_case;
 import entity.Leaderboard;
 import entity.User;
 
-public class AddScoresUseCase {
+/*
+The LeaderboardService class
+ */
+public class LeaderboardUseCase {
     private final Leaderboard leaderboard;
 
 
-    public AddScoresUseCase(Leaderboard leaderboard) {
+    public LeaderboardUseCase(Leaderboard leaderboard) {
         this.leaderboard = leaderboard;
     }
 
     public void addScore(User user, int score) {
-        leaderboard.addScore(user.username, score);
+        leaderboard.addScore(user, score);
     }
 
     public void removeScore(User user, int score) {
-        leaderboard.removeScore(user.username);
+        leaderboard.removeScore(user);
     }
 
     public void updateScore(User user, int score) {
-        leaderboard.updateScore(user.username, score);
+        leaderboard.updateScore(user, score);
     }
 
     public void clearScores() {

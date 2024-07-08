@@ -82,4 +82,50 @@ public class TodoListDataAccessObjectTest {
         // Verify the to-do list is empty
         assertEquals(0, loadedTodoList.getTasks().size());
     }
+
+    @Test
+    public void testAddMultipleTasks() {
+        // Create multiple tasks
+        Task task1 = new Task("Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Course1");
+        Task task2 = new Task("Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), "Course2");
+        addTaskUseCase.execute(task1);
+        addTaskUseCase.execute(task2);
+
+        // Load the to-do list
+        TodoList loadedTodoList = loadTodoListUseCase.execute();
+
+        // Verify the to-do list contents
+        assertEquals(2, loadedTodoList.getTasks().size());
+        assertEquals(task1.getTitle(), loadedTodoList.getTasks().get(0).getTitle());
+        assertEquals(task2.getTitle(), loadedTodoList.getTasks().get(1).getTitle());
+    }
+
+    @Test
+    public void testSaveAndLoadTodoList() {
+        // Create a new task and add it to the to-do list
+        Task task = new Task("Title", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Course");
+        addTaskUseCase.execute(task);
+
+        // Load the to-do list
+        TodoList loadedTodoList = loadTodoListUseCase.execute();
+
+        // Verify the to-do list contents
+        assertEquals(1, loadedTodoList.getTasks().size());
+        Task loadedTask = loadedTodoList.getTasks().get(0);
+        assertEquals(task.getTitle(), loadedTask.getTitle());
+        assertEquals(task.getDescription(), loadedTask.getDescription());
+        assertEquals(task.getCourse(), loadedTask.getCourse());
+    }
+
+    @Test
+    public void testLoadTodoListWhenFileDoesNotExist() {
+        // Ensure the test file does not exist
+        cleanUp();
+
+        // Load the to-do list
+        TodoList loadedTodoList = loadTodoListUseCase.execute();
+
+        // Verify the to-do list is empty
+        assertEquals(0, loadedTodoList.getTasks().size());
+    }
 }

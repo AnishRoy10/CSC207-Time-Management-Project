@@ -3,17 +3,22 @@ package entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The TodoList class represents a list of tasks.
- * It allows adding, removing, and retrieving tasks.
+ * It allows adding, removing, retrieving, sorting, and filtering tasks.
  */
 public class TodoList implements Serializable {
     private static final long serialVersionUID = 1L; // Add a serial version UID
 
     private List<Task> tasks;
 
+    /**
+     * Constructs an empty TodoList.
+     */
     public TodoList() {
         this.tasks = new ArrayList<>();
     }
@@ -54,6 +59,57 @@ public class TodoList implements Serializable {
         this.tasks = tasks;
     }
 
+    /**
+     * Sorts the tasks by due date.
+     *
+     * @param ascending If true, sorts in ascending order; otherwise, sorts in descending order.
+     * @return A sorted list of tasks by due date.
+     */
+    public List<Task> sortByDueDate(boolean ascending) {
+        return tasks.stream()
+                .sorted(ascending ? Comparator.comparing(Task::getDeadline) : Comparator.comparing(Task::getDeadline).reversed())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Sorts the tasks by completion status.
+     *
+     * @param ascending If true, sorts in ascending order; otherwise, sorts in descending order.
+     * @return A sorted list of tasks by completion status.
+     */
+    public List<Task> sortByCompletionStatus(boolean ascending) {
+        return tasks.stream()
+                .sorted(ascending ? Comparator.comparing(Task::isCompleted) : Comparator.comparing(Task::isCompleted).reversed())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Sorts the tasks by course.
+     *
+     * @param ascending If true, sorts in ascending order; otherwise, sorts in descending order.
+     * @return A sorted list of tasks by course.
+     */
+    public List<Task> sortByCourse(boolean ascending) {
+        return tasks.stream()
+                .sorted(ascending ? Comparator.comparing(Task::getCourse) : Comparator.comparing(Task::getCourse).reversed())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Filters the tasks to exclude completed tasks if specified.
+     *
+     * @param hideCompleted If true, hides completed tasks; otherwise, returns all tasks.
+     * @return A list of tasks with completed tasks excluded if specified.
+     */
+    public List<Task> filterCompletedTasks(boolean hideCompleted) {
+        return hideCompleted ? tasks.stream().filter(task -> !task.isCompleted()).collect(Collectors.toList()) : tasks;
+    }
+
+    /**
+     * Returns a string representation of the to-do list.
+     *
+     * @return A string representation of the to-do list.
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

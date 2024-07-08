@@ -2,6 +2,7 @@ package entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * The Task class represents a task in the to-do list.
@@ -142,4 +143,22 @@ public class Task implements Serializable {
                 ", Completed: " + (completed ? "Yes" : "No") +
                 (completed ? ", Completion Date: " + completionDate : "");
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return Objects.equals(title, task.title) &&
+                Objects.equals(description, task.description) &&
+                Objects.equals(startDate, task.startDate) &&
+                Objects.equals(deadline, task.deadline) &&
+                Objects.equals(course, task.course);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, description, startDate, deadline, course);
+    }
+
 }

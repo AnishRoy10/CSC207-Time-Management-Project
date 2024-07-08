@@ -1,6 +1,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class TodoList implements Serializable {
      * @param task The task to be removed.
      */
     public void removeTask(Task task) {
-        tasks.remove(task);
+        tasks.removeIf(existingTask -> existingTask.equals(task));
     }
 
     /**
@@ -53,11 +54,6 @@ public class TodoList implements Serializable {
         this.tasks = tasks;
     }
 
-    /**
-     * Returns a string representation of the to-do list.
-     *
-     * @return A string representation of the to-do list.
-     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

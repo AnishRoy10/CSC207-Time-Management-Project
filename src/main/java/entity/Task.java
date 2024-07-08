@@ -11,26 +11,16 @@ import java.util.Objects;
 public class Task implements Serializable {
     private static final long serialVersionUID = 1L; // Add a serial version UID
 
-    // Title of the task (required)
-    private String title;
+    private static int idCounter = 0; // Static counter to generate unique IDs
 
-    // Description of the task (optional)
-    private String description;
-
-    // Indicates whether the task is completed or not
-    private boolean completed;
-
-    // The start date and time of the task
-    private LocalDateTime startDate;
-
-    // The deadline date and time for the task
-    private LocalDateTime deadline;
-
-    // The course associated with the task (nullable)
-    private String course;
-
-    // The completion date of the task
-    private LocalDateTime completionDate;
+    private final int id; // Unique identifier for the task
+    private String title; // Title of the task (required)
+    private String description; // Description of the task (optional)
+    private boolean completed; // Indicates whether the task is completed or not
+    private LocalDateTime startDate; // The start date and time of the task
+    private LocalDateTime deadline; // The deadline date and time for the task
+    private String course; // The course associated with the task (nullable)
+    private LocalDateTime completionDate; // The completion date of the task
 
     /**
      * Constructs a new Task with the specified details.
@@ -42,6 +32,7 @@ public class Task implements Serializable {
      * @param course      The course associated with the task (nullable)
      */
     public Task(String title, String description, LocalDateTime startDate, LocalDateTime deadline, String course) {
+        this.id = ++idCounter; // Increment the counter and assign it as the ID
         this.title = title;
         this.description = description != null ? description : "";
         this.completed = false; // By default, a new task is not completed
@@ -49,6 +40,11 @@ public class Task implements Serializable {
         this.deadline = deadline;
         this.course = course;
         this.completionDate = null;
+    }
+
+    // Getter for the ID
+    public int getId() {
+        return id;
     }
 
     // Getter for the title
@@ -136,7 +132,7 @@ public class Task implements Serializable {
      */
     @Override
     public String toString() {
-        return title + (description.isEmpty() ? "" : ": " + description) +
+        return id + ": " + title + (description.isEmpty() ? "" : ": " + description) +
                 " - Start: " + startDate +
                 ", Deadline: " + deadline +
                 ", Course: " + (course != null ? course : "None") +
@@ -149,7 +145,8 @@ public class Task implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return Objects.equals(title, task.title) &&
+        return id == task.id &&
+                Objects.equals(title, task.title) &&
                 Objects.equals(description, task.description) &&
                 Objects.equals(startDate, task.startDate) &&
                 Objects.equals(deadline, task.deadline) &&
@@ -158,7 +155,6 @@ public class Task implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, description, startDate, deadline, course);
+        return Objects.hash(id, title, description, startDate, deadline, course);
     }
-
 }

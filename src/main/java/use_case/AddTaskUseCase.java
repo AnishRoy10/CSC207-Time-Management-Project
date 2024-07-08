@@ -4,34 +4,50 @@ import entity.Task;
 import entity.TodoList;
 import repositories.TodoListRepository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Use case for adding a task to the to-do list.
  */
-public class AddTaskUseCase {
+public class AddTaskUseCase implements AddTaskInputBoundary {
     private final TodoListRepository todoListRepository;
+    private final AddTaskOutputBoundary addTaskOutputBoundary;
 
-    /**
-     * Constructs an AddTaskUseCase with the specified TodoListRepository.
-     *
-     * @param todoListRepository The repository for accessing the to-do list.
-     */
-    public AddTaskUseCase(TodoListRepository todoListRepository) {
+    public AddTaskUseCase(TodoListRepository todoListRepository, AddTaskOutputBoundary addTaskOutputBoundary) {
         this.todoListRepository = todoListRepository;
+        this.addTaskOutputBoundary = addTaskOutputBoundary;
     }
 
-    /**
-     * Executes the use case to add a task to the to-do list.
-     *
-     * @param task The task to be added.
-     */
-    public void execute(Task task) {
-        // Load the current to-do list from the repository
+    @Override
+    public void execute(AddTaskRequestModel requestModel) {
         TodoList todoList = todoListRepository.loadTodoList();
 
-        // Add the task to the to-do list
-        todoList.addTask(task);
+        Task newTask = new Task(
+                requestModel.getTitle(),
+                requestModel.getDescription(),
+                requestModel.getStartDate(),
+                requestModel.getDeadline(),
+                requestModel.getCourse()
+        );
 
-        // Save the updated to-do list back to the repository
+        todoList.addTask(newTask);
         todoListRepository.saveTodoList(todoList);
+
+        List<TaskData> tasks = todoList.getTasks().stream()
+                .map(task -> new TaskData(
+                        task.getId(),
+                        task.getTitle(),
+                        task.getDescription(),
+                        task.getStartDate(),
+                        task.getDeadline(),
+                        task.isCompleted(),
+                        task.getCourse(),
+                        task.getCompletionDate()
+                ))
+                .collect(Collectors.toList());
+
+        AddTaskResponseModel responseModel = new AddTaskResponseModel(tasks);
+        addTaskOutputBoundary.present(responseModel);
     }
 }

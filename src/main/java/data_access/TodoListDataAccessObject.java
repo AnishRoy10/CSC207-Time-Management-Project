@@ -13,9 +13,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 
-/**
- * Data access object for TodoList, using Gson for JSON serialization.
- */
 public class TodoListDataAccessObject implements TodoListRepository {
     private static final String DIRECTORY_PATH = "saves";
     private static final String FILE_PATH = DIRECTORY_PATH + "/todo_list.json";
@@ -24,15 +21,9 @@ public class TodoListDataAccessObject implements TodoListRepository {
     public TodoListDataAccessObject() {
         gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer())
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer())
                 .create();
     }
 
-    /**
-     * Loads the to-do list from a JSON file.
-     *
-     * @return The loaded to-do list.
-     */
     @Override
     public TodoList loadTodoList() {
         try (FileReader reader = new FileReader(FILE_PATH)) {
@@ -44,11 +35,6 @@ public class TodoListDataAccessObject implements TodoListRepository {
         }
     }
 
-    /**
-     * Saves the to-do list to a JSON file.
-     *
-     * @param todoList The to-do list to be saved.
-     */
     @Override
     public void saveTodoList(TodoList todoList) {
         try {

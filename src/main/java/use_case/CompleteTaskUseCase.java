@@ -4,11 +4,10 @@ import entity.Task;
 import entity.TodoList;
 import repositories.TodoListRepository;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
- * Use case for completing a task in the to-do list.
+ * Use case for completing a task.
  */
 public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
     private final TodoListRepository todoListRepository;
@@ -22,28 +21,30 @@ public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
     @Override
     public void execute(CompleteTaskRequestModel requestModel) {
         TodoList todoList = todoListRepository.loadTodoList();
-        Task task = todoList.getTasks().stream()
-                .filter(t -> t.getId() == requestModel.getTaskId())
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+        Optional<Task> taskOptional = todoList.getTasks().stream()
+                .filter(task -> task.getId() == requestModel.getTaskId())
+                .findFirst();
 
-        task.completeTask();
-        todoListRepository.saveTodoList(todoList);
+        if (taskOptional.isPresent()) {
+            Task task = taskOptional.get();
+            task.completeTask();
+            todoListRepository.saveTodoList(todoList);
 
-        List<TaskData> tasks = todoList.getTasks().stream()
-                .map(t -> new TaskData(
-                        t.getId(),
-                        t.getTitle(),
-                        t.getDescription(),
-                        t.getStartDate(),
-                        t.getDeadline(),
-                        t.isCompleted(),
-                        t.getCourse(),
-                        t.getCompletionDate()
-                ))
-                .collect(Collectors.toList());
+            TaskData taskData = new TaskData(
+                    task.getId(),
+                    task.getTitle(),
+                    task.getDescription(),
+                    task.getStartDate(),
+                    task.getDeadline(),
+                    task.isCompleted(),
+                    task.getCourse(),
+                    task.getCompletionDate()
+            );
 
-        CompleteTaskResponseModel responseModel = new CompleteTaskResponseModel(tasks);
-        completeTaskOutputBoundary.present(responseModel);
+            CompleteTaskResponseModel responseModel = new CompleteTaskResponseModel(taskData);
+            completeTaskOutputBoundary.present(responseModel);
+        } else {
+            throw new RuntimeException("Task not found");
+        }
     }
 }

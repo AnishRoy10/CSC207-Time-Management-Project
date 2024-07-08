@@ -1,24 +1,15 @@
 package use_case;
 
-import java.util.List;
+import entity.TodoList;
 
-/**
- * Response model for loading the to-do list.
- */
 public class LoadTodoListResponseModel {
-    private List<TaskData> tasks;
+    private final TodoList todoList;
 
-    public LoadTodoListResponseModel(List<TaskData> tasks) {
-        this.tasks = tasks;
+    public LoadTodoListResponseModel(TodoList todoList) {
+        this.todoList = todoList;
     }
 
-    // Getter and setter
-
-    public List<TaskData> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<TaskData> tasks) {
-        this.tasks = tasks;
+    public TodoList getTodoList() {
+        return todoList;
     }
 }

@@ -1,5 +1,7 @@
 package use_case;
 
+import entity.TodoList;
+
 public interface LoadTodoListInputBoundary {
-    void execute(LoadTodoListRequestModel requestModel);
+    TodoList execute(LoadTodoListRequestModel requestModel);
 }

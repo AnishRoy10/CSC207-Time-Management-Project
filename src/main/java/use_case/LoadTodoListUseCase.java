@@ -1,15 +1,8 @@
 package use_case;
 
-import entity.Task;
 import entity.TodoList;
 import repositories.TodoListRepository;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-/**
- * Use case for loading the to-do list.
- */
 public class LoadTodoListUseCase implements LoadTodoListInputBoundary {
     private final TodoListRepository todoListRepository;
     private final LoadTodoListOutputBoundary loadTodoListOutputBoundary;
@@ -20,23 +13,9 @@ public class LoadTodoListUseCase implements LoadTodoListInputBoundary {
     }
 
     @Override
-    public void execute(LoadTodoListRequestModel requestModel) {
+    public TodoList execute(LoadTodoListRequestModel requestModel) {
         TodoList todoList = todoListRepository.loadTodoList();
-
-        List<TaskData> tasks = todoList.getTasks().stream()
-                .map(task -> new TaskData(
-                        task.getId(),
-                        task.getTitle(),
-                        task.getDescription(),
-                        task.getStartDate(),
-                        task.getDeadline(),
-                        task.isCompleted(),
-                        task.getCourse(),
-                        task.getCompletionDate()
-                ))
-                .collect(Collectors.toList());
-
-        LoadTodoListResponseModel responseModel = new LoadTodoListResponseModel(tasks);
-        loadTodoListOutputBoundary.present(responseModel);
+        loadTodoListOutputBoundary.present(new LoadTodoListResponseModel(todoList));
+        return todoList;
     }
 }

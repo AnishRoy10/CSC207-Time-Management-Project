@@ -114,6 +114,10 @@ public class CalendarEvent {
     public boolean getHasPriorityLevel() {
         return this.hasPriorityLevel;
     }
+    // Getter method for the event bool of having an end date
+    public boolean getHasEndDate() {
+        return this.hasEndDate;
+    }
 
     // Setter method for the name of an event
     public void setName(String name) {

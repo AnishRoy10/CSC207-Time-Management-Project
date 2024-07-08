@@ -5,30 +5,42 @@ import entity.TodoList;
 import repositories.TodoListRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Use case for filtering tasks in the to-do list.
  */
-public class FilterTasksUseCase {
+public class FilterTasksUseCase implements FilterTasksInputBoundary {
     private final TodoListRepository todoListRepository;
+    private final FilterTasksOutputBoundary filterTasksOutputBoundary;
 
-    /**
-     * Constructs a FilterTasksUseCase with the specified TodoListRepository.
-     *
-     * @param todoListRepository The repository for accessing the to-do list.
-     */
-    public FilterTasksUseCase(TodoListRepository todoListRepository) {
+    public FilterTasksUseCase(TodoListRepository todoListRepository, FilterTasksOutputBoundary filterTasksOutputBoundary) {
         this.todoListRepository = todoListRepository;
+        this.filterTasksOutputBoundary = filterTasksOutputBoundary;
     }
 
-    /**
-     * Executes the use case to filter completed tasks.
-     *
-     * @param hideCompleted If true, hides completed tasks; otherwise, returns all tasks.
-     * @return A filtered list of tasks.
-     */
-    public List<Task> execute(boolean hideCompleted) {
+    @Override
+    public void execute(FilterTasksRequestModel requestModel) {
         TodoList todoList = todoListRepository.loadTodoList();
-        return todoList.filterCompletedTasks(hideCompleted);
+
+        List<Task> filteredTasks = todoList.getTasks().stream()
+                .filter(task -> !(requestModel.isHideCompleted() && task.isCompleted()))
+                .collect(Collectors.toList());
+
+        List<TaskData> tasks = filteredTasks.stream()
+                .map(task -> new TaskData(
+                        task.getId(),
+                        task.getTitle(),
+                        task.getDescription(),
+                        task.getStartDate(),
+                        task.getDeadline(),
+                        task.isCompleted(),
+                        task.getCourse(),
+                        task.getCompletionDate()
+                ))
+                .collect(Collectors.toList());
+
+        FilterTasksResponseModel responseModel = new FilterTasksResponseModel(tasks);
+        filterTasksOutputBoundary.present(responseModel);
     }
 }

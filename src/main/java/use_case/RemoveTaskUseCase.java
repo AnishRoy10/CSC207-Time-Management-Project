@@ -4,34 +4,46 @@ import entity.Task;
 import entity.TodoList;
 import repositories.TodoListRepository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Use case for removing a task from the to-do list.
  */
-public class RemoveTaskUseCase {
+public class RemoveTaskUseCase implements RemoveTaskInputBoundary {
     private final TodoListRepository todoListRepository;
+    private final RemoveTaskOutputBoundary removeTaskOutputBoundary;
 
-    /**
-     * Constructs a RemoveTaskUseCase with the specified TodoListRepository.
-     *
-     * @param todoListRepository The repository for accessing the to-do list.
-     */
-    public RemoveTaskUseCase(TodoListRepository todoListRepository) {
+    public RemoveTaskUseCase(TodoListRepository todoListRepository, RemoveTaskOutputBoundary removeTaskOutputBoundary) {
         this.todoListRepository = todoListRepository;
+        this.removeTaskOutputBoundary = removeTaskOutputBoundary;
     }
 
-    /**
-     * Executes the use case to remove a task from the to-do list.
-     *
-     * @param task The task to be removed.
-     */
-    public void execute(Task task) {
-        // Load the current to-do list from the repository
+    @Override
+    public void execute(RemoveTaskRequestModel requestModel) {
         TodoList todoList = todoListRepository.loadTodoList();
+        Task task = todoList.getTasks().stream()
+                .filter(t -> t.getId() == requestModel.getTaskId())
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Task not found"));
 
-        // Remove the task from the to-do list
         todoList.removeTask(task);
-
-        // Save the updated to-do list back to the repository
         todoListRepository.saveTodoList(todoList);
+
+        List<TaskData> tasks = todoList.getTasks().stream()
+                .map(t -> new TaskData(
+                        t.getId(),
+                        t.getTitle(),
+                        t.getDescription(),
+                        t.getStartDate(),
+                        t.getDeadline(),
+                        t.isCompleted(),
+                        t.getCourse(),
+                        t.getCompletionDate()
+                ))
+                .collect(Collectors.toList());
+
+        RemoveTaskResponseModel responseModel = new RemoveTaskResponseModel(tasks);
+        removeTaskOutputBoundary.present(responseModel);
     }
 }

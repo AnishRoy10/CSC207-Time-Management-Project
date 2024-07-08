@@ -4,41 +4,64 @@ import entity.Task;
 import entity.TodoList;
 import repositories.TodoListRepository;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Use case for sorting tasks in the to-do list.
  */
-public class SortTasksUseCase {
+public class SortTasksUseCase implements SortTasksInputBoundary {
     private final TodoListRepository todoListRepository;
+    private final SortTasksOutputBoundary sortTasksOutputBoundary;
 
-    /**
-     * Constructs a SortTasksUseCase with the specified TodoListRepository.
-     *
-     * @param todoListRepository The repository for accessing the to-do list.
-     */
-    public SortTasksUseCase(TodoListRepository todoListRepository) {
+    public SortTasksUseCase(TodoListRepository todoListRepository, SortTasksOutputBoundary sortTasksOutputBoundary) {
         this.todoListRepository = todoListRepository;
+        this.sortTasksOutputBoundary = sortTasksOutputBoundary;
     }
 
-    /**
-     * Executes the use case to sort tasks by the specified criteria.
-     *
-     * @param criteria  The sorting criteria (e.g., "dueDate", "completionStatus", "course").
-     * @param ascending If true, sorts in ascending order; otherwise, sorts in descending order.
-     * @return A sorted list of tasks.
-     */
-    public List<Task> execute(String criteria, boolean ascending) {
+    @Override
+    public void execute(SortTasksRequestModel requestModel) {
         TodoList todoList = todoListRepository.loadTodoList();
-        switch (criteria) {
-            case "dueDate":
-                return todoList.sortByDueDate(ascending);
-            case "completionStatus":
-                return todoList.sortByCompletionStatus(ascending);
+
+        Comparator<Task> comparator;
+
+        switch (requestModel.getCriteria().toLowerCase()) {
+            case "title":
+                comparator = Comparator.comparing(Task::getTitle);
+                break;
+            case "deadline":
+                comparator = Comparator.comparing(Task::getDeadline);
+                break;
             case "course":
-                return todoList.sortByCourse(ascending);
+                comparator = Comparator.comparing(Task::getCourse);
+                break;
+            case "completion":
+                comparator = Comparator.comparing(Task::isCompleted);
+                break;
             default:
-                throw new IllegalArgumentException("Unknown sorting criteria: " + criteria);
+                throw new IllegalArgumentException("Unknown sorting criteria: " + requestModel.getCriteria());
         }
+
+        if (!requestModel.isAscending()) {
+            comparator = comparator.reversed();
+        }
+
+        List<TaskData> sortedTasks = todoList.getTasks().stream()
+                .sorted(comparator)
+                .map(task -> new TaskData(
+                        task.getId(),
+                        task.getTitle(),
+                        task.getDescription(),
+                        task.getStartDate(),
+                        task.getDeadline(),
+                        task.isCompleted(),
+                        task.getCourse(),
+                        task.getCompletionDate()
+                ))
+                .collect(Collectors.toList());
+
+        SortTasksResponseModel responseModel = new SortTasksResponseModel(sortedTasks);
+        sortTasksOutputBoundary.present(responseModel);
     }
 }

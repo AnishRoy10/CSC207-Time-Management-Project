@@ -5,10 +5,11 @@ import entity.TodoList;
 import repositories.TodoListRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Use case for removing a task from the to-do list.
+ * Use case for removing a task.
  */
 public class RemoveTaskUseCase implements RemoveTaskInputBoundary {
     private final TodoListRepository todoListRepository;
@@ -22,28 +23,32 @@ public class RemoveTaskUseCase implements RemoveTaskInputBoundary {
     @Override
     public void execute(RemoveTaskRequestModel requestModel) {
         TodoList todoList = todoListRepository.loadTodoList();
-        Task task = todoList.getTasks().stream()
-                .filter(t -> t.getId() == requestModel.getTaskId())
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+        Optional<Task> taskOptional = todoList.getTasks().stream()
+                .filter(task -> task.getId() == requestModel.getTaskId())
+                .findFirst();
 
-        todoList.removeTask(task);
-        todoListRepository.saveTodoList(todoList);
+        if (taskOptional.isPresent()) {
+            Task task = taskOptional.get();
+            todoList.removeTask(task);
+            todoListRepository.saveTodoList(todoList);
 
-        List<TaskData> tasks = todoList.getTasks().stream()
-                .map(t -> new TaskData(
-                        t.getId(),
-                        t.getTitle(),
-                        t.getDescription(),
-                        t.getStartDate(),
-                        t.getDeadline(),
-                        t.isCompleted(),
-                        t.getCourse(),
-                        t.getCompletionDate()
-                ))
-                .collect(Collectors.toList());
+            List<TaskData> tasks = todoList.getTasks().stream()
+                    .map(t -> new TaskData(
+                            t.getId(),
+                            t.getTitle(),
+                            t.getDescription(),
+                            t.getStartDate(),
+                            t.getDeadline(),
+                            t.isCompleted(),
+                            t.getCourse(),
+                            t.getCompletionDate()
+                    ))
+                    .collect(Collectors.toList());
 
-        RemoveTaskResponseModel responseModel = new RemoveTaskResponseModel(tasks);
-        removeTaskOutputBoundary.present(responseModel);
+            RemoveTaskResponseModel responseModel = new RemoveTaskResponseModel(tasks, task.getId());
+            removeTaskOutputBoundary.present(responseModel);
+        } else {
+            throw new RuntimeException("Task not found");
+        }
     }
 }

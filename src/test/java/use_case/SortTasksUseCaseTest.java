@@ -1,6 +1,5 @@
 package use_case;
 
-import entity.Task;
 import entity.TodoList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

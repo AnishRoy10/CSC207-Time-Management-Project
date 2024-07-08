@@ -47,7 +47,7 @@ public class AddTaskUseCase implements AddTaskInputBoundary {
                 ))
                 .collect(Collectors.toList());
 
-        AddTaskResponseModel responseModel = new AddTaskResponseModel(tasks);
+        AddTaskResponseModel responseModel = new AddTaskResponseModel(tasks, newTask.getTitle());
         addTaskOutputBoundary.present(responseModel);
     }
 }

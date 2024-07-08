@@ -7,12 +7,16 @@ import java.util.List;
  */
 public class RemoveTaskResponseModel {
     private List<TaskData> tasks;
+    private int taskId;
 
     public RemoveTaskResponseModel(List<TaskData> tasks) {
         this.tasks = tasks;
     }
 
-    // Getter and setter
+    public RemoveTaskResponseModel(List<TaskData> tasks, int taskId) {
+        this.tasks = tasks;
+        this.taskId = taskId;
+    }
 
     public List<TaskData> getTasks() {
         return tasks;
@@ -20,5 +24,13 @@ public class RemoveTaskResponseModel {
 
     public void setTasks(List<TaskData> tasks) {
         this.tasks = tasks;
+    }
+
+    public int getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
     }
 }

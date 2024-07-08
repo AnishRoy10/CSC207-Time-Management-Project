@@ -41,7 +41,7 @@ public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
                     task.getCompletionDate()
             );
 
-            CompleteTaskResponseModel responseModel = new CompleteTaskResponseModel(taskData);
+            CompleteTaskResponseModel responseModel = new CompleteTaskResponseModel(taskData, task.getId());
             completeTaskOutputBoundary.present(responseModel);
         } else {
             throw new RuntimeException("Task not found");

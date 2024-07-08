@@ -1,33 +1,34 @@
 package interface_adapter.presenter;
 
-import entity.TodoList;
-import entity.Task;
+import use_case.TaskResponseModel;
+import use_case.TodoListOutputBoundary;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The TaskPresenter class is responsible for formatting tasks for display in the user interface.
+ * Presenter for the to-do list use case.
+ * It formats the task response models for display in the user interface.
  */
-public class TaskPresenter {
-    private TodoList todoList;
+public class TaskPresenter implements TodoListOutputBoundary {
 
     /**
-     * Constructs a TaskPresenter with the specified to-do list.
+     * Presents the tasks by formatting them for display.
      *
-     * @param todoList The to-do list whose tasks will be formatted
+     * @param tasks The list of task response models
      */
-    public TaskPresenter(TodoList todoList) {
-        this.todoList = todoList;
+    @Override
+    public void presentTasks(List<TaskResponseModel> tasks) {
+        // Format tasks for UI display if needed
     }
 
     /**
      * Returns a formatted string of all tasks in the to-do list.
      *
+     * @param tasks The list of task response models
      * @return A formatted string representation of all tasks
      */
-    public String getFormattedTasks() {
-        List<Task> tasks = todoList.getTasks();
+    public String getFormattedTasks(List<TaskResponseModel> tasks) {
         return tasks.stream()
                 .map(this::formatTask)
                 .collect(Collectors.joining("\n"));
@@ -36,10 +37,10 @@ public class TaskPresenter {
     /**
      * Formats a single task for display.
      *
-     * @param task The task to be formatted
+     * @param task The task response model to be formatted
      * @return A formatted string representation of the task
      */
-    private String formatTask(Task task) {
+    private String formatTask(TaskResponseModel task) {
         StringBuilder sb = new StringBuilder();
         sb.append("Title: ").append(task.getTitle()).append("\n");
         if (!task.getDescription().isEmpty()) {

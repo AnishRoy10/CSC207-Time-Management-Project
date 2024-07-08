@@ -13,7 +13,7 @@ public class Task implements Serializable {
 
     private static int idCounter = 0; // Static counter to generate unique IDs
 
-    private final int id; // Unique identifier for the task
+    private int id; // Unique identifier for the task
     private String title; // Title of the task (required)
     private String description; // Description of the task (optional)
     private boolean completed; // Indicates whether the task is completed or not
@@ -156,5 +156,9 @@ public class Task implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, title, description, startDate, deadline, course);
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

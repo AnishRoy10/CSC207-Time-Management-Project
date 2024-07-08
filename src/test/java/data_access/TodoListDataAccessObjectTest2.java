@@ -17,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -30,13 +31,15 @@ public class TodoListDataAccessObjectTest2 {
     private LoadTodoListUseCase loadTodoListUseCase;
     private CompleteTaskUseCase completeTaskUseCase;
     private Gson gson;
+    private TestLoadTodoListOutputBoundary loadTodoListOutputBoundary;
 
     @BeforeEach
     public void setUp() throws IOException {
         todoListRepository = new TodoListDataAccessObject();
+        loadTodoListOutputBoundary = new TestLoadTodoListOutputBoundary();
         addTaskUseCase = new AddTaskUseCase(todoListRepository, task -> {});
         removeTaskUseCase = new RemoveTaskUseCase(todoListRepository, task -> {});
-        loadTodoListUseCase = new LoadTodoListUseCase(todoListRepository, responseModel -> {});
+        loadTodoListUseCase = new LoadTodoListUseCase(todoListRepository, loadTodoListOutputBoundary);
         completeTaskUseCase = new CompleteTaskUseCase(todoListRepository, task -> {});
         gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer())
@@ -79,9 +82,10 @@ public class TodoListDataAccessObjectTest2 {
 
         // Load the to-do list
         LoadTodoListRequestModel loadRequest = new LoadTodoListRequestModel();
-        TodoList loadedTodoList = loadTodoListUseCase.execute(loadRequest);
+        loadTodoListUseCase.execute(loadRequest);
 
         // Verify the to-do list contents
+        TodoList loadedTodoList = convertToTodoList(loadTodoListOutputBoundary.getTasks());
         assertEquals(1, loadedTodoList.getTasks().size());
         Task loadedTask = loadedTodoList.getTasks().get(0);
         assertEquals(addTaskRequest.getTitle(), loadedTask.getTitle());
@@ -102,6 +106,37 @@ public class TodoListDataAccessObjectTest2 {
             assertEquals(addTaskRequest.getTitle(), taskFromFile.getTitle());
             assertEquals(addTaskRequest.getDescription(), taskFromFile.getDescription());
             assertEquals(addTaskRequest.getCourse(), taskFromFile.getCourse());
+        }
+    }
+
+    private TodoList convertToTodoList(List<TaskData> taskDataList) {
+        TodoList todoList = new TodoList();
+        for (TaskData taskData : taskDataList) {
+            Task task = new Task(
+                    taskData.getTitle(),
+                    taskData.getDescription(),
+                    taskData.getStartDate(),
+                    taskData.getDeadline(),
+                    taskData.getCourse()
+            );
+            task.setId(taskData.getId());
+            task.setCompleted(taskData.isCompleted());
+            task.setCompletionDate(taskData.getCompletionDate());
+            todoList.addTask(task);
+        }
+        return todoList;
+    }
+
+    private static class TestLoadTodoListOutputBoundary implements LoadTodoListOutputBoundary {
+        private List<TaskData> tasks;
+
+        @Override
+        public void present(LoadTodoListResponseModel responseModel) {
+            tasks = responseModel.getTasks();
+        }
+
+        public List<TaskData> getTasks() {
+            return tasks;
         }
     }
 }

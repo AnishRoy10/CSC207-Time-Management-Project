@@ -1,6 +1,6 @@
 package interface_adapter.presenter;
 
-import use_case.TaskData;
+import interface_adapter.TodoListViewModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import use_case.*;
@@ -12,51 +12,105 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TodoListPresenterTest {
     private TodoListPresenter presenter;
+    private TodoListViewModel viewModel;
 
     @BeforeEach
     public void setUp() {
-        presenter = new TodoListPresenter();
+        viewModel = new TodoListViewModel();
+        presenter = new TodoListPresenter(viewModel);
     }
 
     @Test
     public void testPresentAddTask() {
-        // Arrange
-        TaskData taskData1 = new TaskData(1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course1", null);
-        TaskData taskData2 = new TaskData(2, "Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), false, "Course2", null);
-        AddTaskResponseModel responseModel = new AddTaskResponseModel(Arrays.asList(taskData1, taskData2));
-        responseModel.setTitle("Title1");
+        // Create TaskData
+        TaskData task1 = new TaskData(1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course1", null);
+        TaskData task2 = new TaskData(2, "Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), false, "Course2", null);
 
-        // Act
+        // Create AddTaskResponseModel
+        AddTaskResponseModel responseModel = new AddTaskResponseModel(Arrays.asList(task1, task2));
+
+        // Present the response
         presenter.present(responseModel);
 
-        // Assert - You can use assertion on the console output using System Rules library or similar.
-        // However, for simplicity, we will verify if the present method works without errors.
+        // Verify the ViewModel
+        assertEquals(2, viewModel.getTasks().size());
+        assertEquals("Title1", viewModel.getTasks().get(0).getTitle());
+        assertEquals("Title2", viewModel.getTasks().get(1).getTitle());
     }
 
     @Test
     public void testPresentRemoveTask() {
-        // Arrange
-        TaskData taskData1 = new TaskData(1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course1", null);
-        TaskData taskData2 = new TaskData(2, "Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), false, "Course2", null);
-        RemoveTaskResponseModel responseModel = new RemoveTaskResponseModel(Arrays.asList(taskData1, taskData2));
-        responseModel.setTaskId(1);
+        // Create TaskData
+        TaskData task1 = new TaskData(1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course1", null);
+        TaskData task2 = new TaskData(2, "Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), false, "Course2", null);
 
-        // Act
+        // Create RemoveTaskResponseModel
+        RemoveTaskResponseModel responseModel = new RemoveTaskResponseModel(Arrays.asList(task1, task2));
+
+        // Present the response
         presenter.present(responseModel);
 
-        // Assert - Verify if the method works without errors.
+        // Verify the ViewModel
+        assertEquals(2, viewModel.getTasks().size());
+        assertEquals("Title1", viewModel.getTasks().get(0).getTitle());
+        assertEquals("Title2", viewModel.getTasks().get(1).getTitle());
     }
 
     @Test
     public void testPresentCompleteTask() {
-        // Arrange
-        TaskData taskData = new TaskData(1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), true, "Course1", LocalDateTime.now());
-        CompleteTaskResponseModel responseModel = new CompleteTaskResponseModel(taskData);
-        responseModel.setTaskId(1);
+        // Create TaskData
+        TaskData task1 = new TaskData(1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course1", null);
+        TaskData task2 = new TaskData(2, "Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), true, "Course2", LocalDateTime.now());
 
-        // Act
+        // Initialize ViewModel with tasks
+        viewModel.setTasks(Arrays.asList(task1, task2));
+
+        // Create CompleteTaskResponseModel
+        CompleteTaskResponseModel responseModel = new CompleteTaskResponseModel(task2);
+
+        // Present the response
         presenter.present(responseModel);
 
-        // Assert - Verify if the method works without errors.
+        // Verify the ViewModel
+        assertEquals(2, viewModel.getTasks().size());
+        assertEquals("Title1", viewModel.getTasks().get(0).getTitle());
+        assertEquals("Title2", viewModel.getTasks().get(1).getTitle());
+        assertEquals(true, viewModel.getTasks().get(1).isCompleted());
+    }
+
+    @Test
+    public void testPresentSortTasks() {
+        // Create TaskData
+        TaskData task1 = new TaskData(1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course1", null);
+        TaskData task2 = new TaskData(2, "Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), false, "Course2", null);
+
+        // Create SortTasksResponseModel
+        SortTasksResponseModel responseModel = new SortTasksResponseModel(Arrays.asList(task1, task2));
+
+        // Present the response
+        presenter.present(responseModel);
+
+        // Verify the ViewModel
+        assertEquals(2, viewModel.getTasks().size());
+        assertEquals("Title1", viewModel.getTasks().get(0).getTitle());
+        assertEquals("Title2", viewModel.getTasks().get(1).getTitle());
+    }
+
+    @Test
+    public void testPresentLoadTodoList() {
+        // Create TaskData
+        TaskData task1 = new TaskData(1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course1", null);
+        TaskData task2 = new TaskData(2, "Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), false, "Course2", null);
+
+        // Create LoadTodoListResponseModel
+        LoadTodoListResponseModel responseModel = new LoadTodoListResponseModel(Arrays.asList(task1, task2));
+
+        // Present the response
+        presenter.present(responseModel);
+
+        // Verify the ViewModel
+        assertEquals(2, viewModel.getTasks().size());
+        assertEquals("Title1", viewModel.getTasks().get(0).getTitle());
+        assertEquals("Title2", viewModel.getTasks().get(1).getTitle());
     }
 }

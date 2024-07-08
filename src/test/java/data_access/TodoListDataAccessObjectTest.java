@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -23,13 +25,15 @@ public class TodoListDataAccessObjectTest {
     private RemoveTaskUseCase removeTaskUseCase;
     private LoadTodoListUseCase loadTodoListUseCase;
     private CompleteTaskUseCase completeTaskUseCase;
+    private TestLoadTodoListOutputBoundary loadTodoListOutputBoundary;
 
     @BeforeEach
     public void setUp() throws IOException {
         todoListRepository = new TodoListDataAccessObject();
+        loadTodoListOutputBoundary = new TestLoadTodoListOutputBoundary();
         addTaskUseCase = new AddTaskUseCase(todoListRepository, task -> {});
         removeTaskUseCase = new RemoveTaskUseCase(todoListRepository, task -> {});
-        loadTodoListUseCase = new LoadTodoListUseCase(todoListRepository, todoList -> {});
+        loadTodoListUseCase = new LoadTodoListUseCase(todoListRepository, loadTodoListOutputBoundary);
         completeTaskUseCase = new CompleteTaskUseCase(todoListRepository, task -> {});
         cleanUp();
         ensureTestFileExists();
@@ -69,9 +73,10 @@ public class TodoListDataAccessObjectTest {
 
         // Load the to-do list
         LoadTodoListRequestModel loadRequest = new LoadTodoListRequestModel();
-        TodoList loadedTodoList = loadTodoListUseCase.execute(loadRequest);
+        loadTodoListUseCase.execute(loadRequest);
 
         // Verify the task was added
+        TodoList loadedTodoList = convertToTodoList(loadTodoListOutputBoundary.getTasks());
         Task taskToRemove = loadedTodoList.getTasks().get(0);
         System.out.println("TodoList after adding task: " + loadedTodoList.getTasks());
 
@@ -80,7 +85,8 @@ public class TodoListDataAccessObjectTest {
         removeTaskUseCase.execute(removeTaskRequest);
 
         // Load the to-do list
-        loadedTodoList = loadTodoListUseCase.execute(loadRequest);
+        loadTodoListUseCase.execute(loadRequest);
+        loadedTodoList = convertToTodoList(loadTodoListOutputBoundary.getTasks());
         System.out.println("TodoList after removing task: " + loadedTodoList.getTasks());
 
         // Verify the to-do list is empty
@@ -98,7 +104,8 @@ public class TodoListDataAccessObjectTest {
 
         // Load the to-do list
         LoadTodoListRequestModel loadRequest = new LoadTodoListRequestModel();
-        TodoList loadedTodoList = loadTodoListUseCase.execute(loadRequest);
+        loadTodoListUseCase.execute(loadRequest);
+        TodoList loadedTodoList = convertToTodoList(loadTodoListOutputBoundary.getTasks());
 
         // Verify the to-do list contents
         assertEquals(2, loadedTodoList.getTasks().size());
@@ -114,7 +121,8 @@ public class TodoListDataAccessObjectTest {
 
         // Load the to-do list
         LoadTodoListRequestModel loadRequest = new LoadTodoListRequestModel();
-        TodoList loadedTodoList = loadTodoListUseCase.execute(loadRequest);
+        loadTodoListUseCase.execute(loadRequest);
+        TodoList loadedTodoList = convertToTodoList(loadTodoListOutputBoundary.getTasks());
 
         // Verify the to-do list contents
         assertEquals(1, loadedTodoList.getTasks().size());
@@ -131,9 +139,41 @@ public class TodoListDataAccessObjectTest {
 
         // Load the to-do list
         LoadTodoListRequestModel loadRequest = new LoadTodoListRequestModel();
-        TodoList loadedTodoList = loadTodoListUseCase.execute(loadRequest);
+        loadTodoListUseCase.execute(loadRequest);
+        TodoList loadedTodoList = convertToTodoList(loadTodoListOutputBoundary.getTasks());
 
         // Verify the to-do list is empty
         assertEquals(0, loadedTodoList.getTasks().size());
+    }
+
+    private TodoList convertToTodoList(List<TaskData> taskDataList) {
+        TodoList todoList = new TodoList();
+        for (TaskData taskData : taskDataList) {
+            Task task = new Task(
+                    taskData.getTitle(),
+                    taskData.getDescription(),
+                    taskData.getStartDate(),
+                    taskData.getDeadline(),
+                    taskData.getCourse()
+            );
+            task.setId(taskData.getId());
+            task.setCompleted(taskData.isCompleted());
+            task.setCompletionDate(taskData.getCompletionDate());
+            todoList.addTask(task);
+        }
+        return todoList;
+    }
+
+    private static class TestLoadTodoListOutputBoundary implements LoadTodoListOutputBoundary {
+        private List<TaskData> tasks;
+
+        @Override
+        public void present(LoadTodoListResponseModel responseModel) {
+            tasks = responseModel.getTasks();
+        }
+
+        public List<TaskData> getTasks() {
+            return tasks;
+        }
     }
 }

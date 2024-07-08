@@ -1,15 +1,15 @@
 package use_case;
 
-import entity.TodoList;
+import java.util.List;
 
 public class LoadTodoListResponseModel {
-    private final TodoList todoList;
+    private final List<TaskData> tasks;
 
-    public LoadTodoListResponseModel(TodoList todoList) {
-        this.todoList = todoList;
+    public LoadTodoListResponseModel(List<TaskData> tasks) {
+        this.tasks = tasks;
     }
 
-    public TodoList getTodoList() {
-        return todoList;
+    public List<TaskData> getTasks() {
+        return tasks;
     }
 }

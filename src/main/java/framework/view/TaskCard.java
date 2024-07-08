@@ -17,6 +17,7 @@ public class TaskCard extends JPanel {
     private JLabel descriptionLabel;
     private JLabel deadlineLabel;
     private JLabel courseLabel;
+    private JLabel completionDateLabel;
 
     /**
      * Constructs a new TaskCard.
@@ -39,6 +40,12 @@ public class TaskCard extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 task.setCompleted(completedCheckBox.isSelected());
+                if (task.isCompleted()) {
+                    task.completeTask();
+                } else {
+                    task.setCompletionDate(null);
+                }
+                updateCompletionDateLabel();
             }
         });
 
@@ -51,8 +58,22 @@ public class TaskCard extends JPanel {
         deadlineLabel = new JLabel("Due: " + (task.getDeadline() != null ? task.getDeadline().toString() : "No deadline"));
         deadlineLabel.setFont(new Font("Arial", Font.ITALIC, 12));
 
-        courseLabel = new JLabel(task.getCourse() != null ? task.getCourse().getName() : "No course");
+        courseLabel = new JLabel(task.getCourse() != null ? task.getCourse() : "No course");
         courseLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+
+        completionDateLabel = new JLabel();
+        updateCompletionDateLabel();
+    }
+
+    /**
+     * Updates the completion date label based on the task's completion status.
+     */
+    private void updateCompletionDateLabel() {
+        if (task.isCompleted()) {
+            completionDateLabel.setText("Completed on: " + task.getCompletionDate().toString());
+        } else {
+            completionDateLabel.setText("");
+        }
     }
 
     /**
@@ -65,6 +86,7 @@ public class TaskCard extends JPanel {
         textPanel.add(descriptionLabel);
         textPanel.add(deadlineLabel);
         textPanel.add(courseLabel);
+        textPanel.add(completionDateLabel);
 
         add(completedCheckBox, BorderLayout.WEST);
         add(textPanel, BorderLayout.CENTER);

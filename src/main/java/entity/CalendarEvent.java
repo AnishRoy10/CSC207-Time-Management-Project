@@ -25,13 +25,14 @@ public class CalendarEvent {
     private boolean hasEndDate;
     private ArrayList<Integer> duration;
 
+
     /**
      * Constructs a new calendar event with the specified parameters.
      *
      * @param name           The name of the event (required)
      * @param description    The description of the event (nullable)
      * @param status         The status of the event: must be either "Upcoming", "In Progress", or "Finished"
-     * @param priorityLevel  The priority level of the event: must be either "Non-important, Major event"
+     * @param priorityLevel  The priority level of the event: must be either "Low", "Normal", or "High"
      * @param startDate      The start date and time of the event (required)
      * @param endDate        The end date and time for the event (nullable and must be on the same day as startDate)
      */
@@ -49,14 +50,7 @@ public class CalendarEvent {
         }
 
         this.status = status;
-
-        if (priorityLevel != null) {
-            this.priorityLevel = priorityLevel;
-            this.hasPriorityLevel = true;
-        } else {
-            this.priorityLevel = "No priority level specified for this Event";
-            this.hasPriorityLevel = false;
-        }
+        this.priorityLevel = priorityLevel != null ? priorityLevel : "normal";
 
         this.startDate = startDate;
         //Finds the difference in minutes between the dates before converting it into hours and minutes for the duration

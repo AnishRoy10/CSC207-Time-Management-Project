@@ -2,7 +2,7 @@ package use_case;
 
 import entity.Task;
 import entity.TodoList;
-import entity.Course;
+import entity.CalendarEvent;
 
 import java.time.LocalDateTime;
 
@@ -28,10 +28,26 @@ public class AddTaskUseCase {
      * @param description The description of the task (optional)
      * @param startDate   The start date and time of the task
      * @param deadline    The deadline date and time for the task
-     * @param course      The course associated with the task (optional)
+     * @param course      The course associated with the task (optional, as a string)
      */
-    public void addTask(String title, String description, LocalDateTime startDate, LocalDateTime deadline, Course course) {
+    public void addTask(String title, String description, LocalDateTime startDate, LocalDateTime deadline, String course) {
         Task task = new Task(title, description, startDate, deadline, course);
+        todoList.addTask(task);
+    }
+
+    /**
+     * Converts a CalendarEvent to a Task and adds it to the to-do list.
+     *
+     * @param event The calendar event to convert to a task
+     */
+    public void convertEventToTask(CalendarEvent event) {
+        Task task = new Task(
+                event.getName(),
+                event.getDescription(),
+                event.getStartDate(),
+                event.getEndDate(),
+                null // Assuming course information is not relevant for the event-to-task conversion
+        );
         todoList.addTask(task);
     }
 }

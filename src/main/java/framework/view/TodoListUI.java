@@ -2,11 +2,10 @@ package framework.view;
 
 import com.github.lgooddatepicker.components.DateTimePicker;
 import entity.TodoList;
-import entity.Course;
+import entity.Task;
 import interface_adapter.controller.TodoListController;
 import interface_adapter.presenter.TaskPresenter;
 import use_case.AddTaskUseCase;
-import entity.Task;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +28,6 @@ public class TodoListUI {
     private AddTaskUseCase addTaskUseCase;
     private TaskPresenter taskPresenter;
     private TodoListController todoListController;
-    private Course currentCourse; // Currently selected course for the task
 
     /**
      * Constructs a new TodoListUI and initializes the user interface components.
@@ -115,11 +113,8 @@ public class TodoListUI {
             return;
         }
 
-        // Create a course object if a course name is provided
-        Course course = (courseName != null && !courseName.trim().isEmpty()) ? new Course(courseName, "") : null;
-
         // Add task to the list using the controller
-        todoListController.addTask(title, description, startDate, deadline, course);
+        todoListController.addTask(title, description, startDate, deadline, courseName);
         refreshTaskList();
 
         // Clear input fields after adding the task

@@ -2,7 +2,6 @@ package interface_adapter.controller;
 
 import use_case.AddTaskUseCase;
 import java.time.LocalDateTime;
-import entity.Course;
 
 /**
  * The TodoListController class acts as a mediator between the UI and the use case.
@@ -28,7 +27,7 @@ public class TodoListController {
      * @param deadline    The deadline date and time for the task
      * @param course      The course associated with the task
      */
-    public void addTask(String title, String description, LocalDateTime startDate, LocalDateTime deadline, Course course) {
+    public void addTask(String title, String description, LocalDateTime startDate, LocalDateTime deadline, String course) {
         addTaskUseCase.addTask(title, description, startDate, deadline, course);
     }
 }

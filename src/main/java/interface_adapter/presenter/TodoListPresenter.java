@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Presenter for the to-do list, implementing the output boundaries for adding, removing, completing, and sorting tasks.
+ * Presenter for the to-do list, implementing the output boundaries for adding, removing, completing, sorting, loading, and filtering tasks.
  */
-public class TodoListPresenter implements AddTaskOutputBoundary, RemoveTaskOutputBoundary, CompleteTaskOutputBoundary, SortTasksOutputBoundary, LoadTodoListOutputBoundary {
+public class TodoListPresenter implements AddTaskOutputBoundary, RemoveTaskOutputBoundary, CompleteTaskOutputBoundary, SortTasksOutputBoundary, LoadTodoListOutputBoundary, FilterTasksOutputBoundary {
 
     private final TodoListViewModel viewModel;
 
@@ -49,5 +49,11 @@ public class TodoListPresenter implements AddTaskOutputBoundary, RemoveTaskOutpu
     public void present(LoadTodoListResponseModel responseModel) {
         viewModel.setTasks(responseModel.getTasks());
         responseModel.getTasks().forEach(task -> System.out.println("Task loaded: " + task.getTitle()));
+    }
+
+    @Override
+    public void present(FilterTasksResponseModel responseModel) {
+        viewModel.setTasks(responseModel.getTasks());
+        responseModel.getTasks().forEach(task -> System.out.println("Task filtered: " + task.getTitle()));
     }
 }

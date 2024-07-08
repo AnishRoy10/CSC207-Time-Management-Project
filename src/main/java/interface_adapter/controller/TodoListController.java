@@ -1,29 +1,25 @@
 package interface_adapter.controller;
 
 import use_case.TodoListInputBoundary;
-import use_case.TaskResponseModel;
-
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
- * Controller for the to-do list use case.
- * It interacts with the input boundary to perform actions.
+ * The TodoListController class acts as a mediator between the UI and the use case.
  */
 public class TodoListController {
     private final TodoListInputBoundary todoListInputBoundary;
 
     /**
-     * Constructs a TodoListController with the specified input boundary.
+     * Constructs a TodoListController with the specified TodoListInputBoundary.
      *
-     * @param todoListInputBoundary The input boundary for the to-do list use case
+     * @param todoListInputBoundary The input boundary for adding tasks
      */
     public TodoListController(TodoListInputBoundary todoListInputBoundary) {
         this.todoListInputBoundary = todoListInputBoundary;
     }
 
     /**
-     * Adds a task using the use case.
+     * Adds a task using the input boundary.
      *
      * @param title       The title of the task
      * @param description The description of the task
@@ -36,11 +32,9 @@ public class TodoListController {
     }
 
     /**
-     * Loads tasks from the use case.
-     *
-     * @return The list of task response models
+     * Loads tasks using the input boundary.
      */
-    public List<TaskResponseModel> loadTasks() {
-        return todoListInputBoundary.loadTasks();
+    public void loadTasks() {
+        todoListInputBoundary.loadTasks();
     }
 }

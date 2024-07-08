@@ -1,35 +1,50 @@
 package interface_adapter.presenter;
 
-import use_case.TaskResponseModel;
 import use_case.TodoListOutputBoundary;
+import use_case.TaskResponseModel;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Presenter for the to-do list use case.
- * It formats the task response models for display in the user interface.
+ * The TaskPresenter class is responsible for formatting tasks for display in the user interface.
  */
 public class TaskPresenter implements TodoListOutputBoundary {
+    private List<TaskResponseModel> taskResponseModels;
 
     /**
-     * Presents the tasks by formatting them for display.
-     *
-     * @param tasks The list of task response models
+     * Constructs a TaskPresenter.
      */
-    @Override
-    public void presentTasks(List<TaskResponseModel> tasks) {
-        // Format tasks for UI display if needed
+    public TaskPresenter() {
+        // Default constructor
     }
 
     /**
-     * Returns a formatted string of all tasks in the to-do list.
+     * Presents tasks by saving them internally as TaskResponseModels.
      *
-     * @param tasks The list of task response models
+     * @param taskResponseModels The list of task response models to be presented
+     */
+    @Override
+    public void presentTasks(List<TaskResponseModel> taskResponseModels) {
+        this.taskResponseModels = taskResponseModels;
+    }
+
+    /**
+     * Returns a list of TaskResponseModels.
+     *
+     * @return The list of TaskResponseModels
+     */
+    public List<TaskResponseModel> getTaskResponseModels() {
+        return taskResponseModels;
+    }
+
+    /**
+     * Returns a formatted string of all tasks.
+     *
      * @return A formatted string representation of all tasks
      */
-    public String getFormattedTasks(List<TaskResponseModel> tasks) {
-        return tasks.stream()
+    public String getFormattedTasks() {
+        return taskResponseModels.stream()
                 .map(this::formatTask)
                 .collect(Collectors.joining("\n"));
     }
@@ -37,7 +52,7 @@ public class TaskPresenter implements TodoListOutputBoundary {
     /**
      * Formats a single task for display.
      *
-     * @param task The task response model to be formatted
+     * @param task The task to be formatted
      * @return A formatted string representation of the task
      */
     private String formatTask(TaskResponseModel task) {

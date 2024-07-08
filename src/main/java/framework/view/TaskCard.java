@@ -1,6 +1,6 @@
 package framework.view;
 
-import entity.Task;
+import use_case.TaskResponseModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
  * TaskCard represents the UI component for displaying a task's details.
  */
 public class TaskCard extends JPanel {
-    private Task task;
+    private TaskResponseModel task;
     private JCheckBox completedCheckBox;
     private JLabel titleLabel;
     private JLabel descriptionLabel;
@@ -24,7 +24,7 @@ public class TaskCard extends JPanel {
      *
      * @param task The task to display in this card.
      */
-    public TaskCard(Task task) {
+    public TaskCard(TaskResponseModel task) {
         this.task = task;
         initializeComponents();
         layoutComponents();
@@ -40,11 +40,6 @@ public class TaskCard extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 task.setCompleted(completedCheckBox.isSelected());
-                if (task.isCompleted()) {
-                    task.completeTask();
-                } else {
-                    task.setCompletionDate(null);
-                }
                 updateCompletionDateLabel();
             }
         });

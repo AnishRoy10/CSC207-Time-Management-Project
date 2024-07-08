@@ -1,15 +1,19 @@
 package framework.view;
 
 import com.github.lgooddatepicker.components.DateTimePicker;
-import entity.TodoList;
-import entity.Task;
 import interface_adapter.controller.TodoListController;
 import interface_adapter.presenter.TaskPresenter;
+import use_case.TaskResponseModel;
 import use_case.AddTaskUseCase;
+import use_case.TodoListInputBoundary;
+import use_case.TodoListOutputBoundary;
+import data_access.TodoListDataAccessObject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * User interface for managing a to-do list.
@@ -24,20 +28,15 @@ public class TodoListUI {
     private DateTimePicker startDateTimePicker;
     private DateTimePicker deadlineDateTimePicker;
     private JButton addButton;
-    private TodoList todoList;
-    private AddTaskUseCase addTaskUseCase;
-    private TaskPresenter taskPresenter;
     private TodoListController todoListController;
+    private TaskPresenter taskPresenter;
 
     /**
      * Constructs a new TodoListUI and initializes the user interface components.
      */
-    public TodoListUI() {
-        // Initialize the domain and use case components
-        todoList = new TodoList();
-        addTaskUseCase = new AddTaskUseCase(todoList);
-        taskPresenter = new TaskPresenter(todoList);
-        todoListController = new TodoListController(addTaskUseCase);
+    public TodoListUI(TodoListController todoListController, TaskPresenter taskPresenter) {
+        this.todoListController = todoListController;
+        this.taskPresenter = taskPresenter;
 
         // Set up the main frame
         frame = new JFrame("Todo List");
@@ -81,6 +80,9 @@ public class TodoListUI {
 
         // Set the size of the frame
         frame.setSize(1000, 800);
+
+        // Load and display tasks at startup
+        todoListController.loadTasks();
     }
 
     /**
@@ -115,23 +117,17 @@ public class TodoListUI {
 
         // Add task to the list using the controller
         todoListController.addTask(title, description, startDate, deadline, courseName);
-        refreshTaskList();
-
-        // Clear input fields after adding the task
-        taskTitleField.setText("");
-        taskDescriptionField.setText("");
-        taskCourseField.setText(""); // Clear course field
-        startDateTimePicker.clear();
-        deadlineDateTimePicker.clear();
     }
 
     /**
      * Refreshes the task list display.
+     *
+     * @param taskResponseModels The list of task response models to display
      */
-    private void refreshTaskList() {
+    public void refreshTaskList(List<TaskResponseModel> taskResponseModels) {
         taskPanel.removeAll();
-        for (Task task : todoList.getTasks()) {
-            taskPanel.add(new TaskCard(task));
+        for (TaskResponseModel taskResponseModel : taskResponseModels) {
+            taskPanel.add(new TaskCard(taskResponseModel));
         }
         taskPanel.revalidate();
         taskPanel.repaint();
@@ -143,6 +139,17 @@ public class TodoListUI {
      * @param args Command line arguments
      */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(TodoListUI::new);
+        // Create the "Saves" directory if it doesn't exist
+        File saveDir = new File("./Saves");
+        if (!saveDir.exists()) {
+            saveDir.mkdir();
+        }
+
+        // Initialize necessary components and start the UI
+        TodoListDataAccessObject todoListDataAccessObject = new TodoListDataAccessObject("./Saves/todoListFile.json");
+        TodoListOutputBoundary todoListOutputBoundary = new TaskPresenter();
+        TodoListInputBoundary todoListInputBoundary = new AddTaskUseCase(todoListDataAccessObject, todoListOutputBoundary);
+        TodoListController todoListController = new TodoListController(todoListInputBoundary);
+        SwingUtilities.invokeLater(() -> new TodoListUI(todoListController, (TaskPresenter) todoListOutputBoundary));
     }
 }

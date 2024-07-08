@@ -40,6 +40,11 @@ public class TodoListDataAccessObject {
      * @throws ClassNotFoundException If the class of the loaded object cannot be found.
      */
     public TodoList loadTodoList() throws IOException, ClassNotFoundException {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            // Return a new TodoList if the file does not exist
+            return new TodoList();
+        }
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
             return (TodoList) ois.readObject();
         }

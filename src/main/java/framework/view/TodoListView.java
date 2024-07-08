@@ -1,14 +1,16 @@
 package framework.view;
 
 import com.github.lgooddatepicker.components.DateTimePicker;
-import interface_adapter.controller.TodoListController;
 import interface_adapter.TodoListViewModel;
+import interface_adapter.controller.TodoListController;
 import use_case.TaskData;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -17,8 +19,7 @@ import java.util.List;
 public class TodoListView extends JFrame {
     private final TodoListController controller;
     private final TodoListViewModel viewModel;
-    private final DefaultListModel<TaskData> taskListModel;
-    private final JList<TaskData> taskList;
+    private final JPanel taskListPanel;
     private final JTextField titleField;
     private final JTextArea descriptionArea;
     private final DateTimePicker startDatePicker;
@@ -33,50 +34,56 @@ public class TodoListView extends JFrame {
         this.viewModel = viewModel;
 
         setTitle("Todo List");
-        setSize(1000, 600);
+        setSize(1200, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        // Set a modern font for the entire application
+        UIManager.put("Label.font", new Font("Segoe UI", Font.PLAIN, 14));
+        UIManager.put("Button.font", new Font("Segoe UI", Font.PLAIN, 14));
+        UIManager.put("CheckBox.font", new Font("Segoe UI", Font.PLAIN, 14));
+        UIManager.put("TextField.font", new Font("Segoe UI", Font.PLAIN, 14));
+        UIManager.put("TextArea.font", new Font("Segoe UI", Font.PLAIN, 14));
+        UIManager.put("ComboBox.font", new Font("Segoe UI", Font.PLAIN, 14));
+
         // Task Adding Panel
         JPanel taskAddingPanel = new JPanel();
-        taskAddingPanel.setLayout(new GridLayout(7, 2));
+        taskAddingPanel.setLayout(new BoxLayout(taskAddingPanel, BoxLayout.Y_AXIS));
+        taskAddingPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        taskAddingPanel.setBackground(Color.WHITE);
 
         titleField = new JTextField();
-        descriptionArea = new JTextArea();
+        descriptionArea = new JTextArea(3, 20);
         startDatePicker = new DateTimePicker();
         deadlinePicker = new DateTimePicker();
         courseField = new JTextField();
 
-        taskAddingPanel.add(new JLabel("Title:"));
-        taskAddingPanel.add(titleField);
-        taskAddingPanel.add(new JLabel("Description:"));
-        taskAddingPanel.add(descriptionArea);
-        taskAddingPanel.add(new JLabel("Start Date:"));
-        taskAddingPanel.add(startDatePicker);
-        taskAddingPanel.add(new JLabel("Deadline:"));
-        taskAddingPanel.add(deadlinePicker);
-        taskAddingPanel.add(new JLabel("Course:"));
-        taskAddingPanel.add(courseField);
+        taskAddingPanel.add(createLabeledComponent("Title:", titleField));
+        taskAddingPanel.add(createLabeledComponent("Description:", new JScrollPane(descriptionArea)));
+        taskAddingPanel.add(createLabeledComponent("Start Date:", startDatePicker));
+        taskAddingPanel.add(createLabeledComponent("Deadline:", deadlinePicker));
+        taskAddingPanel.add(createLabeledComponent("Course:", courseField));
 
         JButton addTaskButton = new JButton("Add Task");
         addTaskButton.addActionListener(e -> addTask());
+        taskAddingPanel.add(Box.createVerticalStrut(10));
         taskAddingPanel.add(addTaskButton);
 
         add(taskAddingPanel, BorderLayout.WEST);
 
-        // Task List and Details Panel
-        taskListModel = new DefaultListModel<>();
-        taskList = new JList<>(taskListModel);
-        taskList.setCellRenderer(new TaskCellRenderer());
-        taskList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        taskList.addListSelectionListener(e -> showTaskDetails(taskList.getSelectedValue()));
-        add(new JScrollPane(taskList), BorderLayout.CENTER);
+        // Task List Panel
+        taskListPanel = new JPanel();
+        taskListPanel.setLayout(new BoxLayout(taskListPanel, BoxLayout.Y_AXIS));
+        JScrollPane taskListScrollPane = new JScrollPane(taskListPanel);
+        taskListScrollPane.setBorder(BorderFactory.createEmptyBorder());
+        add(taskListScrollPane, BorderLayout.CENTER);
 
         // Filtering and Sorting Panel
-        JPanel filterSortPanel = new JPanel();
-        filterSortPanel.setLayout(new GridLayout(2, 2));
+        JPanel filterSortPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        filterSortPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
+        filterSortPanel.setBackground(Color.WHITE);
 
-        showCompletedCheckBox = new JCheckBox("Show Completed");
+        showCompletedCheckBox = new JCheckBox("Hide Completed");
         showCompletedCheckBox.addActionListener(e -> filterTasks());
         filterSortPanel.add(showCompletedCheckBox);
 
@@ -97,6 +104,15 @@ public class TodoListView extends JFrame {
         loadTasks();
     }
 
+    private Component createLabeledComponent(String label, Component component) {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(new JLabel(label), BorderLayout.NORTH);
+        panel.add(component, BorderLayout.CENTER);
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(new EmptyBorder(5, 0, 10, 0));
+        return panel;
+    }
+
     private void addTask() {
         String title = titleField.getText();
         String description = descriptionArea.getText();
@@ -104,23 +120,26 @@ public class TodoListView extends JFrame {
         LocalDateTime deadline = deadlinePicker.getDateTimeStrict();
         String course = courseField.getText();
         controller.addTask(title, description, startDate, deadline, course);
+        clearInputFields();
         loadTasks();
     }
 
-    private void completeTask() {
-        TaskData selectedTask = taskList.getSelectedValue();
-        if (selectedTask != null) {
-            controller.completeTask(selectedTask.getId());
-            loadTasks();
-        }
+    private void clearInputFields() {
+        titleField.setText("");
+        descriptionArea.setText("");
+        startDatePicker.clear();
+        deadlinePicker.clear();
+        courseField.setText("");
     }
 
-    private void removeTask() {
-        TaskData selectedTask = taskList.getSelectedValue();
-        if (selectedTask != null) {
-            controller.removeTask(selectedTask.getId());
-            loadTasks();
-        }
+    private void completeTask(int taskId) {
+        controller.completeTask(taskId);
+        loadTasks();
+    }
+
+    private void removeTask(int taskId) {
+        controller.removeTask(taskId);
+        loadTasks();
     }
 
     private void filterTasks() {
@@ -136,50 +155,21 @@ public class TodoListView extends JFrame {
         loadTasks();
     }
 
-    private void showTaskDetails(TaskData task) {
-        if (task != null) {
-            JOptionPane.showMessageDialog(this, String.format("Title: %s\nDescription: %s\nStart Date: %s\nDeadline: %s\nCourse: %s\nCompleted: %s\nCompletion Date: %s",
-                            task.getTitle(), task.getDescription(), task.getStartDate(), task.getDeadline(), task.getCourse(), task.isCompleted() ? "Yes" : "No", task.getCompletionDate() != null ? task.getCompletionDate() : "Not completed"),
-                    "Task Details", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
     private void loadTasks() {
-        taskListModel.clear();
+        taskListPanel.removeAll();
         List<TaskData> tasks = viewModel.getTasks();
-        tasks.forEach(taskListModel::addElement);
-    }
-
-    private static class TaskCellRenderer extends JPanel implements ListCellRenderer<TaskData> {
-        private final JLabel titleLabel;
-        private final JLabel courseLabel;
-        private final JLabel deadlineLabel;
-
-        public TaskCellRenderer() {
-            setLayout(new GridLayout(3, 1));
-            titleLabel = new JLabel();
-            courseLabel = new JLabel();
-            deadlineLabel = new JLabel();
-            add(titleLabel);
-            add(courseLabel);
-            add(deadlineLabel);
-        }
-
-        @Override
-        public Component getListCellRendererComponent(JList<? extends TaskData> list, TaskData value, int index, boolean isSelected, boolean cellHasFocus) {
-            titleLabel.setText("Title: " + value.getTitle());
-            courseLabel.setText("Course: " + value.getCourse());
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            deadlineLabel.setText("Due: " + value.getDeadline().format(formatter));
-
-            if (isSelected) {
-                setBackground(list.getSelectionBackground());
-                setForeground(list.getSelectionForeground());
-            } else {
-                setBackground(list.getBackground());
-                setForeground(list.getForeground());
-            }
-            return this;
-        }
+        tasks.forEach(task -> {
+            TaskCard taskCard = new TaskCard(task);
+            taskCard.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    completeTask(task.getId());
+                }
+            });
+            taskListPanel.add(taskCard);
+            taskListPanel.add(Box.createVerticalStrut(10));
+        });
+        taskListPanel.revalidate();
+        taskListPanel.repaint();
     }
 }

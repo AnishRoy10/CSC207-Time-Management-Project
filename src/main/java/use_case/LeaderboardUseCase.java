@@ -1,7 +1,6 @@
 package use_case;
 
 import entity.Leaderboard;
-import entity.User;
 
 /**
  * LeaderboardUseCase is used for manipulating the leaderboard.
@@ -17,28 +16,28 @@ public class LeaderboardUseCase {
 
     /**
      * Adds a score to the leaderboard.
-     * @param user The user.
+     * @param username The username of the user.
      * @param score The score to add.
      */
-    public void addScore(User user, int score) {
-        leaderboard.addScore(user, score);
+    public void addScore(String username, int score) {
+        leaderboard.addScore(username, score);
     }
 
     /**
      * Removes a score from the leaderboard.
-     * @param user The user.
+     * @param username The username of the user.
      */
-    public void removeScore(User user) {
-        leaderboard.removeScore(user);
+    public void removeScore(String username) {
+        leaderboard.removeScore(username);
     }
 
     /**
      * Updates a score in the leaderboard.
-     * @param user The user.
+     * @param username The username of the user.
      * @param score The new score to add to the current score.
      */
-    public void updateScore(User user, int score) {
-        leaderboard.updateScore(user, score);
+    public void updateScore(String username, int score) {
+        leaderboard.updateScore(username, score);
     }
 
     /**

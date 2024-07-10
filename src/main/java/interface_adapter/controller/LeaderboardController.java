@@ -2,7 +2,6 @@ package interface_adapter.controller;
 
 import interface_adapter.presenter.LeaderboardPresenter;
 import use_case.LeaderboardUseCase;
-import entity.User;
 
 /**
  * LeaderboardController helps the interaction between the use case and the presenter.
@@ -18,28 +17,28 @@ public class LeaderboardController {
 
     /**
      * Adds a score to the leaderboard.
-     * @param user The user.
+     * @param username The username of the user.
      * @param score The score to add.
      */
-    public void addScore(User user, int score) {
-        usecase.addScore(user, score);
+    public void addScore(String username, int score) {
+        usecase.addScore(username, score);
     }
 
     /**
      * Removes a score from the leaderboard.
-     * @param user The user.
+     * @param username The username of the user.
      */
-    public void removeScore(User user) {
-        usecase.removeScore(user);
+    public void removeScore(String username) {
+        usecase.removeScore(username);
     }
 
     /**
      * Updates a score in the leaderboard.
-     * @param user The user.
+     * @param username The username of the user.
      * @param score The new score to add to current score.
      */
-    public void updateScore(User user, int score) {
-        usecase.updateScore(user, score);
+    public void updateScore(String username, int score) {
+        usecase.updateScore(username, score);
     }
 
     /**

@@ -23,29 +23,28 @@ public abstract class Leaderboard {
 
     /**
      * Adds a user score to the leaderboard.
-     * @param user The user.
+     * @param username The username of the user.
      * @param score The score to add.
      */
-    public void addScore(User user, int score) {
-        scores.put(user.getUsername(), score);
+    public void addScore(String username, int score) {
+        scores.put(username, score);
     }
 
     /**
      * Removes a user score from the leaderboard.
-     * @param user The user.
+     * @param username The username of the user.
      */
-    public void removeScore(User user) {
-        scores.remove(user.getUsername());
+    public void removeScore(String username) {
+        scores.remove(username);
     }
 
     /**
      * Updates a user score in the leaderboard.
-     * @param user The user.
+     * @param username The username of the user.
      * @param newScore The new score to add to the current score.
      */
-    public void updateScore(User user, int newScore) {
-        int score = user.getScore();
-        scores.put(user.getUsername(), score + newScore);
+    public void updateScore(String username, int newScore) {
+        scores.put(username, newScore);
     }
 
     /**
@@ -76,12 +75,13 @@ public abstract class Leaderboard {
 
     /**
      * Checks if the tasks is completed to add scores. If completed, adds a certain score.
-     * @param user The user.
+     * @param username The username of the user.
      * @param task The task to check.
      */
-    public void taskCompleted(User user, Task task) {
+    public void taskCompleted(String username, Task task) {
         if (task.isCompleted()) {
-            updateScore(user, 500);
+            int score = scores.get(username);
+            updateScore(username, 500 + score);
         }
     }
 

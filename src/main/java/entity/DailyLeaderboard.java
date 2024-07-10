@@ -2,6 +2,10 @@ package entity;
 
 import java.time.LocalDate;
 
+/**
+ * Represents a daily leaderboard.
+ */
+
 public class DailyLeaderboard extends Leaderboard {
     private LocalDate currentDate;
 
@@ -12,7 +16,7 @@ public class DailyLeaderboard extends Leaderboard {
 
     @Override
     public void displayLeaderboard() {
-
+        System.out.println("Daily Leaderboard");
     }
 
     // Getter for local date

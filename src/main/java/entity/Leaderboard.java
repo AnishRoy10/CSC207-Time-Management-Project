@@ -3,9 +3,10 @@ package entity;
 import java.util.HashMap;
 import java.util.Map;
 
-/* The Leaderboard class represents a leaderboard that users can view their scores
+/**
+ *  The Leaderboard class represents a leaderboard that users can view their scores
     and others scores.
-*/
+ */
 
 public abstract class Leaderboard {
     //Name of the leaderboard
@@ -20,28 +21,42 @@ public abstract class Leaderboard {
         this.scores = new HashMap<>() ;
     }
 
-    // A method to add a user score
+    /**
+     * Adds a user score to the leaderboard.
+     * @param user The user.
+     * @param score The score to add.
+     */
     public void addScore(User user, int score) {
-        scores.put(user.username, score);
+        scores.put(user.getUsername(), score);
     }
 
-    // Removes a score from the leaderboard
+    /**
+     * Removes a user score from the leaderboard.
+     * @param user The user.
+     */
     public void removeScore(User user) {
-        scores.remove(user.username);
+        scores.remove(user.getUsername());
     }
 
-    // Updates a user score in the leaderboard
+    /**
+     * Updates a user score in the leaderboard.
+     * @param user The user.
+     * @param newScore The new score to add to the current score.
+     */
     public void updateScore(User user, int newScore) {
-        int score = user.score;
-        scores.put(user.username, score + newScore);
+        int score = user.getScore();
+        scores.put(user.getUsername(), score + newScore);
     }
 
-    // Clearing all scores from the leaderboard
-    public void clearScores() {
+    /**
+     * Clears all scores from the leaderboard.
+     */    public void clearScores() {
         scores.clear();
     }
 
-    // An abstract method to be implemented by subclasses
+    /**
+     * Displays the leaderboard.
+     */
     public abstract void displayLeaderboard();
 
 
@@ -59,14 +74,16 @@ public abstract class Leaderboard {
         this.name = name;
     }
 
-    // Checking if the tasks is completed to add scores, if completed adds a certain score.
+    /**
+     * Checks if the tasks is completed to add scores. If completed, adds a certain score.
+     * @param user The user.
+     * @param task The task to check.
+     */
     public void taskCompleted(User user, Task task) {
         if (task.isCompleted()) {
             updateScore(user, 500);
         }
     }
-
-    //
 
 
 

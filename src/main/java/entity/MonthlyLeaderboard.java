@@ -2,12 +2,13 @@ package entity;
 
 import java.time.LocalDate;
 
-/* The MonthlyLeaderboard class represents a leaderboard specific to the current month.
+/**
+ *  The MonthlyLeaderboard class represents a leaderboard specific to the current month.
  */
 
 public class MonthlyLeaderboard extends Leaderboard {
 
-    //Current Month
+    // Current Month
     private LocalDate month;
 
     public MonthlyLeaderboard(String name, LocalDate month) {
@@ -18,6 +19,7 @@ public class MonthlyLeaderboard extends Leaderboard {
 
     @Override
     public void displayLeaderboard() {
+        System.out.println("Monthly Leaderboard");
 
 
     }

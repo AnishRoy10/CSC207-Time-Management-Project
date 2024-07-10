@@ -1,5 +1,9 @@
 package entity;
 
+/**
+ * Represents a user in the system.
+ */
+
 public class User {
     private String username;
     private String password;

@@ -1,5 +1,6 @@
 package framework.view;
-
+//TODO make the code work for the FriendsList class
+//TODO add documentation
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -15,10 +16,11 @@ public class FriendsListView {
     private JList<String>friendsListDisplay;
     private JButton refreshButton;
     private JButton addButton;
-    private FriendsList friendsList;
+    private ArrayList<String> friendsList; //Temporary data structure
 
     public FriendsListView() {
         mainFrame = new JFrame("Friends");
+        friendsList = new ArrayList<>();
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setLayout(new BorderLayout());
         mainFrame.pack();
@@ -30,6 +32,7 @@ public class FriendsListView {
         refreshButton = new JButton("Refresh");
         addButton = new JButton("Add");
         refreshButton.addActionListener(e -> refreshFriendsList());
+        addButton.addActionListener(e -> AddFriend());
         inputPanel.add(refreshButton);
         inputPanel.add(addButton);
         mainFrame.add(friendsPanel, BorderLayout.CENTER);
@@ -39,12 +42,15 @@ public class FriendsListView {
 
     public void refreshFriendsList(){
         DefaultListModel<String> model = new DefaultListModel<>();
-        ArrayList<String> friendsUsernames = friendsList.exportFriendsNames();
+        ArrayList<String> friendsUsernames = friendsList;
         for (int i = 0; i < friendsUsernames.size(); i++){
             model.addElement(friendsUsernames.get(i));
         }
-        System.out.println(friendsList.exportFriendsNames());
         friendsListDisplay.setModel(model);
+    }
+
+    public void AddFriend(){
+        friendsList.add("User1");
     }
 
     public static void main(String[] args) {

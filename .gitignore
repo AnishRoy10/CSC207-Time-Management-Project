@@ -1,1 +1,5 @@
-/.idea/
+/idea/
+/target/
+
+# text file for idea, delete this later if need be
+ignore.md

@@ -1,4 +1,6 @@
-import use_case.JoinCourseUseCase;
+package interface_adapter.controller;
+
+import use_case.join_course.JoinCourseUseCase;
 
 /**
  * CourseController connects the course presenter and use cases.

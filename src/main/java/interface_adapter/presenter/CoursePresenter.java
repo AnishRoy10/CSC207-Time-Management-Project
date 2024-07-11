@@ -1,4 +1,4 @@
-package presenter;
+package interface_adapter.presenter;
 
 import entity.Course;
 

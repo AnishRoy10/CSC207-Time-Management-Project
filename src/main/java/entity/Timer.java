@@ -10,9 +10,12 @@ public class Timer {
 
     /**
      * Creates a timer with a specified length.
-     * @param timer_length The timer's length in milliseconds
+     * @param hours The amount of hours the timer lasts
+     * @param minutes The amount of minutes the timer lasts
+     * @param seconds The amount of seconds the timer lasts
      */
-    public Timer(long timer_length) {
+    public Timer(int hours, int minutes, int seconds) {
+        long timer_length = hours * 36000000L + minutes * 60000L + seconds * 1000L;
         start_time = System.currentTimeMillis();
         end_time = start_time + timer_length;
         elapsed_time = 0;

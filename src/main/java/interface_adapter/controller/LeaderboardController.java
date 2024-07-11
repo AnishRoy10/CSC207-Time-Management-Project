@@ -1,7 +1,7 @@
 package interface_adapter.controller;
 
 import interface_adapter.presenter.LeaderboardPresenter;
-import use_case.LeaderboardUseCase;
+import use_case.Leaderboard.LeaderboardUseCase;
 
 /**
  * LeaderboardController helps the interaction between the use case and the presenter.

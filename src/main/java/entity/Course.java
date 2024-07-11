@@ -2,8 +2,6 @@ package entity;
 
 import java.util.ArrayList;
 
-class User {}  // for reference purposes
-
 /**
  * The Course class represents a course that users can join.
  */
@@ -91,10 +89,4 @@ public class Course {
     public boolean removeUser(User user) {
         return users.remove(user);
     }
-
-    private abstract void resetDailyLeaderboard() {}
-
-    private abstract void resetMonthlyLeaderboard() {}
-
-    private abstract void resetAlltimeLeaderboard() {}
 }

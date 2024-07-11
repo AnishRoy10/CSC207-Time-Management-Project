@@ -19,5 +19,11 @@ public class SetTimerInteractor implements SetTimerInputBoundary {
 
 
     public void execute(SetTimerInputData setTimerInputData) {
+        Timer timer = new Timer(setTimerInputData.getHours(),
+                setTimerInputData.getMinutes(),
+                setTimerInputData.getSeconds());
+
+        SetTimerOutputData setTimerOutputData = new SetTimerOutputData();
+        userPresenter.prepareSuccessView(setTimerOutputData);
     }
 }

@@ -1,5 +1,5 @@
 /idea/
 /target/
 
-# text file for idea, delete this later if need be
-ignore.md
+# Visual Studio Code tasks & settings
+/.vscode/

@@ -1,5 +1,6 @@
 package entity;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -35,5 +36,14 @@ public class FriendsList {
     //Convert the FriendsList ArrayList into an Array
     public Object[] exportFriendsList() {
         return this.friends.toArray();
+
+    //Return an arraylist of the usernames of a users friends
+    }
+    public ArrayList<String> exportFriendsNames() {
+        ArrayList<String> friendsnames = new ArrayList<String>();
+        for (int i = 0; i < this.friends.size(); i++) {
+            friendsnames.add(this.friends.get(i).getUsername());
+        }
+        return friendsnames;
     }
 }

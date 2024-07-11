@@ -12,15 +12,31 @@ public class MongoConnector {
      * The MongoConnector class establishes a connection between the application and the MongoDB database
      *
      */
-    public static void main(String[] args) {
-        MongoClient mongoClient = MongoClients.create("mongodb+srv://admin1:<password>@cluster0.d61osh2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+    private MongoClient mongoClient;
+    private MongoDatabase database;
+    private MongoCollection<Document> collection;
+
+    public MongoConnector() {
+        MongoClient mongoClient = MongoClients.create("mongodb+srv://admin1:fn5Z7JJgnYVLeLhq@cluster0.d61osh2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
 
         MongoDatabase db = mongoClient.getDatabase("TimeManagementProject");
 
         MongoCollection col = db.getCollection("users");
 
-        Document sampleDoc = new Document("_id", new ObjectId("889f445ed1cb36fdc66b17ef")).append("username", "User2");
+        this.mongoClient = mongoClient;
+        this.database = db;
+        this.collection = col;
+    }
 
-        col.insertOne(sampleDoc);
+    public MongoClient getMongoClient() {
+        return mongoClient;
+    }
+
+    public MongoDatabase getDatabase() {
+        return database;
+    }
+
+    public MongoCollection<Document> getCollection() {
+        return collection;
     }
 }

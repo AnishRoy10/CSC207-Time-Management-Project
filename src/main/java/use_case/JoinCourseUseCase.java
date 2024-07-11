@@ -3,6 +3,9 @@ package use_case;
 import entity.User;
 import entity.Course;
 
+/**
+ * A use case to join new or existing users to a particular course.
+ */
 public class JoinCourseUseCase {
     private Course course;
     private User user;
@@ -30,7 +33,7 @@ public class JoinCourseUseCase {
     /**
      * Add a user to the course.
      */
-    public final void joinCourse() {
+    public final void addUser() {
         this.course.addUser(user);
     }
 
@@ -41,7 +44,7 @@ public class JoinCourseUseCase {
      * @param friends  friends of the new user
      * @param courses  courses of the new user
      */
-    public final void joinCourse(String username, User[] friends, Course[] courses) {
+    public final void addUser(String username, User[] friends, Course[] courses) {
         this.user = new User(username, friends, courses);
         this.joinCourse();
     }

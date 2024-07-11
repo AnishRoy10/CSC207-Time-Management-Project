@@ -19,9 +19,12 @@ public class User {
   // Todolist associated with this user
   private final TodoList todo;
 
+  // Timer associated with this user
+  private Timer timer;
+
   /**
    * Construct a new User object.
-   * 
+   *
    * @param username username for this user
    * @param friends  friends for this user
    * @param courses  courses this user is in
@@ -36,7 +39,7 @@ public class User {
 
   /**
    * Get this users username.
-   * 
+   *
    * @return the username of this user
    */
   public String getUsername() {
@@ -45,7 +48,7 @@ public class User {
 
   /**
    * Change this users username.
-   * 
+   *
    * @param username the new username for this user
    */
   public void setUsername(String username) {
@@ -54,7 +57,7 @@ public class User {
 
   /**
    * Add a friend to this user.
-   * 
+   *
    * @param user the new friend for this user
    */
   public void addFriend(User user) {
@@ -63,7 +66,7 @@ public class User {
 
   /**
    * Attempt to remove a friend from this user.
-   * 
+   *
    * @param user the friend to remove
    */
   public void removeFriend(User user) {
@@ -72,7 +75,7 @@ public class User {
 
   /**
    * Add a task to this users todolist.
-   * 
+   *
    * @param task the task to add
    */
   public void addTask(Task task) {
@@ -81,7 +84,7 @@ public class User {
 
   /**
    * Remove a task from this users todolist.
-   * 
+   *
    * @param task the task to remove
    */
   public void removeTask(Task task) {
@@ -90,7 +93,7 @@ public class User {
 
   /**
    * Place this user in a new course.
-   * 
+   *
    * @param course the course to put this user in
    */
   public void addCourse(Course course) {
@@ -100,10 +103,18 @@ public class User {
       }
   }
 
+    /**
+     * Adds a Timer for the user.
+     * @param timer the timer set by the user
+     */
+  public void addTimer(Timer timer) {
+      this.timer = timer;
+  }
+
   /**
    * Attempts to remove this user from the target course.
    * Returns whether the removal was successful.
-   * 
+   *
    * @param course the course to remove this user from
    * @return       success value of the method
    */

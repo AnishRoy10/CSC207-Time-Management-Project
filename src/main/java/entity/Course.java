@@ -33,7 +33,7 @@ public class Course {
 
     /**
      * Gets the name of this course.
-     *
+     * 
      * @return the name of this course
      */
     public String getName() {
@@ -42,7 +42,7 @@ public class Course {
 
     /**
      * Gets the description of this course.
-     *
+     * 
      * @return the description of this course
      */
     public String getDescription() {
@@ -51,7 +51,7 @@ public class Course {
 
     /**
      * Sets the name of this course.
-     *
+     * 
      * @param name the new name for this course
      */
     public void setName(String name) {
@@ -60,7 +60,7 @@ public class Course {
 
     /**
      * Sets the description of this course.
-     *
+     * 
      * @param description the new description for this course
      */
     public void setDescription(String description) {
@@ -69,7 +69,7 @@ public class Course {
 
     /**
      * Adds a new user to this course.
-     *
+     * 
      * @param user the user to add
      */
     public void addUser(User user) {
@@ -80,9 +80,9 @@ public class Course {
     }
 
     /**
-     * Attempts to remove the specified user from this course.
+     * Attempts to remove the specified user from this course. 
      * Returns a boolean value that indicates whether the attempt was successful.
-     *
+     * 
      * @param user the user to remove
      * @return     the success value of the method
      */

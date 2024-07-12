@@ -18,7 +18,11 @@ public class FriendsList {
      */
     public FriendsList(User[] importedFriends) {
         this.friends = new ArrayList<>();
-        this.friends.addAll(Arrays.asList(importedFriends));
+        if (importedFriends != null) {
+            for (int i = 0; i < importedFriends.length; i++) {
+                this.friends.add(importedFriends[i]);
+            }
+        }
     }
 
     //Add a friend if not already added

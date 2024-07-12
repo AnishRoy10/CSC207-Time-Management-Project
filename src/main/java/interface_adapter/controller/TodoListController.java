@@ -1,6 +1,17 @@
 package interface_adapter.controller;
 
-import use_case.*;
+import use_case.AddTaskUseCase.AddTaskInputBoundary;
+import use_case.AddTaskUseCase.AddTaskRequestModel;
+import use_case.CompleteTaskUseCase.CompleteTaskInputBoundary;
+import use_case.CompleteTaskUseCase.CompleteTaskRequestModel;
+import use_case.FilterTasksUseCase.FilterTasksInputBoundary;
+import use_case.FilterTasksUseCase.FilterTasksRequestModel;
+import use_case.LoadTodoListUseCase.LoadTodoListInputBoundary;
+import use_case.LoadTodoListUseCase.LoadTodoListRequestModel;
+import use_case.RemoveTaskUseCase.RemoveTaskInputBoundary;
+import use_case.RemoveTaskUseCase.RemoveTaskRequestModel;
+import use_case.SortTasksUseCase.SortTasksInputBoundary;
+import use_case.SortTasksUseCase.SortTasksRequestModel;
 
 import java.time.LocalDateTime;
 
@@ -61,11 +72,11 @@ public class TodoListController {
     }
 
     /**
-     * Marks a task as completed.
+     * Toggles the completion status of a task.
      *
-     * @param taskId the ID of the task to be completed
+     * @param taskId the ID of the task to be toggled
      */
-    public void completeTask(int taskId) {
+    public void toggleTaskCompletion(int taskId) {
         CompleteTaskRequestModel requestModel = new CompleteTaskRequestModel(taskId);
         completeTaskUseCase.execute(requestModel);
     }

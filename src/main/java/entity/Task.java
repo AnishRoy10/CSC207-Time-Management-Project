@@ -118,6 +118,19 @@ public class Task implements Serializable {
     }
 
     /**
+     * Toggles the completion status of the task.
+     */
+    public void toggleTaskCompletion() {
+        if (this.completed) {
+            this.completed = false;
+            this.completionDate = null;
+        } else {
+            this.completed = true;
+            this.completionDate = LocalDateTime.now();
+        }
+    }
+
+    /**
      * Marks the task as completed and sets the completion date.
      */
     public void completeTask() {

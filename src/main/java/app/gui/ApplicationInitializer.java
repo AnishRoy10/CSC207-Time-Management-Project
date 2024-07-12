@@ -5,8 +5,13 @@ import interface_adapter.presenter.TodoListPresenter;
 import interface_adapter.TodoListViewModel;
 import data_access.TodoListDataAccessObject;
 import repositories.TodoListRepository;
-import use_case.*;
 import framework.view.TodoListView;
+import use_case.AddTaskUseCase.AddTaskUseCase;
+import use_case.CompleteTaskUseCase.CompleteTaskUseCase;
+import use_case.FilterTasksUseCase.FilterTasksUseCase;
+import use_case.LoadTodoListUseCase.LoadTodoListUseCase;
+import use_case.RemoveTaskUseCase.RemoveTaskUseCase;
+import use_case.SortTasksUseCase.SortTasksUseCase;
 
 public class ApplicationInitializer {
     public static void main(String[] args) {

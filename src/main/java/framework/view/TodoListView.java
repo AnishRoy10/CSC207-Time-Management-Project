@@ -103,7 +103,8 @@ public class TodoListView extends JFrame {
 
         add(filterSortPanel, BorderLayout.NORTH);
 
-        // Load tasks initially
+        // Ensure tasks are loaded initially
+        controller.loadTodoList();
         loadTasks();
     }
 
@@ -136,7 +137,7 @@ public class TodoListView extends JFrame {
     }
 
     private void completeTask(int taskId) {
-        controller.completeTask(taskId);
+        controller.toggleTaskCompletion(taskId);
         loadTasks();
     }
 
@@ -193,13 +194,16 @@ public class TodoListView extends JFrame {
 
         tasks.forEach(task -> {
             TaskCard taskCard = new TaskCard(task);
+            taskCard.addCompletionActionListener(e -> completeTask(task.getId()));
             taskCard.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (SwingUtilities.isLeftMouseButton(e)) {
                         deselectAllTaskCards();
                         taskCard.setSelected(true);
-                        taskCard.toggleDetails();
+                        if (e.getClickCount() == 2) {
+                            taskCard.toggleDetails();
+                        }
                     }
                 }
             });

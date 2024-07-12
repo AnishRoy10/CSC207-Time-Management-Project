@@ -2,7 +2,18 @@ package interface_adapter.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import use_case.*;
+import use_case.AddTaskUseCase.AddTaskInputBoundary;
+import use_case.AddTaskUseCase.AddTaskRequestModel;
+import use_case.CompleteTaskUseCase.CompleteTaskInputBoundary;
+import use_case.CompleteTaskUseCase.CompleteTaskRequestModel;
+import use_case.FilterTasksUseCase.FilterTasksInputBoundary;
+import use_case.FilterTasksUseCase.FilterTasksRequestModel;
+import use_case.LoadTodoListUseCase.LoadTodoListInputBoundary;
+import use_case.LoadTodoListUseCase.LoadTodoListRequestModel;
+import use_case.RemoveTaskUseCase.RemoveTaskInputBoundary;
+import use_case.RemoveTaskUseCase.RemoveTaskRequestModel;
+import use_case.SortTasksUseCase.SortTasksInputBoundary;
+import use_case.SortTasksUseCase.SortTasksRequestModel;
 
 import java.time.LocalDateTime;
 
@@ -80,7 +91,7 @@ public class TodoListControllerTest {
         CompleteTaskRequestModel expectedRequest = new CompleteTaskRequestModel(taskId);
 
         // Act
-        controller.completeTask(taskId);
+        controller.toggleTaskCompletion(taskId);
 
         // Assert
         verify(completeTaskUseCase).execute(argThat(request ->

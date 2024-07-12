@@ -5,8 +5,7 @@ import use_case.TaskData;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
 
 /**
  * TaskCard represents the UI component for displaying a task's details.
@@ -34,7 +33,6 @@ public class TaskCard extends JPanel {
 
         completedCheckBox = new JCheckBox();
         completedCheckBox.setSelected(task.isCompleted());
-        completedCheckBox.addActionListener(e -> task.setCompleted(completedCheckBox.isSelected()));
 
         titleLabel = new JLabel(task.getTitle());
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
@@ -65,30 +63,10 @@ public class TaskCard extends JPanel {
         add(headerPanel, BorderLayout.NORTH);
         add(deadlineLabel, BorderLayout.CENTER);
         add(detailsPanel, BorderLayout.SOUTH);
-
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 1) {
-                    selectTaskCard();
-                } else if (e.getClickCount() == 2) {
-                    toggleDetails();
-                    selectTaskCard();
-                }
-            }
-        });
     }
 
-    private void selectTaskCard() {
-        Container parent = getParent();
-        if (parent instanceof JPanel) {
-            for (Component component : ((JPanel) parent).getComponents()) {
-                if (component instanceof TaskCard) {
-                    ((TaskCard) component).setSelected(false);
-                }
-            }
-        }
-        setSelected(true);
+    public void addCompletionActionListener(ActionListener listener) {
+        completedCheckBox.addActionListener(listener);
     }
 
     public TaskData getTask() {

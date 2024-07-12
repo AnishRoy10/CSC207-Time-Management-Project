@@ -72,8 +72,7 @@ public class TodoListView extends JFrame {
         add(taskAddingPanel, BorderLayout.WEST);
 
         // Task List Panel
-        taskListPanel = new JPanel();
-        taskListPanel.setLayout(new BoxLayout(taskListPanel, BoxLayout.Y_AXIS));
+        taskListPanel = new JPanel(new GridBagLayout());
         JScrollPane taskListScrollPane = new JScrollPane(taskListPanel);
         taskListScrollPane.setBorder(BorderFactory.createEmptyBorder());
         add(taskListScrollPane, BorderLayout.CENTER);
@@ -97,6 +96,10 @@ public class TodoListView extends JFrame {
         JButton sortTasksButton = new JButton("Sort Tasks");
         sortTasksButton.addActionListener(e -> sortTasks());
         filterSortPanel.add(sortTasksButton);
+
+        JButton removeTaskButton = new JButton("Remove Task");
+        removeTaskButton.addActionListener(e -> removeSelectedTask());
+        filterSortPanel.add(removeTaskButton);
 
         add(filterSortPanel, BorderLayout.NORTH);
 
@@ -142,6 +145,30 @@ public class TodoListView extends JFrame {
         loadTasks();
     }
 
+    private void removeSelectedTask() {
+        TaskCard selectedTaskCard = getSelectedTaskCard();
+        if (selectedTaskCard != null) {
+            int confirmed = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete the selected task?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+            if (confirmed == JOptionPane.YES_OPTION) {
+                removeTask(selectedTaskCard.getTask().getId());
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "No task selected.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private TaskCard getSelectedTaskCard() {
+        for (Component component : taskListPanel.getComponents()) {
+            if (component instanceof TaskCard) {
+                TaskCard taskCard = (TaskCard) component;
+                if (taskCard.isSelected()) {
+                    return taskCard;
+                }
+            }
+        }
+        return null;
+    }
+
     private void filterTasks() {
         boolean showCompleted = showCompletedCheckBox.isSelected();
         controller.filterTasks(showCompleted);
@@ -158,18 +185,35 @@ public class TodoListView extends JFrame {
     private void loadTasks() {
         taskListPanel.removeAll();
         List<TaskData> tasks = viewModel.getTasks();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = GridBagConstraints.RELATIVE;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
         tasks.forEach(task -> {
             TaskCard taskCard = new TaskCard(task);
             taskCard.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    completeTask(task.getId());
+                    if (SwingUtilities.isLeftMouseButton(e)) {
+                        deselectAllTaskCards();
+                        taskCard.setSelected(true);
+                        taskCard.toggleDetails();
+                    }
                 }
             });
-            taskListPanel.add(taskCard);
-            taskListPanel.add(Box.createVerticalStrut(10));
+            taskListPanel.add(taskCard, gbc);
         });
         taskListPanel.revalidate();
         taskListPanel.repaint();
+    }
+
+    private void deselectAllTaskCards() {
+        for (Component component : taskListPanel.getComponents()) {
+            if (component instanceof TaskCard) {
+                ((TaskCard) component).setSelected(false);
+            }
+        }
     }
 }

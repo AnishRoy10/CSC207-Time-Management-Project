@@ -10,34 +10,28 @@ import framework.view.TodoListView;
 
 public class ApplicationInitializer {
     public static void main(String[] args) {
-        // Initialize repository
+        // Initialize the repository
         TodoListRepository repository = new TodoListDataAccessObject();
 
-        // Initialize view model
+        // Initialize the view model
         TodoListViewModel viewModel = new TodoListViewModel();
 
-        // Initialize presenter
+        // Initialize the presenter
         TodoListPresenter presenter = new TodoListPresenter(viewModel);
 
         // Initialize use cases
-        AddTaskInputBoundary addTaskUseCase = new AddTaskUseCase(repository, presenter);
-        RemoveTaskInputBoundary removeTaskUseCase = new RemoveTaskUseCase(repository, presenter);
-        CompleteTaskInputBoundary completeTaskUseCase = new CompleteTaskUseCase(repository, presenter);
-        LoadTodoListInputBoundary loadTodoListUseCase = new LoadTodoListUseCase(repository, presenter);
-        SortTasksInputBoundary sortTasksUseCase = new SortTasksUseCase(repository, presenter);
-        FilterTasksInputBoundary filterTasksUseCase = new FilterTasksUseCase(repository, presenter);
+        AddTaskUseCase addTaskUseCase = new AddTaskUseCase(repository, presenter);
+        RemoveTaskUseCase removeTaskUseCase = new RemoveTaskUseCase(repository, presenter);
+        CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase(repository, presenter);
+        SortTasksUseCase sortTasksUseCase = new SortTasksUseCase(repository, presenter);
+        FilterTasksUseCase filterTasksUseCase = new FilterTasksUseCase(repository, presenter);
+        LoadTodoListUseCase loadTodoListUseCase = new LoadTodoListUseCase(repository, presenter);
 
-        // Initialize controller
+        // Initialize the controller
         TodoListController controller = new TodoListController(
-                addTaskUseCase,
-                removeTaskUseCase,
-                completeTaskUseCase,
-                sortTasksUseCase,
-                filterTasksUseCase,
-                loadTodoListUseCase
-        );
+                addTaskUseCase, removeTaskUseCase, completeTaskUseCase, sortTasksUseCase, filterTasksUseCase, loadTodoListUseCase);
 
-        // Initialize and display view
+        // Initialize and show the view
         TodoListView view = new TodoListView(controller, viewModel);
         view.setVisible(true);
     }

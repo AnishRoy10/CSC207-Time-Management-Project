@@ -3,6 +3,9 @@ package use_case.join_course;
 import entity.Course;
 import entity.User;
 
+/**
+ * An object to represent input data when joining a course.
+ */
 public class JoinCourseInputData {
     
     final private User user;

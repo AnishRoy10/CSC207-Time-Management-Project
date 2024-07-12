@@ -1,5 +1,8 @@
 package use_case.join_course;
 
+/**
+ * An object to represent output data when joining a course.
+ */
 public class JoinCourseOutputData {
     
     final private boolean useCaseFailed;

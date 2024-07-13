@@ -1,75 +1,98 @@
 package framework.view;
 
-import entity.Task;
+import use_case.TaskData;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
  * TaskCard represents the UI component for displaying a task's details.
  */
 public class TaskCard extends JPanel {
-    private Task task;
-    private JCheckBox completedCheckBox;
-    private JLabel titleLabel;
-    private JLabel descriptionLabel;
-    private JLabel deadlineLabel;
-    private JLabel courseLabel;
+    private final TaskData task;
+    private final JCheckBox completedCheckBox;
+    private final JLabel titleLabel;
+    private final JLabel deadlineLabel;
+    private final JLabel courseLabel;
+    private final JPanel detailsPanel;
+    private final JLabel descriptionLabel;
+    private final JLabel startDateLabel;
+    private final JLabel completionDateLabel;
 
-    /**
-     * Constructs a new TaskCard.
-     *
-     * @param task The task to display in this card.
-     */
-    public TaskCard(Task task) {
+    private boolean isSelected;
+
+    public TaskCard(TaskData task) {
         this.task = task;
-        initializeComponents();
-        layoutComponents();
-    }
+        this.isSelected = false;
 
-    /**
-     * Initializes the UI components for this card.
-     */
-    private void initializeComponents() {
+        setLayout(new BorderLayout());
+        setBorder(new EmptyBorder(10, 10, 10, 10));
+        setBackground(Color.WHITE);
+
         completedCheckBox = new JCheckBox();
         completedCheckBox.setSelected(task.isCompleted());
-        completedCheckBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                task.setCompleted(completedCheckBox.isSelected());
-            }
-        });
 
         titleLabel = new JLabel(task.getTitle());
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
-        descriptionLabel = new JLabel(task.getDescription());
-        descriptionLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        deadlineLabel = new JLabel("Due: " + task.getDeadline().toString());
+        deadlineLabel.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        deadlineLabel = new JLabel("Due: " + (task.getDeadline() != null ? task.getDeadline().toString() : "No deadline"));
-        deadlineLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+        courseLabel = new JLabel(task.getCourse());
+        courseLabel.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        courseLabel = new JLabel(task.getCourse() != null ? task.getCourse().getName() : "No course");
-        courseLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+        detailsPanel = new JPanel(new GridLayout(3, 1));
+        detailsPanel.setVisible(false);
+
+        descriptionLabel = new JLabel("Description: " + task.getDescription());
+        startDateLabel = new JLabel("Start Date: " + task.getStartDate().toString());
+        completionDateLabel = new JLabel();
+        updateCompletionDateLabel();
+
+        detailsPanel.add(descriptionLabel);
+        detailsPanel.add(startDateLabel);
+        detailsPanel.add(completionDateLabel);
+
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.add(completedCheckBox, BorderLayout.WEST);
+        headerPanel.add(titleLabel, BorderLayout.CENTER);
+        headerPanel.add(courseLabel, BorderLayout.EAST);
+
+        add(headerPanel, BorderLayout.NORTH);
+        add(deadlineLabel, BorderLayout.CENTER);
+        add(detailsPanel, BorderLayout.SOUTH);
     }
 
-    /**
-     * Lays out the UI components within this card.
-     */
-    private void layoutComponents() {
-        setLayout(new BorderLayout());
-        JPanel textPanel = new JPanel(new GridLayout(0, 1));
-        textPanel.add(titleLabel);
-        textPanel.add(descriptionLabel);
-        textPanel.add(deadlineLabel);
-        textPanel.add(courseLabel);
+    public void addCompletionActionListener(ActionListener listener) {
+        completedCheckBox.addActionListener(listener);
+    }
 
-        add(completedCheckBox, BorderLayout.WEST);
-        add(textPanel, BorderLayout.CENTER);
+    public TaskData getTask() {
+        return task;
+    }
 
-        setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        setMaximumSize(new Dimension(Integer.MAX_VALUE, getPreferredSize().height));
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+        setBackground(selected ? Color.LIGHT_GRAY : Color.WHITE);
+    }
+
+    public void toggleDetails() {
+        detailsPanel.setVisible(!detailsPanel.isVisible());
+        revalidate();
+        repaint();
+    }
+
+    private void updateCompletionDateLabel() {
+        if (task.isCompleted()) {
+            completionDateLabel.setText("Completion Date: " + task.getCompletionDate().toString());
+        } else {
+            completionDateLabel.setText("Completion Date: Not completed");
+        }
     }
 }

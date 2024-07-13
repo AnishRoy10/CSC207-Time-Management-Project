@@ -1,104 +1,61 @@
 package entity;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.HashMap;
 
 /**
- * The Calendar class represents a user's calendar which contains multiple events.
- * It allows adding, removing, and retrieving events.
+ * The Calendar class representing a list of events and converting to do list items into
+ * to-do-list items
  */
 
 public class Calendar {
-    /**
-     * A map that holds the events in the calendar, with the key being the date of the event.
-     */
-    private HashMap<LocalDateTime, List<CalendarEvent>> events;
+    ArrayList<CalendarEvent> events;
+    TodoList calendarToDoList;
+    HashSet<ArrayList<CalendarEvent>> conflicts;
 
-    /**
-     * Constructs a new Calendar.
-     */
-    public Calendar() {
-        events = new HashMap<>();
+    public Calendar(ArrayList<CalendarEvent> events, TodoList calendarToDoList) {
+        this.events = events;
+        this.calendarToDoList = calendarToDoList;
     }
 
-    /**
-     * Adds an event to the calendar.
-     *
-     * @param event The event to be added.
-     */
+    // Returns a list of the events in the order that they start, the order staying the same
+    // if the start dates are the same. Helper method for conflict checker.
+    private ArrayList<CalendarEvent> orderEvents(CalendarEvent eventOne, CalendarEvent eventTwo) {
+        boolean preconditionOne = eventOne.getStartDate().getHour() == eventTwo.getStartDate().getHour();
+        boolean conditionOne = eventOne.getStartDate().getMinute() < eventTwo.getStartDate().getMinute();
+        boolean conditionTwo = eventOne.getStartDate().getHour() < eventTwo.getStartDate().getHour();
+        if ((preconditionOne && conditionOne) || conditionTwo) {
+            ArrayList<CalendarEvent> orderedArray = new ArrayList<CalendarEvent>(2);
+            orderedArray.add(eventOne);
+            orderedArray.add(eventTwo);
+            return orderedArray;
+        } else {
+            ArrayList<CalendarEvent> orderedArray = new ArrayList<CalendarEvent>(2);
+            orderedArray.add(eventTwo);
+            orderedArray.add(eventOne);
+            return orderedArray;
+        }
+    }
+
+    // Adds an event to the calendar.
     public void addEvent(CalendarEvent event) {
-        LocalDateTime startDate = event.getStartDate();
-        if (!events.containsKey(startDate)) {
-            events.put(startDate, new ArrayList<>());
-        }
-        events.get(startDate).add(event);
+        events.add(event);
     }
 
-    /**
-     * Removes an event from the calendar.
-     *
-     * @param event The event to be removed.
-     */
-    public void removeEvent(CalendarEvent event) {
-        LocalDateTime startDate = event.getStartDate();
-        if (events.containsKey(startDate)) {
-            events.get(startDate).remove(event);
-            if (events.get(startDate).isEmpty()) {
-                events.remove(startDate);
-            }
-        }
-    }
-
-    /**
-     * Gets the list of events for a specific date.
-     *
-     * @param date The date for which to get the events.
-     * @return The list of events on the specified date.
-     */
+    // Returns a list of all events in the calendar for a given date.
     public List<CalendarEvent> getEventsForDate(LocalDateTime date) {
-        return events.getOrDefault(date, new ArrayList<>());
-    }
-
-    /**
-     * Gets all the events in the calendar.
-     *
-     * @return A list of all events in the calendar.
-     */
-    public List<CalendarEvent> getAllEvents() {
-        List<CalendarEvent> allEvents = new ArrayList<>();
-        for (List<CalendarEvent> eventList : events.values()) {
-            allEvents.addAll(eventList);
-        }
-        return allEvents;
-    }
-
-    /**
-     * Checks if there are any events on a specific date.
-     *
-     * @param date The date to check for events.
-     * @return True if there are events on the specified date, false otherwise.
-     */
-    public boolean hasEventsOnDate(LocalDateTime date) {
-        return events.containsKey(date);
-    }
-
-    /**
-     * Returns a string representation of the calendar.
-     *
-     * @return A string representation of the calendar.
-     */
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (LocalDateTime date : events.keySet()) {
-            sb.append("Date: ").append(date).append("\n");
-            for (CalendarEvent event : events.get(date)) {
-                sb.append(event).append("\n");
+        List<CalendarEvent> eventsOnDate = new ArrayList<>();
+        for (CalendarEvent event : events) {
+            if (event.getStartDate().toLocalDate().equals(date.toLocalDate())) {
+                eventsOnDate.add(event);
             }
         }
-        return sb.toString();
+        return eventsOnDate;
+    }
+
+    // Returns a list of all events in the calendar.
+    public List<CalendarEvent> getAllEvents() {
+        return new ArrayList<>(events);
     }
 }

@@ -29,6 +29,12 @@ public class TodoListView extends JFrame {
     private final JComboBox<String> sortCriteriaComboBox;
     private final JCheckBox ascendingCheckBox;
 
+    /**
+     * Constructs the TodoListView with the specified controller and viewModel.
+     *
+     * @param controller the controller to handle user actions
+     * @param viewModel  the view model to provide data to the view
+     */
     public TodoListView(TodoListController controller, TodoListViewModel viewModel) {
         this.controller = controller;
         this.viewModel = viewModel;
@@ -108,6 +114,13 @@ public class TodoListView extends JFrame {
         loadTasks();
     }
 
+    /**
+     * Creates a labeled component for the UI.
+     *
+     * @param label     the label text
+     * @param component the component to be labeled
+     * @return the panel containing the labeled component
+     */
     private Component createLabeledComponent(String label, Component component) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JLabel(label), BorderLayout.NORTH);
@@ -117,6 +130,9 @@ public class TodoListView extends JFrame {
         return panel;
     }
 
+    /**
+     * Adds a task using the data from the input fields.
+     */
     private void addTask() {
         String title = titleField.getText();
         String description = descriptionArea.getText();
@@ -128,6 +144,9 @@ public class TodoListView extends JFrame {
         loadTasks();
     }
 
+    /**
+     * Clears the input fields.
+     */
     private void clearInputFields() {
         titleField.setText("");
         descriptionArea.setText("");
@@ -136,16 +155,29 @@ public class TodoListView extends JFrame {
         courseField.setText("");
     }
 
+    /**
+     * Marks a task as complete.
+     *
+     * @param taskId the ID of the task to complete
+     */
     private void completeTask(int taskId) {
         controller.toggleTaskCompletion(taskId);
         loadTasks();
     }
 
+    /**
+     * Removes a task by its ID.
+     *
+     * @param taskId the ID of the task to remove
+     */
     private void removeTask(int taskId) {
         controller.removeTask(taskId);
         loadTasks();
     }
 
+    /**
+     * Removes the currently selected task after confirmation.
+     */
     private void removeSelectedTask() {
         TaskCard selectedTaskCard = getSelectedTaskCard();
         if (selectedTaskCard != null) {
@@ -158,6 +190,11 @@ public class TodoListView extends JFrame {
         }
     }
 
+    /**
+     * Gets the currently selected task card.
+     *
+     * @return the selected TaskCard, or null if no task is selected
+     */
     private TaskCard getSelectedTaskCard() {
         for (Component component : taskListPanel.getComponents()) {
             if (component instanceof TaskCard) {
@@ -170,12 +207,18 @@ public class TodoListView extends JFrame {
         return null;
     }
 
+    /**
+     * Filters tasks based on the completed status.
+     */
     private void filterTasks() {
         boolean showCompleted = showCompletedCheckBox.isSelected();
         controller.filterTasks(showCompleted);
         loadTasks();
     }
 
+    /**
+     * Sorts tasks based on the selected criterion and order.
+     */
     private void sortTasks() {
         String criterion = (String) sortCriteriaComboBox.getSelectedItem();
         boolean ascending = ascendingCheckBox.isSelected();
@@ -183,6 +226,9 @@ public class TodoListView extends JFrame {
         loadTasks();
     }
 
+    /**
+     * Loads tasks from the view model and updates the UI.
+     */
     private void loadTasks() {
         taskListPanel.removeAll();
         List<TaskData> tasks = viewModel.getTasks();
@@ -192,6 +238,7 @@ public class TodoListView extends JFrame {
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        // Add each task to the task list panel
         tasks.forEach(task -> {
             TaskCard taskCard = new TaskCard(task);
             taskCard.addCompletionActionListener(e -> completeTask(task.getId()));
@@ -209,10 +256,15 @@ public class TodoListView extends JFrame {
             });
             taskListPanel.add(taskCard, gbc);
         });
+
+        // Refresh the task list panel
         taskListPanel.revalidate();
         taskListPanel.repaint();
     }
 
+    /**
+     * Deselects all task cards in the task list panel.
+     */
     private void deselectAllTaskCards() {
         for (Component component : taskListPanel.getComponents()) {
             if (component instanceof TaskCard) {

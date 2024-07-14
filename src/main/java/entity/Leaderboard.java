@@ -12,7 +12,7 @@ public abstract class Leaderboard {
     //Name of the leaderboard
     private String name;
 
-    // A HashMap to store the user's scores
+    // A HashMap to store users scores
 
     protected Map<String, Integer> scores;
 
@@ -68,6 +68,7 @@ public abstract class Leaderboard {
     public String getName() {
         return name;
     }
+
      // Setter for the leaderboard's name
     public void setName(String name) {
         this.name = name;
@@ -84,6 +85,8 @@ public abstract class Leaderboard {
             updateScore(username, 500 + score);
         }
     }
+
+    //TODO: automatically arranges in ascending order.
 
 
 

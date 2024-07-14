@@ -3,6 +3,8 @@ package interface_adapter.controller;
 import interface_adapter.presenter.LeaderboardPresenter;
 import use_case.Leaderboard.LeaderboardUseCase;
 
+import javax.swing.*;
+
 /**
  * LeaderboardController helps the interaction between the use case and the presenter.
  */
@@ -51,7 +53,7 @@ public class LeaderboardController {
     /**
      * Displays the leaderboard.
      */
-    public void displayLeaderboard() {
-        presenter.displayLeaderboard();
+    public void displayLeaderboard(JPanel panel) {
+        presenter.displayLeaderboard(panel);
     }
 }

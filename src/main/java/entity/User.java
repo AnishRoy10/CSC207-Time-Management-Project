@@ -10,8 +10,6 @@ public class User {
     // The username of this user
     private String username;
 
-    // Friends list of this user
-    private final FriendsList friends;
 
     // Courses this user is in
     private final ArrayList<Course> courses;
@@ -31,7 +29,6 @@ public class User {
      */
     public User(String username, User[] friends, Course[] courses) {
         this.username = username;
-        this.friends = new FriendsList(friends);
         this.courses = new ArrayList<>();
         this.courses.addAll(Arrays.asList(courses));
         this.todo = new TodoList();
@@ -56,23 +53,7 @@ public class User {
         this.username = username;
     }
 
-    /**
-     * Add a friend to this user.
-     *
-     * @param user the new friend for this user
-     */
-    public void addFriend(User user) {
-        this.friends.addFriend(user);
-    }
 
-    /**
-     * Attempt to remove a friend from this user.
-     *
-     * @param user the friend to remove
-     */
-    public void removeFriend(User user) {
-        this.friends.removeFriend(user);
-    }
 
     /**
      * Add a task to this users todolist.

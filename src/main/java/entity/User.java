@@ -54,6 +54,13 @@ public class User implements Serializable {
   }
 
   /**
+   * Retrieve this users friendslist
+   */
+    public FriendsList getFriends() {
+        return this.friends;
+    }
+
+  /**
    * Add a friend to this user.
    * 
    * @param user the new friend for this user
@@ -89,6 +96,12 @@ public class User implements Serializable {
       this.todo.removeTask(task);
   }
 
+  /**
+   * Retrieve this users courses
+   */
+  public ArrayList<Course> getCourses() {
+      return this.courses;
+  }
   /**
    * Place this user in a new course.
    * 

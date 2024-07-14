@@ -51,8 +51,10 @@ public class FriendsListView {
     public void AddFriend(){
         User[] empty = new User[1];
         Course[] empty2 = new Course[1];
-        User dummy = new User("User1", empty, empty2);
-        friendsList.addFriend(dummy);
+        for (int i = 0; i < 100; i++) {
+            User dummy = new User("User", empty, empty2);
+            friendsList.addFriend(dummy);
+        }
     }
 
     public static void main(String[] args) {

@@ -1,10 +1,11 @@
 package entity;
 
 import javax.swing.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class FriendsList {
+public class FriendsList implements Serializable {
     /**
      * An ArrayList of Users whom a User has added as friends
      */

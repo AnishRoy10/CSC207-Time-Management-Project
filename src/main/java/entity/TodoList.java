@@ -1,5 +1,6 @@
 package entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import java.util.List;
  * The TodoList class represents a list of tasks.
  * It allows adding, removing, and retrieving tasks.
  */
-public class TodoList {
+public class TodoList implements Serializable {
     private List<Task> tasks;
 
     public TodoList() {

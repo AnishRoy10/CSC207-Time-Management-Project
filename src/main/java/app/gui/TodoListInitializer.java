@@ -13,7 +13,7 @@ import use_case.LoadTodoListUseCase.LoadTodoListUseCase;
 import use_case.RemoveTaskUseCase.RemoveTaskUseCase;
 import use_case.SortTasksUseCase.SortTasksUseCase;
 
-public class ApplicationInitializer {
+public class TodoListInitializer {
     public static void main(String[] args) {
         // Initialize the repository
         TodoListRepository repository = new TodoListDataAccessObject();

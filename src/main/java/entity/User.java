@@ -17,7 +17,7 @@ public class User implements Serializable {
     private final FriendsList friends; // Friends list of this user
     private final List<Course> courses; // Courses this user is in
     private final TodoList todo; // To-do list associated with this user
-
+    private int score; // The users score
     /**
      * Constructs a new User object.
      *
@@ -32,6 +32,7 @@ public class User implements Serializable {
         this.friends = new FriendsList(friends);
         this.courses = new ArrayList<>(Arrays.asList(courses));
         this.todo = new TodoList();
+        this.score = 0;
     }
 
     // Getter for the username
@@ -98,6 +99,16 @@ public class User implements Serializable {
             return course.removeUser(this);
         }
         return false;
+    }
+
+    // Getter for score
+    public int getScore() {
+        return score;
+    }
+
+    // Setter for score
+    public void setScore(int score) {
+        this.score = score;
     }
 
     // Hash the password (to be properly done later. SHA-256 perhaps?)

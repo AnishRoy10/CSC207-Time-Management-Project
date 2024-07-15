@@ -1,4 +1,4 @@
-package use_case.UserSignUpUseCase;
+package use_case.UserSignupUseCase;
 
 import entity.User;
 import entity.Course;
@@ -6,11 +6,20 @@ import repositories.UserRepository;
 
 import java.io.IOException;
 
-public class UserSignUpUseCase implements UserSignupInputBoundary {
+/**
+ * Use case for the user sign-up process.
+ */
+public class UserSignupUseCase implements UserSignupInputBoundary {
     private final UserRepository userRepository;
     private final UserSignupOutputBoundary outputBoundary;
 
-    public UserSignUpUseCase(UserRepository userRepository, UserSignupOutputBoundary outputBoundary) {
+    /**
+     * Constructs a UserSignupUseCase with the specified repository and output boundary.
+     *
+     * @param userRepository  The repository to access user data.
+     * @param outputBoundary  The output boundary to present the response.
+     */
+    public UserSignupUseCase(UserRepository userRepository, UserSignupOutputBoundary outputBoundary) {
         this.userRepository = userRepository;
         this.outputBoundary = outputBoundary;
     }

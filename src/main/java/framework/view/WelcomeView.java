@@ -7,7 +7,15 @@ import java.awt.event.ActionListener;
 import app.gui.LoginInitializer;
 import app.gui.SignupInitializer;
 
+/**
+ * The WelcomeView class represents the initial screen of the application,
+ * offering options for the user to either log in or sign up.
+ * This view serves as the entry point for users, guiding them to the authentication process.
+ */
 public class WelcomeView extends JFrame {
+    /**
+     * Constructor for WelcomeView. Sets up the UI components and layout for the welcome screen.
+     */
     public WelcomeView() {
         setTitle("Welcome");
         setSize(300, 200);
@@ -15,6 +23,10 @@ public class WelcomeView extends JFrame {
         initComponents();
     }
 
+    /**
+     * Initializes the components of the WelcomeView.
+     * This method sets up the buttons for login and sign up, along with their action listeners.
+     */
     private void initComponents() {
         JPanel panel = new JPanel(new GridLayout(2, 1));
 
@@ -44,6 +56,12 @@ public class WelcomeView extends JFrame {
         add(panel);
     }
 
+    /**
+     * The main method serves as the entry point for the application.
+     * It creates and displays the WelcomeView window, guiding the user to either log in or sign up.
+     *
+     * @param args Command line arguments (not used in this application).
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             WelcomeView welcomeView = new WelcomeView();

@@ -5,10 +5,15 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 /**
- * Main class that serves as the central navigation screen for the application.
+ * This class represents the main page of the application, which serves as the central navigation screen.
+ * It is displayed to the user after a successful login. The main page provides buttons for accessing
+ * various features of the application such as the Calendar, Leaderboard, To-do List, and Timer.
  */
 public class MainPage extends JFrame {
 
+    /**
+     * Constructor for MainPage. Sets up the UI components and layout for the main navigation screen.
+     */
     public MainPage() {
         setTitle("Time Management Application");
         setSize(300, 400);
@@ -25,17 +30,18 @@ public class MainPage extends JFrame {
         addNavigationButton(navigationPanel, "Leaderboard", e -> openLeaderboard());
         addNavigationButton(navigationPanel, "To-do List", e -> openTodoList());
         addNavigationButton(navigationPanel, "Timer", e -> openTimer());
-        // Add more buttons here as needed
+        // Additional feature buttons can be added here as needed
 
         add(navigationPanel, BorderLayout.CENTER);
     }
 
     /**
-     * Adds a button to the navigation panel.
+     * Adds a navigation button to the specified panel.
+     * Each button is configured with text and an action listener that defines its behavior.
      *
-     * @param panel The panel to add the button to.
-     * @param buttonText The text for the button.
-     * @param actionListener The action listener for the button.
+     * @param panel The panel to which the button will be added.
+     * @param buttonText The text displayed on the button.
+     * @param actionListener The action listener attached to the button, defining its behavior.
      */
     private void addNavigationButton(JPanel panel, String buttonText, ActionListener actionListener) {
         JButton button = new JButton(buttonText);
@@ -55,45 +61,47 @@ public class MainPage extends JFrame {
         panel.add(Box.createHorizontalStrut(10));
     }
 
-
     /**
-     * Opens the Calendar feature.
+     * Placeholder method to open the Calendar feature.
+     * This method should be implemented to open the Calendar view of the application.
      */
     private void openCalendar() {
-        // Code to open Calendar feature
-        // Placeholder for now
+        // Placeholder implementation
         JOptionPane.showMessageDialog(this, "Calendar feature to be implemented");
     }
 
-
     /**
-     * Opens the Leaderboard feature.
+     * Placeholder method to open the Leaderboard feature.
+     * This method should be implemented to open the Leaderboard view of the application.
      */
     private void openLeaderboard() {
-        // Code to open Leaderboard feature
-        // Placeholder for now
+        // Placeholder implementation
         JOptionPane.showMessageDialog(this, "Leaderboard feature to be implemented");
     }
 
-
     /**
-     * Opens the To-do List feature.
+     * Opens the To-do List feature of the application.
+     * This method is responsible for initializing and displaying the To-do List view.
      */
     private void openTodoList() {
         TodoListInitializer.main(null);
     }
 
     /**
-     * Opens the Timer feature.
+     * Placeholder method to open the Timer feature.
+     * This method should be implemented to open the Timer view of the application.
      */
     private void openTimer() {
-        // Code to open Timer feature
-        // Placeholder for now
+        // Placeholder implementation
         JOptionPane.showMessageDialog(this, "Timer feature to be implemented");
     }
 
-
-
+    /**
+     * The main method serves as the entry point for the application.
+     * It creates and displays the MainPage window, which is the central navigation interface for the user.
+     *
+     * @param args Command line arguments (not used in this application).
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             MainPage main = new MainPage();

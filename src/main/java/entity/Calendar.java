@@ -4,19 +4,21 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import java.io.Serializable;
+
 /**
  * The Calendar class representing a list of events and converting to do list items into
  * to-do-list items
  */
 
-public class Calendar {
+public class Calendar implements Serializable  {
+    private static final long serialVersionUID = 4L; // Add serial version UID for serialization compatibility
     ArrayList<CalendarEvent> events;
     TodoList calendarToDoList;
     HashSet<ArrayList<CalendarEvent>> conflicts;
 
-    public Calendar(ArrayList<CalendarEvent> events, TodoList calendarToDoList) {
+    public Calendar(ArrayList<CalendarEvent> events) {
         this.events = events;
-        this.calendarToDoList = calendarToDoList;
     }
 
     // Returns a list of the events in the order that they start, the order staying the same

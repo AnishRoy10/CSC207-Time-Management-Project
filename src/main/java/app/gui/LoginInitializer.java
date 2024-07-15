@@ -12,10 +12,10 @@ import use_case.UserLoginUseCase.UserLoginUseCase;
 import java.io.IOException;
 
 /**
- * Initializer class for the user login GUI.
+ * Initializes the login view and its dependencies.
  */
 public class LoginInitializer {
-    public static void main(String[] args) {
+    public static void initializeLogin() {
         try {
             FileCacheUserDataAccessObject userRepository = new FileCacheUserDataAccessObject();
             UserLoginViewModel userLoginViewModel = new UserLoginViewModel();

@@ -20,21 +20,44 @@ public class UserSignupView extends JFrame {
     private JPasswordField confirmPasswordField;
     private JLabel messageLabel;
 
+    /**
+     * Constructor for UserSignupView.
+     *
+     * @param userSignupController The controller for user signup.
+     * @param userSignupViewModel The view model for user signup.
+     */
     public UserSignupView(UserSignupController userSignupController, UserSignupViewModel userSignupViewModel) {
         this.userSignupController = userSignupController;
         this.userSignupViewModel = userSignupViewModel;
 
         setTitle("User Signup");
         setSize(400, 300);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                returnToWelcomeView();
+            }
+        });
         initComponents();
     }
+
+    /**
+     * Returns to the welcome view.
+     */
+    private void returnToWelcomeView() {
+        SwingUtilities.invokeLater(() -> {
+            WelcomeView welcomeView = new WelcomeView();
+            welcomeView.setVisible(true);
+        });
+    }
+
 
     /**
      * Initializes the components of the signup view.
      */
     private void initComponents() {
-        JPanel panel = new JPanel(new GridLayout(5, 2));
+        JPanel panel = new JPanel(new GridLayout(6, 2));
 
         // Initialize all components
         initializeFields();

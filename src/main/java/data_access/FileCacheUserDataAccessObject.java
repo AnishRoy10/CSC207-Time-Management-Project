@@ -88,6 +88,25 @@ public class FileCacheUserDataAccessObject implements UserRepository{
     }
 
 
+
+    /**
+     * Finds a user by username.
+     *
+     * @param username The username to find.
+     * @return The User object with the specified username.
+     * @throws IOException If an I/O error occurs.
+     * @throws ClassNotFoundException If the User class is not found.
+     */
+    public User findByUsername(String username) throws IOException, ClassNotFoundException {
+        User user = ReadFromCache();
+        if (user != null && user.getUsername().equals(username)) {
+            return user;
+        } else {
+            return null;
+        }
+    }
+
+
     /*  This commented block is for testing user read/write to file
     public void TestUserSerialization() throws IOException, ClassNotFoundException {
         User[] users = new User[1];

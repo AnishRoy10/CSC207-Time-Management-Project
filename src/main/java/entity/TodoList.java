@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
  */
 public class TodoList implements Serializable {
     private static final long serialVersionUID = 1L; // Add a serial version UID
-
     private List<Task> tasks;
 
     /**

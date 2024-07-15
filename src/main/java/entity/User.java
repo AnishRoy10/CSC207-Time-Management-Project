@@ -1,12 +1,13 @@
 package entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
  * The User class represents a user of the program.
  */
-public class User {
+public class User implements Serializable {
   // The username of this user
   private String username;
 
@@ -53,6 +54,13 @@ public class User {
   }
 
   /**
+   * Retrieve this users friendslist
+   */
+    public FriendsList getFriends() {
+        return this.friends;
+    }
+
+  /**
    * Add a friend to this user.
    * 
    * @param user the new friend for this user
@@ -88,6 +96,12 @@ public class User {
       this.todo.removeTask(task);
   }
 
+  /**
+   * Retrieve this users courses
+   */
+  public ArrayList<Course> getCourses() {
+      return this.courses;
+  }
   /**
    * Place this user in a new course.
    * 

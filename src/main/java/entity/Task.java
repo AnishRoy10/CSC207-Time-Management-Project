@@ -10,7 +10,6 @@ import java.util.Objects;
  */
 public class Task implements Serializable {
     private static final long serialVersionUID = 1L; // Add a serial version UID
-
     private static int idCounter = 0; // Static counter to generate unique IDs
 
     private int id; // Unique identifier for the task

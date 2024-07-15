@@ -1,7 +1,7 @@
 package framework.view;
 
 import com.github.lgooddatepicker.components.DateTimePicker;
-import interface_adapter.TodoListViewModel;
+import interface_adapter.viewmodel.TodoListViewModel;
 import interface_adapter.controller.TodoListController;
 import use_case.TaskData;
 

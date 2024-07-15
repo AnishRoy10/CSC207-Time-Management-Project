@@ -31,7 +31,7 @@ class UserSignupUseCaseTest {
         when(userRepository.UserExists("username")).thenReturn(false);
         doNothing().when(userRepository).WriteToCache(any(User.class));
 
-        UserSignupRequestModel requestModel = new UserSignupRequestModel("username", "Password1");
+        UserSignupRequestModel requestModel = new UserSignupRequestModel("username", "Password1", "Password1");
         userSignupUseCase.signup(requestModel);
 
         ArgumentCaptor<UserSignupResponseModel> captor = ArgumentCaptor.forClass(UserSignupResponseModel.class);
@@ -45,7 +45,7 @@ class UserSignupUseCaseTest {
     void signupUserFailsUserExists() throws IOException, ClassNotFoundException {
         when(userRepository.UserExists("username")).thenReturn(true);
 
-        UserSignupRequestModel requestModel = new UserSignupRequestModel("username", "Password1");
+        UserSignupRequestModel requestModel = new UserSignupRequestModel("username", "Password1", "Password1");
         userSignupUseCase.signup(requestModel);
 
         ArgumentCaptor<UserSignupResponseModel> captor = ArgumentCaptor.forClass(UserSignupResponseModel.class);
@@ -57,7 +57,7 @@ class UserSignupUseCaseTest {
 
     @Test
     void signupUserWithEmptyUsername() throws IOException, ClassNotFoundException {
-        UserSignupRequestModel requestModel = new UserSignupRequestModel("", "password");
+        UserSignupRequestModel requestModel = new UserSignupRequestModel("", "Password1", "Password1");
         userSignupUseCase.signup(requestModel);
 
         ArgumentCaptor<UserSignupResponseModel> captor = ArgumentCaptor.forClass(UserSignupResponseModel.class);
@@ -69,7 +69,7 @@ class UserSignupUseCaseTest {
 
     @Test
     void signupUserWithEmptyPassword() throws IOException, ClassNotFoundException {
-        UserSignupRequestModel requestModel = new UserSignupRequestModel("username", "");
+        UserSignupRequestModel requestModel = new UserSignupRequestModel("username", "", "");
         userSignupUseCase.signup(requestModel);
 
         ArgumentCaptor<UserSignupResponseModel> captor = ArgumentCaptor.forClass(UserSignupResponseModel.class);
@@ -84,7 +84,7 @@ class UserSignupUseCaseTest {
         when(userRepository.UserExists("username")).thenReturn(false);
         doThrow(new IOException("Test exception")).when(userRepository).WriteToCache(any(User.class));
 
-        UserSignupRequestModel requestModel = new UserSignupRequestModel("username", "Password1");
+        UserSignupRequestModel requestModel = new UserSignupRequestModel("username", "Password1", "Password1");
         userSignupUseCase.signup(requestModel);
 
         ArgumentCaptor<UserSignupResponseModel> captor = ArgumentCaptor.forClass(UserSignupResponseModel.class);
@@ -92,5 +92,17 @@ class UserSignupUseCaseTest {
         UserSignupResponseModel responseModel = captor.getValue();
 
         assertEquals("An error occurred during sign up.", responseModel.getMessage());
+    }
+
+    @Test
+    void signupUserFailsOnPasswordMismatch() throws IOException, ClassNotFoundException {
+        UserSignupRequestModel requestModel = new UserSignupRequestModel("username", "Password1", "Password2");
+        userSignupUseCase.signup(requestModel);
+
+        ArgumentCaptor<UserSignupResponseModel> captor = ArgumentCaptor.forClass(UserSignupResponseModel.class);
+        verify(userSignupOutputBoundary).present(captor.capture());
+        UserSignupResponseModel responseModel = captor.getValue();
+
+        assertEquals("Passwords do not match.", responseModel.getMessage());
     }
 }

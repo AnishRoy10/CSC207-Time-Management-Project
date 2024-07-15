@@ -33,10 +33,16 @@ public class UserSignupUseCase implements UserSignupInputBoundary {
     public void signup(UserSignupRequestModel requestModel) {
         String username = requestModel.getUsername();
         String password = requestModel.getPassword();
+        String confirmPassword = requestModel.getConfirmPassword();
 
         // Validate username and password
         if (!isValidUsername(username) || !isValidPassword(password)) {
             UserSignupResponseModel responseModel = new UserSignupResponseModel(false, "Invalid username or password.");
+            userSignupOutputBoundary.present(responseModel);
+            return;
+        }
+        else if (!password.equals(confirmPassword)) {
+            UserSignupResponseModel responseModel = new UserSignupResponseModel(false, "Passwords do not match.");
             userSignupOutputBoundary.present(responseModel);
             return;
         }

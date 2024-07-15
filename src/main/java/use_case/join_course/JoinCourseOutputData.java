@@ -5,22 +5,22 @@ package use_case.join_course;
  */
 public class JoinCourseOutputData {
     
-    final private boolean useCaseFailed;
+    final private boolean response;
 
     /**
      * Construct a new Output Data object.
      * 
-     * @param useCaseFailed success value of the use case
+     * @param response success value of the prompt
      */
-    public JoinCourseOutputData(boolean useCaseFailed) {
-        this.useCaseFailed = useCaseFailed;
+    public JoinCourseOutputData(boolean response) {
+        this.response = response;
     }
 
     /**
-     * Get the result associated with this data object.
-     * @return if the use case failed
+     * Get the response associated with this data object.
+     * @return the response value
      */
-    boolean getResult() {
-        return useCaseFailed;
+    boolean getResponse() {
+        return response;
     }
 }

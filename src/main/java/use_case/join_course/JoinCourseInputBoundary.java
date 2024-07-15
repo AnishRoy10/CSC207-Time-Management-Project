@@ -1,5 +1,5 @@
 package use_case.join_course;
 
 public interface JoinCourseInputBoundary {
-    void execute(JoinCourseInputData joinCourseInputData);
+    void execute(JoinCourseInputData inputData);
 }

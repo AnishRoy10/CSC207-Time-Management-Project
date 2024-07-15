@@ -56,6 +56,20 @@ public class FileCacheUserDataAccessObject implements UserRepository{
         fis.close();
         return userObject;
     }
+
+    /**
+     * Checks if a user exists in the cache by reading the cache and checking the username.
+     *
+     * @param username The username to check.
+     * @return True if the user exists, false otherwise.
+     * @throws IOException If an I/O error occurs.
+     * @throws ClassNotFoundException If the User class is not found.
+     */
+    @Override
+    public boolean UserExists(String username) throws IOException, ClassNotFoundException {
+        User cachedUser = ReadFromCache();
+        return cachedUser != null && cachedUser.getUsername().equals(username);
+    }
     /*  This commented block is for testing user read/write to file
     public void TestUserSerialization() throws IOException, ClassNotFoundException {
         User[] users = new User[1];

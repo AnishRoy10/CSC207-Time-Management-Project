@@ -23,4 +23,14 @@ public interface UserRepository {
      * @throws ClassNotFoundException If the User class is not found.
      */
     User ReadFromCache() throws IOException, ClassNotFoundException;
+
+    /**
+     * Checks if a user exists in the cache.
+     *
+     * @param username The username to check.
+     * @return True if the user exists, false otherwise.
+     * @throws IOException If an I/O error occurs.
+     * @throws ClassNotFoundException If the User class is not found.
+     */
+    boolean UserExists(String username) throws IOException, ClassNotFoundException;
 }

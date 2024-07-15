@@ -45,6 +45,11 @@ public class User implements Serializable {
         this.username = username;
     }
 
+    // Getter for the password
+    public String getPassword() {
+        return password;
+    }
+
     // Setter for the password
     public void setPassword(String password) {
         this.password = hashPassword(password);
@@ -113,7 +118,7 @@ public class User implements Serializable {
 
     // Hash the password (to be properly done later. SHA-256 perhaps?)
     private String hashPassword(String password) {
-        return Integer.toString(password.hashCode());
+        return password;
     }
 
     @Override

@@ -119,14 +119,32 @@ public class FileCacheUserDataAccessObject implements UserRepository{
         User newUser = new User("user1", users, courses);
         WriteToCache(newUser);
     }
-
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-        FileCacheUserDataAccessObject f = new FileCacheUserDataAccessObject();
-        f.TestUserSerialization();
-        User readUser = f.ReadFromCache();
-        System.out.println(readUser.getUsername());
-        System.out.println(readUser.getFriends().exportFriendsNames());
-        System.out.println(readUser.getCourses().get(0).getName());
-    }
 */
+//    public static void main(String[] args) throws IOException, ClassNotFoundException {
+//        FileCacheUserDataAccessObject f = new FileCacheUserDataAccessObject();
+//        f.TestUserSerialization();
+//        User readUser = f.ReadFromCache();
+//        System.out.println(readUser.getUsername());
+//        System.out.println(readUser.getFriends().exportFriendsNames());
+//        System.out.println(readUser.getCourses().get(0).getName());
+//    }
+
+//    public static void main(String[] args) {
+//        try {
+//            FileCacheUserDataAccessObject cacheDAO = new FileCacheUserDataAccessObject();
+//            User user = cacheDAO.ReadFromCache();
+//            if (user != null) {
+//                System.out.println("Username: " + user.getUsername());
+//                System.out.println("Password: " + user.getPassword());
+//                System.out.println("Friends: " + user.getFriends().toString());
+//                System.out.println("Courses: ");
+//                user.getCourses().forEach(course -> System.out.println(course.getName()));
+//            } else {
+//                System.out.println("No user found in cache.");
+//            }
+//        } catch (IOException | ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
 }

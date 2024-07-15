@@ -35,13 +35,15 @@ public class UserLoginUseCase implements UserLoginInputBoundary {
 
         try {
             User user = userRepository.findByUsername(username);
-            if (user != null && user.verifyPassword(password)) {
-                UserLoginResponseModel responseModel = new UserLoginResponseModel(true, "Login successful.");
-                userLoginOutputBoundary.present(responseModel);
-            } else {
+
+            if (user == null || !user.verifyPassword(password)) {
                 UserLoginResponseModel responseModel = new UserLoginResponseModel(false, "Invalid username or password.");
                 userLoginOutputBoundary.present(responseModel);
+                return;
             }
+
+            UserLoginResponseModel responseModel = new UserLoginResponseModel(true, "Login successful.");
+            userLoginOutputBoundary.present(responseModel);
         } catch (IOException | ClassNotFoundException e) {
             UserLoginResponseModel responseModel = new UserLoginResponseModel(false, "An error occurred during login.");
             userLoginOutputBoundary.present(responseModel);

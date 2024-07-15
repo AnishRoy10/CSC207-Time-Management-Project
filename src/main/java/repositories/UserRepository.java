@@ -33,4 +33,14 @@ public interface UserRepository {
      * @throws ClassNotFoundException If the User class is not found.
      */
     boolean UserExists(String username) throws IOException, ClassNotFoundException;
+
+    /**
+     * Finds a user by username.
+     *
+     * @param username The username to find.
+     * @return The User object with the specified username.
+     * @throws IOException If an I/O error occurs.
+     * @throws ClassNotFoundException If the User class is not found.
+     */
+    User findByUsername(String username) throws IOException, ClassNotFoundException;
 }

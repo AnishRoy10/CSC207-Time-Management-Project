@@ -2,32 +2,52 @@ package data_access;
 
 import entity.User;
 import entity.Course;
+import repositories.UserRepository;
 import java.io.*;
 
 /**
  * DAO for storing the active user in a txt file
  */
 
-public class FileCacheUserDataAccessObject {
+public class FileCacheUserDataAccessObject implements UserRepository{
     private File fileCache;
     private String activeDirectory;
 
-    // instantiates a new FileCacheUserDataAccessObject and creates a new txt file if it doesn't exist in the directory
+    /**
+     * Constructs a new FileCacheUserDataAccessObject and creates a new file if it doesn't exist.
+     *
+     * @throws IOException If an I/O error occurs.
+     */
     public FileCacheUserDataAccessObject() throws IOException {
         activeDirectory = System.getProperty("user.dir");
         System.out.println(activeDirectory);
         fileCache = new File(activeDirectory+"\\src\\main\\java\\data_access\\userCache.txt");
-        fileCache.createNewFile();
+        if (!fileCache.exists()) {
+            fileCache.createNewFile();
+        }
     }
-    // Takes a User object, serializes it, and writes it to the file (REWRITES THE FILE EVERY TIME THIS METHOD IS CALLED)
-    public void WriteToCache(User userObject) throws IOException {
-        FileOutputStream fos = new FileOutputStream(fileCache);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(userObject);
-        oos.close();
-        fos.close();
+
+    /**
+     * Writes a User object to the cache.
+     *
+     * @param user The User object to write.
+     * @throws IOException If an I/O error occurs.
+     */
+    @Override
+    public void WriteToCache(User user) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(fileCache);
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(user);
+        }
     }
-    // Reads the txt file and returns ONE User object
+
+    /**
+     * Reads a User object from the cache.
+     *
+     * @return The User object read from the cache.
+     * @throws IOException If an I/O error occurs.
+     * @throws ClassNotFoundException If the User class is not found.
+     */
     public User ReadFromCache() throws IOException, ClassNotFoundException {
         FileInputStream fis = new FileInputStream(fileCache);
         ObjectInputStream ois = new ObjectInputStream(fis);

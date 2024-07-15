@@ -28,6 +28,20 @@ public class FileCacheUserDataAccessObject implements UserRepository{
     }
 
     /**
+     * Constructs a new FileCacheUserDataAccessObject with a specified file path for testing.
+     *
+     * @param filePath The path to the cache file.
+     * @throws IOException If an I/O error occurs.
+     */
+    public FileCacheUserDataAccessObject(String filePath) throws IOException {
+        this.activeDirectory = null;
+        this.fileCache = new File(filePath);
+        if (!fileCache.exists()) {
+            fileCache.createNewFile();
+        }
+    }
+
+    /**
      * Writes a User object to the cache.
      *
      * @param user The User object to write.
@@ -44,21 +58,23 @@ public class FileCacheUserDataAccessObject implements UserRepository{
     /**
      * Reads a User object from the cache.
      *
-     * @return The User object read from the cache.
+     * @return The User object read from the cache, or null if the file is empty.
      * @throws IOException If an I/O error occurs.
      * @throws ClassNotFoundException If the User class is not found.
      */
+    @Override
     public User ReadFromCache() throws IOException, ClassNotFoundException {
-        FileInputStream fis = new FileInputStream(fileCache);
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        User userObject = (User) ois.readObject();
-        ois.close();
-        fis.close();
-        return userObject;
+        try (FileInputStream fis = new FileInputStream(fileCache);
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+            return (User) ois.readObject();
+        } catch (EOFException e) {
+            // Return null if the file is empty
+            return null;
+        }
     }
 
     /**
-     * Checks if a user exists in the cache by reading the cache and checking the username.
+     * Checks if a user exists in the cache.
      *
      * @param username The username to check.
      * @return True if the user exists, false otherwise.
@@ -67,9 +83,11 @@ public class FileCacheUserDataAccessObject implements UserRepository{
      */
     @Override
     public boolean UserExists(String username) throws IOException, ClassNotFoundException {
-        User cachedUser = ReadFromCache();
-        return cachedUser != null && cachedUser.getUsername().equals(username);
+        User user = ReadFromCache();
+        return user != null && user.getUsername().equals(username);
     }
+
+
     /*  This commented block is for testing user read/write to file
     public void TestUserSerialization() throws IOException, ClassNotFoundException {
         User[] users = new User[1];

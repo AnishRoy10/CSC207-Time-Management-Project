@@ -1,17 +1,20 @@
 package use_case.UserSignupUseCase;
 
 import entity.User;
+import interface_adapter.controller.UserSignupController;
+import interface_adapter.presenter.UserSignupPresenter;
+import interface_adapter.viewmodel.UserSignupViewModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import repositories.UserRepository;
+import data_access.FileCacheUserDataAccessObject;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 class UserSignupUseCaseTest {
@@ -80,6 +83,18 @@ class UserSignupUseCaseTest {
     }
 
     @Test
+    void signupUserWithNonMatchingPasswords() throws IOException, ClassNotFoundException {
+        UserSignupRequestModel requestModel = new UserSignupRequestModel("username", "Password1", "Password2");
+        userSignupUseCase.signup(requestModel);
+
+        ArgumentCaptor<UserSignupResponseModel> captor = ArgumentCaptor.forClass(UserSignupResponseModel.class);
+        verify(userSignupOutputBoundary).present(captor.capture());
+        UserSignupResponseModel responseModel = captor.getValue();
+
+        assertEquals("Passwords do not match.", responseModel.getMessage());
+    }
+
+    @Test
     void signupUserFailsOnRepositoryError() throws IOException, ClassNotFoundException {
         when(userRepository.UserExists("username")).thenReturn(false);
         doThrow(new IOException("Test exception")).when(userRepository).WriteToCache(any(User.class));
@@ -92,17 +107,5 @@ class UserSignupUseCaseTest {
         UserSignupResponseModel responseModel = captor.getValue();
 
         assertEquals("An error occurred during sign up.", responseModel.getMessage());
-    }
-
-    @Test
-    void signupUserFailsOnPasswordMismatch() throws IOException, ClassNotFoundException {
-        UserSignupRequestModel requestModel = new UserSignupRequestModel("username", "Password1", "Password2");
-        userSignupUseCase.signup(requestModel);
-
-        ArgumentCaptor<UserSignupResponseModel> captor = ArgumentCaptor.forClass(UserSignupResponseModel.class);
-        verify(userSignupOutputBoundary).present(captor.capture());
-        UserSignupResponseModel responseModel = captor.getValue();
-
-        assertEquals("Passwords do not match.", responseModel.getMessage());
     }
 }

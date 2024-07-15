@@ -5,11 +5,14 @@ import entity.Course;
 import repositories.UserRepository;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Interactor class for the user signup use case.
  */
 public class UserSignupUseCase implements UserSignupInputBoundary {
+    private static final Logger LOGGER = Logger.getLogger(UserSignupUseCase.class.getName());
     private final UserRepository userRepository;
     private final UserSignupOutputBoundary userSignupOutputBoundary;
 
@@ -41,7 +44,8 @@ public class UserSignupUseCase implements UserSignupInputBoundary {
             userSignupOutputBoundary.present(responseModel);
             return;
         }
-        else if (!password.equals(confirmPassword)) {
+
+        if (!password.equals(confirmPassword)) {
             UserSignupResponseModel responseModel = new UserSignupResponseModel(false, "Passwords do not match.");
             userSignupOutputBoundary.present(responseModel);
             return;
@@ -60,6 +64,7 @@ public class UserSignupUseCase implements UserSignupInputBoundary {
             UserSignupResponseModel responseModel = new UserSignupResponseModel(true, "User signed up successfully.");
             userSignupOutputBoundary.present(responseModel);
         } catch (IOException | ClassNotFoundException e) {
+            LOGGER.log(Level.SEVERE, "Error during sign up", e);
             UserSignupResponseModel responseModel = new UserSignupResponseModel(false, "An error occurred during sign up.");
             userSignupOutputBoundary.present(responseModel);
         }

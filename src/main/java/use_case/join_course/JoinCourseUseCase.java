@@ -27,18 +27,18 @@ public class JoinCourseUseCase implements JoinCourseInputBoundary {
 	 * @param inputData input data holding associated course and user
 	 */
     @Override
-    public void execute(JoinCourseInputData inputData) {
+    public void execute(JoinCourseRequestModel inputData) {
 		Course course = inputData.getCourse();
 		User user = inputData.getUser();
 
 		if (!repository.courseExists(course)) {
-			JoinCourseOutputData outputData = new JoinCourseOutputData(false, "Course not found.");
+			JoinCourseResponseModel outputData = new JoinCourseResponseModel(false, "Course not found.");
 			outputBoundary.present(outputData);
 			return;
 		}
 
 		course.addUser(user);
-		JoinCourseOutputData outputData = new JoinCourseOutputData(true, "User successfully added.");
+		JoinCourseResponseModel outputData = new JoinCourseResponseModel(true, "User successfully added.");
 		outputBoundary.present(outputData);
     }  
 }

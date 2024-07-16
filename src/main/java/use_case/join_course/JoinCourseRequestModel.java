@@ -6,7 +6,7 @@ import entity.User;
 /**
  * An object to represent input data when joining a course.
  */
-public class JoinCourseInputData {
+public class JoinCourseRequestModel {
     
     final private User user;
     final private Course course;
@@ -17,7 +17,7 @@ public class JoinCourseInputData {
      * @param user   the user to add to course
      * @param course the course to add user to
      */
-    public JoinCourseInputData(User user, Course course) {
+    public JoinCourseRequestModel(User user, Course course) {
         this.user = user;
         this.course = course;
     }

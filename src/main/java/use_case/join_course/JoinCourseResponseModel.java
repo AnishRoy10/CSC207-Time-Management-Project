@@ -3,7 +3,7 @@ package use_case.join_course;
 /**
  * An object to represent output data when joining a course.
  */
-public class JoinCourseOutputData {
+public class JoinCourseResponseModel {
     
     final private boolean response;
     final private String message;
@@ -13,7 +13,7 @@ public class JoinCourseOutputData {
      * 
      * @param response success value of the prompt
      */
-    public JoinCourseOutputData(boolean response, String message) {
+    public JoinCourseResponseModel(boolean response, String message) {
         this.response = response;
         this.message = message;
     }

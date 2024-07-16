@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * It allows adding, removing, retrieving, sorting, and filtering tasks.
  */
 public class TodoList implements Serializable {
-    private static final long serialVersionUID = 1L; // Add a serial version UID
+    private static final long serialVersionUID = 2L; // Add a serial version UID
     private List<Task> tasks;
 
     /**

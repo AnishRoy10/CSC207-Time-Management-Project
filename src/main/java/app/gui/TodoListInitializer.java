@@ -2,7 +2,7 @@ package app.gui;
 
 import interface_adapter.controller.TodoListController;
 import interface_adapter.presenter.TodoListPresenter;
-import interface_adapter.TodoListViewModel;
+import interface_adapter.viewmodel.TodoListViewModel;
 import data_access.TodoListDataAccessObject;
 import repositories.TodoListRepository;
 import framework.view.TodoListView;

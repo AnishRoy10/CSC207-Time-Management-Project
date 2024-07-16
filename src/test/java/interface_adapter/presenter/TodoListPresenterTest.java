@@ -1,6 +1,6 @@
 package interface_adapter.presenter;
 
-import interface_adapter.TodoListViewModel;
+import interface_adapter.viewmodel.TodoListViewModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import use_case.*;

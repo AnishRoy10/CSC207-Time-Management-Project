@@ -7,14 +7,14 @@ import use_case.join_course.JoinCourseRequestModel;
 
 public class JoinCourseController {
     
-    final JoinCourseInputBoundary joinCourseUseCaseInteractor;
+    final private JoinCourseInputBoundary inputBoundary;
 
-    public JoinCourseController(JoinCourseInputBoundary joinCourseUseCaseInteractor) {
-        this.joinCourseUseCaseInteractor = joinCourseUseCaseInteractor;
+    public JoinCourseController(JoinCourseInputBoundary inputBoundary) {
+        this.inputBoundary = inputBoundary;
     }
 
-    void execute(User user, Course course) {
-        JoinCourseRequestModel joinCourseInputData = new JoinCourseRequestModel(user, course);
-        joinCourseUseCaseInteractor.execute(joinCourseInputData);
+    public void execute(User user, String courseName) {
+        JoinCourseRequestModel inputData = new JoinCourseRequestModel(user, courseName);
+        inputBoundary.execute(inputData);
     }
 }

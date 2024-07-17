@@ -1,52 +1,86 @@
 package framework.view;
 
 import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import entity.Course;
+import interface_adapter.join_course.JoinCourseController;
+import interface_adapter.join_course.JoinCourseViewModel;
 
 public class JoinCoursePrompt {
-    private Course course;
+    private final JoinCourseController controller;
+    private final JoinCourseViewModel viewModel;
+
     private JFrame frame;
-    private JPanel infoPanel;
+    private JPanel labelPanel;
+    private JPanel fieldPanel;
     private JPanel buttonPanel;
-    private JLabel infoLabel;
-    private JButton confirmButton;
+    private JLabel courseNameLabel;
+    private JTextField courseNameField;
+    private JButton joinButton;
     private JButton cancelButton;
 
-    public JoinCoursePrompt(Course course) {
-        this.course = course;
+    public JoinCoursePrompt(JoinCourseController controller, JoinCourseViewModel viewModel) {
+        this.controller = controller;
+        this.viewModel = viewModel;
 
-        frame = new JFrame("Confirm Join");
+        frame = new JFrame("Join Course");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-        frame.setSize(320, 200);
-        
-        infoPanel = new JPanel(new GridBagLayout());
-        infoLabel = new JLabel("Join " + course.getName() + "?");
-        infoLabel.setFont(new Font("ARIAL", Font.PLAIN, 18));
-        infoPanel.add(infoLabel);
+        frame.setSize(450, 200);
 
-        buttonPanel = new JPanel(new GridLayout(1, 2));
-        cancelButton = new JButton("Cancel");
-        cancelButton.setFont(new Font("ARIAL", Font.PLAIN, 14));
-        confirmButton = new JButton("Confirm");
-        confirmButton.setFont(new Font("ARIAL", Font.PLAIN, 14));
-        
-        buttonPanel.add(cancelButton);
-        buttonPanel.add(confirmButton);
+        labelPanel = new JPanel();
+        labelPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        fieldPanel = new JPanel();
+        fieldPanel.setBorder(new EmptyBorder(10 , 10, 10, 10));
+
+        courseNameLabel = new JLabel("Course Name:");
+        courseNameField = new JTextField();
+        fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.Y_AXIS));
+
+        labelPanel.add(courseNameLabel);
+        fieldPanel.add(courseNameField);
+
+        buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BorderLayout());
         buttonPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+
+        cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(e -> frame.dispose());
+
+        joinButton = new JButton("Join");
+        joinButton.addActionListener(e -> attemptToJoinCourse());
+
+        buttonPanel.add(cancelButton, BorderLayout.WEST);
+        buttonPanel.add(joinButton, BorderLayout.EAST);
         
-        frame.add(infoPanel, BorderLayout.CENTER);
+        frame.add(labelPanel, BorderLayout.NORTH);
+        frame.add(fieldPanel, BorderLayout.CENTER);
         frame.add(buttonPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
+    }
+
+    private void attemptToJoinCourse() {
+        String courseName = courseNameField.getText();
+
+        if (courseName == null || courseName.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(
+                frame,
+                "Course field must not be empty.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        controller.execute(viewModel.getUser(), courseName);
+        frame.dispose();
     }
 }

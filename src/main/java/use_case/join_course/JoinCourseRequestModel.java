@@ -1,6 +1,5 @@
 package use_case.join_course;
 
-import entity.Course;
 import entity.User;
 
 /**
@@ -9,7 +8,7 @@ import entity.User;
 public class JoinCourseRequestModel {
     
     final private User user;
-    final private Course course;
+    final private String courseName;
 
     /**
      * Construct a new Input Data object.
@@ -17,9 +16,9 @@ public class JoinCourseRequestModel {
      * @param user   the user to add to course
      * @param course the course to add user to
      */
-    public JoinCourseRequestModel(User user, Course course) {
+    public JoinCourseRequestModel(User user, String courseName) {
         this.user = user;
-        this.course = course;
+        this.courseName = courseName;
     }
 
     /**
@@ -31,10 +30,10 @@ public class JoinCourseRequestModel {
     }
 
     /**
-     * Get the course associated with this data object.
-     * @return the course
+     * Get the course name associated with this data object.
+     * @return the course name
      */
-    Course getCourse() {
-        return course;
+    String getCourseName() {
+        return courseName;
     }
 }

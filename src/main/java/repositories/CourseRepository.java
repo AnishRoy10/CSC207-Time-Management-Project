@@ -10,7 +10,7 @@ public interface CourseRepository {
 	 * Loads the course.
 	 * @return the course to get
 	 */
-	Course loadCourse();
+	Course loadCourse(String courseName);
 
 	/**
 	 * Saves the course.
@@ -21,8 +21,8 @@ public interface CourseRepository {
 	/**
 	 * See if a course exists.
 	 * 
-	 * @param course the course to check
-	 * @return       the success value
+	 * @param courseName  the name of the course to check
+	 * @return            the success value
 	 */
-	boolean courseExists(Course course);
+	boolean courseExists(String courseName);
 }

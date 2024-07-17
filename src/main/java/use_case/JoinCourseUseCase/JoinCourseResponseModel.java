@@ -1,4 +1,4 @@
-package use_case.join_course;
+package use_case.JoinCourseUseCase;
 
 /**
  * An object to represent output data when joining a course.
@@ -23,7 +23,7 @@ public class JoinCourseResponseModel {
      * 
      * @return the response value
      */
-    boolean getResponse() {
+    public boolean getResponse() {
         return response;
     }
 
@@ -32,7 +32,7 @@ public class JoinCourseResponseModel {
      * 
      * @return the message
      */
-    String getMessage() {
+    public String getMessage() {
         return message;
     }
 }

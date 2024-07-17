@@ -1,32 +1,18 @@
-package use_case.join_course;
-
-import entity.User;
+package use_case.JoinCourseUseCase;
 
 /**
  * An object to represent input data when joining a course.
  */
 public class JoinCourseRequestModel {
-    
-    final private User user;
     final private String courseName;
 
     /**
      * Construct a new Input Data object.
      * 
-     * @param user   the user to add to course
-     * @param course the course to add user to
+     * @param courseName the name of the course
      */
-    public JoinCourseRequestModel(User user, String courseName) {
-        this.user = user;
+    public JoinCourseRequestModel(String courseName) {
         this.courseName = courseName;
-    }
-
-    /**
-     * Get the user associated with this data object.
-     * @return the user
-     */
-    User getUser() {
-        return user;
     }
 
     /**

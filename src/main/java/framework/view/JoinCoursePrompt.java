@@ -11,12 +11,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import interface_adapter.join_course.JoinCourseController;
-import interface_adapter.join_course.JoinCourseViewModel;
+import interface_adapter.JoinCourseUseCase.JoinCourseController;
 
 public class JoinCoursePrompt {
-    private final JoinCourseController controller;
-    private final JoinCourseViewModel viewModel;
+    private JoinCourseController controller;
 
     private JFrame frame;
     private JPanel labelPanel;
@@ -27,9 +25,8 @@ public class JoinCoursePrompt {
     private JButton joinButton;
     private JButton cancelButton;
 
-    public JoinCoursePrompt(JoinCourseController controller, JoinCourseViewModel viewModel) {
+    public JoinCoursePrompt(JoinCourseController controller) {
         this.controller = controller;
-        this.viewModel = viewModel;
 
         frame = new JFrame("Join Course");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -80,7 +77,7 @@ public class JoinCoursePrompt {
             return;
         }
 
-        controller.execute(viewModel.getUser(), courseName);
+        controller.execute(courseName);
         frame.dispose();
     }
 }

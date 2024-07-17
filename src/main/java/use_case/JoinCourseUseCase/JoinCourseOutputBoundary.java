@@ -1,4 +1,4 @@
-package use_case.join_course;
+package use_case.JoinCourseUseCase;
 
 public interface JoinCourseOutputBoundary {
     void present(JoinCourseResponseModel outputData);

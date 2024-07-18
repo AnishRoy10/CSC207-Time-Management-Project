@@ -1,4 +1,4 @@
-package use_case.timer;
+package use_case.SetTimerUseCase;
 
 public class SetTimerInputData {
     final private int hours;

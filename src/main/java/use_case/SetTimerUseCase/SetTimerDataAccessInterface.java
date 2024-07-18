@@ -1,4 +1,4 @@
-package use_case.timer;
+package use_case.SetTimerUseCase;
 
 import entity.Timer;
 

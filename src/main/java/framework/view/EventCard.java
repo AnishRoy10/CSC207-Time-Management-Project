@@ -2,75 +2,86 @@ package framework.view;
 
 import entity.CalendarEvent;
 import entity.Task;
+import use_case.TaskData;
 
+import java.time.LocalDateTime;
+import java.time.Month;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * TaskCard represents the UI component for displaying a task's details.
  */
 public class EventCard extends JPanel {
-    private CalendarEvent event;
-    private JLabel nameLabel;
-    private JLabel descriptionLabel;
-    private JLabel startTimeLabel;
-    private JLabel endTimeLabel;
-    private JLabel statusLabel;
-    private JLabel priorityLabel;
+    private final CalendarEvent event;
+    private final JLabel nameLabel;
+    private final JPanel detailsPanel;
+    private final JTextArea textArea;
+    private final JScrollPane descriptionPanel;
+    private final JPanel fillerCenterPanel;
+    private final JLabel fillerLabel;
+    private final JLabel startDateLabel;
+    private final JLabel endDateLabel;
+    private final JLabel statusLabel;
+    private final JLabel priorityLevelLabel;
 
-    /**
-     * Constructs a new TaskCard.
-     *
-     * @param event The Calendar Event to display in this card.
-     */
     public EventCard(CalendarEvent event) {
         this.event = event;
-        initializeComponents();
-        layoutComponents();
-    }
 
-    /**
-     * Initializes the UI components for this card.
-     */
-    private void initializeComponents() {
+        setLayout(new BorderLayout());
+        setBorder(new EmptyBorder(10, 10, 10, 10));
+        setBackground(Color.WHITE);
+
+
         nameLabel = new JLabel(event.getName());
         nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
-        descriptionLabel = new JLabel(event.getDescription());
-        descriptionLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        endDateLabel = new JLabel("End Date and Time: " + (event.getHasEndDate() ? event.getEndDate() : "N/A"));
 
-        startTimeLabel = new JLabel("Starts " + event.getStartDate());
-        startTimeLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+        detailsPanel = new JPanel(new GridLayout(4, 1));
+        detailsPanel.setVisible(true);
 
-        endTimeLabel = new JLabel("Ends " +
-                (event.getHasEndDate() ? event.getHasEndDate() : "Event does not have end date"));
-        endTimeLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+        textArea = new JTextArea("Description:" + "\n" +
+                (event.getHasDescription() ? event.getDescription() : "No description"), 12, 22);
+        descriptionPanel = new JScrollPane(textArea);
+        descriptionPanel.setVisible(true);
 
-        statusLabel = new JLabel("Event Status: " + event.getStatus());
-        statusLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+        fillerCenterPanel = new JPanel(new GridLayout(1, 4));
+        fillerCenterPanel.setVisible(true);
 
-        priorityLabel = new JLabel("Priority Level: " +
-                (event.getHasPriorityLevel() ? event.getPriorityLevel() : "Event does not have priority level"));
-        priorityLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+        startDateLabel = new JLabel("Start Date and Time: " + event.getStartDate().toString());
+        statusLabel = new JLabel("Status: " + (event.getStatus()));
+        priorityLevelLabel = new JLabel("Priority Level: " + event.getPriorityLevel());
+        fillerLabel = new JLabel("");
+
+        detailsPanel.add(startDateLabel);
+        detailsPanel.add(endDateLabel);
+        detailsPanel.add(statusLabel);
+        detailsPanel.add(priorityLevelLabel);
+
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.add(nameLabel, BorderLayout.CENTER);
+
+        add(headerPanel, BorderLayout.NORTH);
+        add(fillerCenterPanel, BorderLayout.CENTER);
+        add(detailsPanel, BorderLayout.WEST);
+        add(descriptionPanel, BorderLayout.CENTER);
     }
-        /**
-         * Lays out the UI components within this card.
-         */
-    private void layoutComponents() {
-        setLayout(new BorderLayout());
-        JPanel textPanel = new JPanel(new GridLayout(0, 1));
-        textPanel.add(nameLabel);
-        textPanel.add(descriptionLabel);
-        textPanel.add(startTimeLabel);
-        textPanel.add(endTimeLabel);
-        textPanel.add(statusLabel);
-        textPanel.add(priorityLabel);
 
-        add(textPanel, BorderLayout.CENTER);
+    public static void main(String[] args) {
 
-        setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        setMaximumSize(new Dimension(Integer.MAX_VALUE, getPreferredSize().height));
+        LocalDateTime start = LocalDateTime.of(2024, Month.JULY, 15, 12, 30);
+        LocalDateTime end = LocalDateTime.of(2024, Month.JULY, 15, 14, 30);
+        CalendarEvent eventer = new CalendarEvent("Awesome Saucer", "Bad Description",
+                "high", start, end);
+        JPanel panel = new EventCard(eventer);
+        JFrame frame = new JFrame();
+        frame.add(panel, BorderLayout.CENTER);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setTitle("Event Visualizer");
+        frame.setSize(500, 300);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
 }

@@ -1,11 +1,12 @@
 package entity;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.HashMap;
-
+import entity.CalendarEvent;
 /**
  * The Calendar class represents a user's calendar which contains multiple events.
  * It allows adding, removing, and retrieving events.
@@ -70,7 +71,8 @@ public class Calendar {
     public List<CalendarEvent> getAllEvents() {
         List<CalendarEvent> allEvents = new ArrayList<>();
         for (List<CalendarEvent> eventList : events.values()) {
-            allEvents.addAll(eventList);
+            for (CalendarEvent event : eventList)
+            allEvents.add(event);
         }
         return allEvents;
     }
@@ -83,6 +85,38 @@ public class Calendar {
      */
     public boolean hasEventsOnDate(LocalDateTime date) {
         return events.containsKey(date);
+    }
+
+    /**
+     * Returns a list of events in the calendar which start and end
+     * between two specific dates.
+     * @param dateOne The earlier specific date.
+     * @param dateTwo The later specific date.
+     * @return the list of events in the calendar in between the specific dates.
+     */
+    public List<CalendarEvent> eventsBetweenDates(LocalDateTime dateOne, LocalDateTime dateTwo) {
+        List<CalendarEvent> eventList = this.getAllEvents();
+        List<CalendarEvent> includedEventList = new ArrayList<CalendarEvent>();
+        for (CalendarEvent event : eventList) {
+            boolean conditionOne = dateOne.isBefore(event.getStartDate());
+            boolean conditionTwo =
+                    (event.getHasEndDate() ? dateTwo.isAfter(event.getEndDate()) : dateTwo.isAfter(event.getStartDate()));
+            if (conditionOne && conditionTwo){includedEventList.add(event);}
+        }
+        return includedEventList;
+    }
+
+    /**
+     * Checks if there are any events in the calendar which start and end
+     * between two specific dates.
+     * @param dateOne The earlier specific date.
+     * @param dateTwo The later specific date.
+     * @return True if there are events in the calendar in between the specific dates.
+     */
+    public boolean hasEventsBetweenDates(LocalDateTime dateOne, LocalDateTime dateTwo) {
+        List<CalendarEvent> eventsInBetween = this.eventsBetweenDates(dateOne, dateTwo);
+        if (eventsInBetween.isEmpty()) {return false;}
+        else {return true;}
     }
 
     /**
@@ -100,5 +134,17 @@ public class Calendar {
             }
         }
         return sb.toString();
+    }
+    public static void main(String[] args) {
+        LocalDateTime start = LocalDateTime.of(2024, Month.JULY, 13, 21, 30);
+        LocalDateTime end = LocalDateTime.of(2024, Month.JULY, 13, 21, 40);
+        CalendarEvent eventer = new CalendarEvent("Awesome Saucer", "Bad Description",
+                "High", start, end);
+        Calendar calendar = new Calendar();
+        calendar.addEvent(eventer);
+        LocalDateTime startDate = LocalDateTime.of(2024, Month.JULY, 12, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(2024, Month.JULY, 12, 23, 59);
+        boolean toBePrinted = calendar.hasEventsBetweenDates(startDate, endDate);
+        System.out.println(toBePrinted);
     }
 }

@@ -12,6 +12,7 @@ public class JoinCoursePresenter implements JoinCourseOutputBoundary {
 
 	@Override
 	public void present(JoinCourseResponseModel responseModel) {
+		viewModel.setResponse(responseModel.getResponse());
 		viewModel.setMessage(responseModel.getMessage());
 	}
 }

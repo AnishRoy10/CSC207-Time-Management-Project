@@ -1,6 +1,7 @@
 package framework.view;
 
 import java.awt.BorderLayout;
+import java.awt.GridBagLayout;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -12,20 +13,24 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import interface_adapter.JoinCourseUseCase.JoinCourseController;
+import interface_adapter.JoinCourseUseCase.JoinCourseViewModel;
 
 public class JoinCoursePrompt {
     private JoinCourseController controller;
+    private JoinCourseViewModel viewModel;
 
     private JFrame frame;
     private JPanel labelPanel;
     private JPanel fieldPanel;
     private JPanel buttonPanel;
+    private JPanel responsePanel;
+    private JLabel responseLabel;
     private JLabel courseNameLabel;
     private JTextField courseNameField;
     private JButton joinButton;
     private JButton cancelButton;
 
-    public JoinCoursePrompt(JoinCourseController controller) {
+    public JoinCoursePrompt(JoinCourseController controller, JoinCourseViewModel viewModel) {
         this.controller = controller;
 
         frame = new JFrame("Join Course");
@@ -46,6 +51,12 @@ public class JoinCoursePrompt {
         labelPanel.add(courseNameLabel);
         fieldPanel.add(courseNameField);
 
+        responsePanel = new JPanel();
+        responseLabel.setLayout(new GridBagLayout());
+
+        responseLabel = new JLabel();
+        responsePanel.add(responseLabel);
+
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new BorderLayout());
         buttonPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -61,6 +72,7 @@ public class JoinCoursePrompt {
         
         frame.add(labelPanel, BorderLayout.NORTH);
         frame.add(fieldPanel, BorderLayout.CENTER);
+        frame.add(responsePanel, BorderLayout.CENTER);
         frame.add(buttonPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
     }
@@ -78,6 +90,14 @@ public class JoinCoursePrompt {
         }
 
         controller.execute(courseName);
-        frame.dispose();
+
+        boolean successful = viewModel.getResponse();
+
+        if (successful) {
+            frame.dispose();
+            return;
+        }
+
+        responseLabel.setText(viewModel.getMessage());
     }
 }

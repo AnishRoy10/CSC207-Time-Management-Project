@@ -17,7 +17,8 @@ public class User implements Serializable {
     private final FriendsList friends; // Friends list of this user
     private final List<Course> courses; // Courses this user is in
     private final TodoList todo; // To-do list associated with this user
-    private int score; // The users score
+    private int score;
+    private Calendar calendar;// The users score
     /**
      * Constructs a new User object.
      *
@@ -33,6 +34,7 @@ public class User implements Serializable {
         this.courses = new ArrayList<>(Arrays.asList(courses));
         this.todo = new TodoList();
         this.score = 0;
+        this.calendar = new Calendar();
     }
 
     // Getter for the username
@@ -89,6 +91,18 @@ public class User implements Serializable {
     public List<Course> getCourses() {
         return courses;
     }
+
+    // Add an event to the calendar
+    public void addEvent(CalendarEvent event) {this.calendar.addEvent(event);}
+
+    // Getter for the calendar of the user
+    public Calendar getCalendar() {return this.calendar;}
+
+    // Getter for the events stored in the calendar
+    public List<CalendarEvent> getEvents() {return this.calendar.getAllEvents();}
+
+    // Remove an event from the calendar
+    public void removeEvent(CalendarEvent event) {this.calendar.removeEvent(event);}
 
     // Add a course to the user's courses
     public void addCourse(Course course) {

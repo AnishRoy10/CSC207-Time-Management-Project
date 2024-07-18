@@ -28,7 +28,6 @@ public class User {
    * @param username username for this user
    * @param friends  friends for this user
    * @param courses  courses this user is in
-   * @param calendar the calendar the user will be using
    */
   public User(String username, User[] friends, Course[] courses) {
       this.username = username;
@@ -96,7 +95,7 @@ public class User {
     /**
      * Add an event to this user's calendar.
      *
-     * @param task the task to add
+     * @param event the event to add
      */
     public void addEvent(CalendarEvent event) {
         this.calendar.addEvent(event);

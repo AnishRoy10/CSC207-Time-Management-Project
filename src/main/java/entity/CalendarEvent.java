@@ -1,7 +1,6 @@
 package entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-
 /**
  * The CalendarEvent class represents an event in the calendar of the user.
  * Each event has a name, an optional description, its status (whether it has passed, is ongoing, or yet to start),
@@ -31,13 +30,13 @@ public class CalendarEvent {
      *
      * @param name           The name of the event (required)
      * @param description    The description of the event (nullable)
-     * @param status         The status of the event: must be either "Upcoming", "In Progress", or "Finished"
+     * @var status         The status of the event: must be either "Upcoming", "In Progress", or "Finished"
      * @param priorityLevel  The priority level of the event: must be either "Low", "Normal", or "High"
      * @param startDate      The start date and time of the event (required)
      * @param endDate        The end date and time for the event (nullable and must be on the same day as startDate)
      */
 
-    public CalendarEvent(String name, String description, String status, String priorityLevel,
+    public CalendarEvent(String name, String description, String priorityLevel,
                   LocalDateTime startDate, LocalDateTime endDate) {
         this.name = name;
 
@@ -49,8 +48,7 @@ public class CalendarEvent {
             this.hasDescription = false;
         }
 
-        this.status = status;
-        this.priorityLevel = priorityLevel != null ? priorityLevel : "normal";
+        this.priorityLevel = (priorityLevel != null ? priorityLevel : "Normal");
 
         this.startDate = startDate;
         //Finds the difference in minutes between the dates before converting it into hours and minutes for the duration
@@ -71,6 +69,10 @@ public class CalendarEvent {
             this.hasEndDate = false;
             this.duration = null;
         }
+
+        if (LocalDateTime.now().isBefore(this.startDate)) {this.status = "Upcoming";}
+        else if (LocalDateTime.now().isBefore(this.endDate)) {this.status = "In Progress";}
+        else {this.status = "Finished";}
     }
     // Getter method for the event name
     public String getName() {
@@ -143,6 +145,12 @@ public class CalendarEvent {
     // Setter method for the end date and time of the event
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public void updateStatus() {
+        if (LocalDateTime.now().isBefore(this.startDate)) {this.status = "Upcoming";}
+        else if (LocalDateTime.now().isBefore(this.endDate)) {this.status = "In Progress";}
+        else {this.status = "Finished";}
     }
 
     /**

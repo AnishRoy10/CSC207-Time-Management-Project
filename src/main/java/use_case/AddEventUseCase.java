@@ -31,7 +31,7 @@ public class AddEventUseCase {
      * @param priority    The priority level of the event
      */
     public void addEvent(String name, String description, LocalDateTime startDate, LocalDateTime endDate, String priority) {
-        CalendarEvent event = new CalendarEvent(name, description, "Upcoming", priority, startDate, endDate);
+        CalendarEvent event = new CalendarEvent(name, description, priority, startDate, endDate);
         calendar.addEvent(event);
     }
 
@@ -46,7 +46,6 @@ public class AddEventUseCase {
         CalendarEvent event = new CalendarEvent(
                 task.getTitle(),
                 task.getDescription(),
-                task.isCompleted() ? "Completed" : "Upcoming",
                 "normal",
                 eventStartDate,
                 eventEndDate

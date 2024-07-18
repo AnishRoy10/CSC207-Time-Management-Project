@@ -1,4 +1,7 @@
 package entity;
+
+import java.util.List;
+
 /**
 Represents a timer.
  Each timer has a start time, end time and elasped time.
@@ -50,5 +53,13 @@ public class Timer {
      */
     public boolean checkTimer() {
         return elapsed_time + start_time > end_time;
+    }
+
+    /**
+     * Returns the total length of the timer
+     * @return total length of timer
+     */
+    public long timerLength() {
+        return end_time-start_time;
     }
 }

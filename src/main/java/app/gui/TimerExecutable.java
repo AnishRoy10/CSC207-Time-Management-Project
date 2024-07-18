@@ -1,7 +1,6 @@
 package app.gui;
 
 import data_access.InMemoryTimerDataAccessObject;
-import framework.view.RunningTimerView;
 import interface_adapter.setTimer.SetTimerPresenter;
 import interface_adapter.setTimer.SetTimerViewModel;
 import interface_adapter.setTimer.SetTimerController;

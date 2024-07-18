@@ -1,12 +1,7 @@
 package framework.view;
 import com.github.lgooddatepicker.components.*;
-import com.github.lgooddatepicker.demo.FullDemo;
-import com.github.lgooddatepicker.optionalusertools.CalendarListener;
 import com.github.lgooddatepicker.optionalusertools.DateHighlightPolicy;
-import com.github.lgooddatepicker.zinternaltools.CalendarSelectionEvent;
 import com.github.lgooddatepicker.zinternaltools.HighlightInformation;
-import com.github.lgooddatepicker.zinternaltools.YearMonthChangeEvent;
-import com.privatejgoodies.forms.factories.CC;
 import entity.Calendar;
 import entity.CalendarEvent;
 import javax.swing.*;
@@ -15,12 +10,8 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.time.*;
 import java.time.Month;
-import java.util.List;
 
-import framework.view.EventCard;
-import use_case.TaskData;
-
-public class CalendarEventsViewer {
+public class CalendarView {
     private static Calendar calendar;
     private static JFrame frame = new JFrame();
     private static JPanel panel = new JPanel();
@@ -32,7 +23,7 @@ public class CalendarEventsViewer {
     private static DateTimePicker startDatePicker;
     private static DateTimePicker endDatePicker;
     private static JTextField priorityLevelField;
-    public CalendarEventsViewer(Calendar calendar) {
+    public CalendarView(Calendar calendar) {
         this.calendar = calendar;
         frame.setTitle("Calendar Events Viewer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -182,6 +173,6 @@ public class CalendarEventsViewer {
             calendar.addEvent(eventer);
             calendar.addEvent(eventerTwo);
             calendar.addEvent(eventerThree);
-            new CalendarEventsViewer(calendar);
+            new CalendarView(calendar);
         }
 }

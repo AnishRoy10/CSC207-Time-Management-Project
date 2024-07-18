@@ -9,6 +9,8 @@ public class RunningTimerViewModel extends ViewModel {
     public static String MINUTES;
     public static String SECONDS;
 
+    private String message;
+
     public RunningTimerViewModel(String viewName) {
         super(viewName);
     }
@@ -24,4 +26,8 @@ public class RunningTimerViewModel extends ViewModel {
     public static void setSECONDS(String SECONDS) {
         RunningTimerViewModel.SECONDS = SECONDS;
     }
+
+    public String getMessage() { return message; }
+
+    public void setMessage(String message) { this.message = message; }
 }

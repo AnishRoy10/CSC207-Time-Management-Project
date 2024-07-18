@@ -20,7 +20,7 @@ public class TimerExecutable {
         SetTimerInteractor interactor = new SetTimerInteractor(dataAccessObject, presenter);
         SetTimerController controller = new SetTimerController(interactor);
 
-        SetTimerView view = new SetTimerView(controller, setTimerViewModel);
+        SetTimerView view = new SetTimerView(controller, setTimerViewModel, runningTimerViewModel);
         view.setVisible(true);
     }
 }

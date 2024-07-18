@@ -25,9 +25,9 @@ public class SetTimerInteractor implements SetTimerInputBoundary {
         userDataAccessObject.save(timer);
 
         long timerLength = timer.timerLength();
-        int hours = (int) (timerLength / 3600000);
-        int minutes = (int) ((timerLength - hours*3600000) / 60000);
-        int seconds = (int) ((timerLength - hours*3600000 - minutes*60000) / 1000);
+        int hours = (int) (timerLength / 36000000);
+        int minutes = (int) ((timerLength - hours*36000000) / 60000);
+        int seconds = (int) ((timerLength - hours*36000000 - minutes*60000) / 1000);
         SetTimerOutputData setTimerOutputData = new SetTimerOutputData(hours, minutes, seconds);
         userPresenter.prepareSuccessView(setTimerOutputData);
     }

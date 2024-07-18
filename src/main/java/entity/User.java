@@ -19,12 +19,16 @@ public class User {
   // Todolist associated with this user
   private final TodoList todo;
 
+  // Calendar associated with this user
+    private final Calendar calendar;
+
   /**
    * Construct a new User object.
    * 
    * @param username username for this user
    * @param friends  friends for this user
    * @param courses  courses this user is in
+   * @param calendar the calendar the user will be using
    */
   public User(String username, User[] friends, Course[] courses) {
       this.username = username;
@@ -32,6 +36,7 @@ public class User {
       this.courses = new ArrayList<>();
       this.courses.addAll(Arrays.asList(courses));
       this.todo = new TodoList();
+      this.calendar = new Calendar();
   }
 
   /**
@@ -87,6 +92,15 @@ public class User {
   public void removeTask(Task task) {
       this.todo.removeTask(task);
   }
+
+    /**
+     * Add an event to this user's calendar.
+     *
+     * @param task the task to add
+     */
+    public void addEvent(CalendarEvent event) {
+        this.calendar.addEvent(event);
+    }
 
   /**
    * Place this user in a new course.

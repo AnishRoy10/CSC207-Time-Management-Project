@@ -7,12 +7,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.HashMap;
 import entity.CalendarEvent;
+import java.io.Serializable;
 /**
  * The Calendar class represents a user's calendar which contains multiple events.
  * It allows adding, removing, and retrieving events.
  */
 
-public class Calendar {
+public class Calendar implements Serializable{
+    private static final long serialVersionUID = 8L; // Add a serial version UID
     /**
      * A map that holds the events in the calendar, with the key being the date of the event.
      */

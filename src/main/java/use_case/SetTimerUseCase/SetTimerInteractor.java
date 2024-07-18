@@ -1,7 +1,6 @@
-package use_case.timer;
+package use_case.SetTimerUseCase;
 
 import entity.Timer;
-import java.util.concurrent.TimeUnit;
 
 /*
 The SetTimeUseCase class handles the use case of setting the time for
@@ -25,7 +24,11 @@ public class SetTimerInteractor implements SetTimerInputBoundary {
 
         userDataAccessObject.save(timer);
 
-        SetTimerOutputData setTimerOutputData = new SetTimerOutputData();
+        long timerLength = timer.timerLength();
+        int hours = (int) (timerLength / 3600000);
+        int minutes = (int) ((timerLength - hours*3600000) / 60000);
+        int seconds = (int) ((timerLength - hours*3600000 - minutes*60000) / 1000);
+        SetTimerOutputData setTimerOutputData = new SetTimerOutputData(hours, minutes, seconds);
         userPresenter.prepareSuccessView(setTimerOutputData);
     }
 }

@@ -1,7 +1,7 @@
 package data_access;
 
 import entity.Timer;
-import use_case.timer.SetTimerDataAccessInterface;
+import use_case.SetTimerUseCase.SetTimerDataAccessInterface;
 
 public class InMemoryTimerDataAccessObject implements SetTimerDataAccessInterface {
     private Timer timer;

@@ -1,9 +1,9 @@
 /.idea/
+/.idea/shelf/
+/.idea/compiler.xml
+/.idea/jarRepositories.xml
+/.idea/misc.xml
+/.idea/vcs.xml
 /.idea/workspace.xml
-/compiler.xml
-/jarRepositories.xml
-/misc.xml
-/vcs.xml
-/modules.xml
 /target/
 /CSC207-Time-Management-Project.iml

@@ -1,15 +1,28 @@
 package interface_adapter.setTimer;
 
-import use_case.timer.SetTimerInputBoundary;
-import use_case.timer.SetTimerInputData;
+import use_case.SetTimerUseCase.SetTimerInputBoundary;
+import use_case.SetTimerUseCase.SetTimerInputData;
 
+/**
+ * Controller for the timer which handles the set timer use case.
+ */
 public class SetTimerController {
     final SetTimerInputBoundary userSetTimerUseCaseInteractor;
 
+    /**
+     * Constructs the controller with the Set Timer use case
+     * @param userSetTimerUseCaseInteractor use case for setting the timer
+     */
     public SetTimerController(SetTimerInputBoundary userSetTimerUseCaseInteractor) {
         this.userSetTimerUseCaseInteractor = userSetTimerUseCaseInteractor;
     }
 
+    /**
+     * Sets the timer for the user.
+     * @param hours hours the timer lasts for
+     * @param minutes minutes the timer lasts for
+     * @param seconds seconds the timer lasts for
+     */
     public void execute(String hours, String minutes, String seconds) {
         int int_hours;
         int int_minutes;

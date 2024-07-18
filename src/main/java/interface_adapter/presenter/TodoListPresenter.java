@@ -1,6 +1,6 @@
 package interface_adapter.presenter;
 
-import interface_adapter.TodoListViewModel;
+import interface_adapter.viewmodel.TodoListViewModel;
 import use_case.*;
 import use_case.AddTaskUseCase.AddTaskOutputBoundary;
 import use_case.AddTaskUseCase.AddTaskResponseModel;

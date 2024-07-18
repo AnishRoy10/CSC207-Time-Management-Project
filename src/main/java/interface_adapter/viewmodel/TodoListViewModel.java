@@ -1,4 +1,4 @@
-package interface_adapter;
+package interface_adapter.viewmodel;
 
 import use_case.TaskData;
 

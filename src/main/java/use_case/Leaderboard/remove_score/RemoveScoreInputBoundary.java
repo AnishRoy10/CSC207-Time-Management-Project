@@ -1,4 +1,8 @@
 package use_case.Leaderboard.remove_score;
 
-public class RemoveScoreInputBoundary {
+
+public interface RemoveScoreInputBoundary {
+    RemoveScoreOutputData removeScore(RemoveScoreInputData inputData);
 }
+
+

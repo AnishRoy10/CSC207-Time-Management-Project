@@ -1,4 +1,5 @@
 package use_case.Leaderboard.update_score;
 
-public class UpdateScoreDataAccessInterface {
+public interface UpdateScoreDataAccessInterface {
+    void updateScore(String username, int score);
 }

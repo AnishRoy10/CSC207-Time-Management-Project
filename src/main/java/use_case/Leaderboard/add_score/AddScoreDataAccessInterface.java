@@ -1,4 +1,5 @@
 package use_case.Leaderboard.add_score;
 
-public class AddScoreDataAccessInterface {
+public interface AddScoreDataAccessInterface {
+    void addScore(String username, int score);
 }

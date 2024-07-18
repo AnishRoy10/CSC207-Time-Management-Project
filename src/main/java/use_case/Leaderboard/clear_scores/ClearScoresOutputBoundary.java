@@ -1,4 +1,5 @@
 package use_case.Leaderboard.clear_scores;
 
-public class ClearScoresOutputBoundary {
+public interface ClearScoresOutputBoundary {
+    void present(ClearScoresOutputData outputData);
 }

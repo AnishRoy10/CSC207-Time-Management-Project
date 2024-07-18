@@ -1,4 +1,5 @@
 package use_case.Leaderboard.clear_scores;
 
-public class ClearScoresDataAccessInterface {
+public interface ClearScoresDataAccessInterface {
+    void clearScores();
 }

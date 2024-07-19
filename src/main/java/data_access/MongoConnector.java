@@ -17,7 +17,7 @@ public class MongoConnector {
     private MongoCollection<Document> collection;
 
     public MongoConnector() {
-        MongoClient mongoClient = MongoClients.create("mongodb+srv://admin1:fn5Z7JJgnYVLeLhq@cluster0.d61osh2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+        MongoClient mongoClient = MongoClients.create("mongodb+srv://admin1:<password>@cluster0.d61osh2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
 
         MongoDatabase db = mongoClient.getDatabase("TimeManagementProject");
 

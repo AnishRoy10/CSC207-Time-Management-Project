@@ -15,11 +15,20 @@ public class CourseDataAccessObject implements CourseRepository {
     private String activeDirectory;
 
     public CourseDataAccessObject() throws IOException {
-
+        activeDirectory = System.getProperty("courses.dir");
+        System.out.println(activeDirectory);
+        fileCache = new File(activeDirectory+"\\src\\main\\java\\data_access\\courseCache.txt");
+        if (!fileCache.exists()) {
+            fileCache.createNewFile();
+        }
     }
 
     public CourseDataAccessObject(String path) throws IOException {
-
+        this.activeDirectory = null;
+        this.fileCache = new File(path);
+        if (!fileCache.exists()) {
+            fileCache.createNewFile();
+        }
     }
 
     @Override

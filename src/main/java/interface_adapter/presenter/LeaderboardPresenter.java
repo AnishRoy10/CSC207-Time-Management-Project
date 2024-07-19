@@ -1,6 +1,15 @@
 package interface_adapter.presenter;
 
 import entity.Leaderboard;
+import use_case.Leaderboard.add_score.AddScoreOutputBoundary;
+import use_case.Leaderboard.add_score.AddScoreOutputData;
+import use_case.Leaderboard.clear_scores.ClearScoresOutputData;
+import use_case.Leaderboard.remove_score.RemoveScoreOutputBoundary;
+import use_case.Leaderboard.remove_score.RemoveScoreOutputData;
+import use_case.Leaderboard.update_score.UpdateScoreOutputBoundary;
+import use_case.Leaderboard.update_score.UpdateScoreOutputData;
+import use_case.Leaderboard.clear_scores.ClearScoresOutputBoundary;
+import use_case.Leaderboard.clear_scores.ClearScoresOutputData;
 
 import javax.swing.*;
 import java.util.Map;
@@ -8,7 +17,11 @@ import java.util.Map;
 /**
  * LeaderboardPresenter presents the leaderboard data.
  */
-public class LeaderboardPresenter {
+public class LeaderboardPresenter implements
+        AddScoreOutputBoundary,
+        RemoveScoreOutputBoundary,
+        UpdateScoreOutputBoundary,
+        ClearScoresOutputBoundary {
     private final Leaderboard leaderboard;
 
     public LeaderboardPresenter(Leaderboard leaderboard) {
@@ -24,6 +37,40 @@ public class LeaderboardPresenter {
             panel.add(new JLabel(rank + ". " + entry.getKey() + ": " + entry.getValue()));
             rank++;
         }
-        leaderboard.displayLeaderboard();
+        panel.revalidate();
+        panel.repaint();
     }
+
+    @Override
+    public void present(AddScoreOutputData outputData) {
+        // Handle output data for adding a score
+        displayScores(outputData.getScores());
+    }
+
+    @Override
+    public void present(RemoveScoreOutputData outputData) {
+        // Handle output data for removing a score
+        displayScores(outputData.getScores());
+    }
+
+    @Override
+    public void present(UpdateScoreOutputData outputData) {
+        // Handle output data for updating a score
+        displayScores(outputData.getScores());
+    }
+
+    @Override
+    public void present(ClearScoresOutputData outputData) {
+        // Handle output data for clearing scores
+        displayScores(outputData.getScores());
+    }
+
+
+
+    private void displayScores(Map<String, Integer> scores) {
+        scores.forEach((key, value) -> System.out.println(key + ": " + value));
+    }
+
+
+
 }

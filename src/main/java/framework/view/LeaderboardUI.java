@@ -2,10 +2,15 @@ package framework.view;
 
 import entity.AllTimeLeaderboard;
 import entity.DailyLeaderboard;
+import entity.Leaderboard;
 import entity.MonthlyLeaderboard;
 import interface_adapter.controller.LeaderboardController;
 import interface_adapter.presenter.LeaderboardPresenter;
-import use_case.Leaderboard.LeaderboardUseCase;
+import use_case.Leaderboard.add_score.*;
+import use_case.Leaderboard.clear_scores.ClearScoresInputBoundary;
+import use_case.Leaderboard.clear_scores.ClearScoresInteractor;
+import use_case.Leaderboard.remove_score.*;
+import use_case.Leaderboard.update_score.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -89,21 +94,53 @@ public class LeaderboardUI {
         LocalDate today = LocalDate.now();
         LocalDate thisMonth = LocalDate.now().withDayOfMonth(1);
 
-        MonthlyLeaderboard monthlyLeaderboard = new MonthlyLeaderboard("Monthly Leaderboard", thisMonth);
-        AllTimeLeaderboard allTimeLeaderboard = new AllTimeLeaderboard("All-Time Leaderboard");
-        DailyLeaderboard dailyLeaderboard = new DailyLeaderboard("Daily Leaderboard", today);
-
-        LeaderboardUseCase monthlyUseCase = new LeaderboardUseCase(monthlyLeaderboard);
-        LeaderboardUseCase allTimeUseCase = new LeaderboardUseCase(allTimeLeaderboard);
-        LeaderboardUseCase dailyUseCase = new LeaderboardUseCase(dailyLeaderboard);
+        Leaderboard monthlyLeaderboard = new MonthlyLeaderboard("Monthly Leaderboard", thisMonth);
+        Leaderboard allTimeLeaderboard = new AllTimeLeaderboard("All-Time Leaderboard");
+        Leaderboard dailyLeaderboard = new DailyLeaderboard("Daily Leaderboard", today);
 
         LeaderboardPresenter monthlyPresenter = new LeaderboardPresenter(monthlyLeaderboard);
         LeaderboardPresenter allTimePresenter = new LeaderboardPresenter(allTimeLeaderboard);
         LeaderboardPresenter dailyPresenter = new LeaderboardPresenter(dailyLeaderboard);
 
-        LeaderboardController monthlyController = new LeaderboardController(monthlyUseCase, monthlyPresenter);
-        LeaderboardController allTimeController = new LeaderboardController(allTimeUseCase, allTimePresenter);
-        LeaderboardController dailyController = new LeaderboardController(dailyUseCase, dailyPresenter);
+        AddScoreInputBoundary monthlyAddScoreUseCase = new AddScoreInteractor(monthlyLeaderboard, monthlyPresenter);
+        AddScoreInputBoundary allTimeAddScoreUseCase = new AddScoreInteractor(allTimeLeaderboard, allTimePresenter);
+        AddScoreInputBoundary dailyAddScoreUseCase = new AddScoreInteractor(dailyLeaderboard, dailyPresenter);
+
+        RemoveScoreInputBoundary monthlyRemoveScoreUseCase = new RemoveScoreInteractor(monthlyLeaderboard, monthlyPresenter);
+        RemoveScoreInputBoundary allTimeRemoveScoreUseCase = new RemoveScoreInteractor(allTimeLeaderboard, allTimePresenter);
+        RemoveScoreInputBoundary dailyRemoveScoreUseCase = new RemoveScoreInteractor(dailyLeaderboard, dailyPresenter);
+
+        UpdateScoreInputBoundary monthlyUpdateScoreUseCase = new UpdateScoreInteractor(monthlyLeaderboard, monthlyPresenter);
+        UpdateScoreInputBoundary allTimeUpdateScoreUseCase = new UpdateScoreInteractor(allTimeLeaderboard, allTimePresenter);
+        UpdateScoreInputBoundary dailyUpdateScoreUseCase = new UpdateScoreInteractor(dailyLeaderboard, dailyPresenter);
+
+        ClearScoresInputBoundary monthlyClearScoresUseCase = new ClearScoresInteractor(monthlyLeaderboard, monthlyPresenter);
+        ClearScoresInputBoundary allTimeClearScoresUseCase = new ClearScoresInteractor(allTimeLeaderboard, allTimePresenter);
+        ClearScoresInputBoundary dailyClearScoresUseCase = new ClearScoresInteractor(dailyLeaderboard, dailyPresenter);
+
+        LeaderboardController monthlyController = new LeaderboardController(
+                monthlyAddScoreUseCase,
+                monthlyRemoveScoreUseCase,
+                monthlyUpdateScoreUseCase,
+                monthlyClearScoresUseCase,
+                monthlyPresenter
+        );
+
+        LeaderboardController allTimeController = new LeaderboardController(
+                allTimeAddScoreUseCase,
+                allTimeRemoveScoreUseCase,
+                allTimeUpdateScoreUseCase,
+                allTimeClearScoresUseCase,
+                allTimePresenter
+        );
+
+        LeaderboardController dailyController = new LeaderboardController(
+                dailyAddScoreUseCase,
+                dailyRemoveScoreUseCase,
+                dailyUpdateScoreUseCase,
+                dailyClearScoresUseCase,
+                dailyPresenter
+        );
 
         SwingUtilities.invokeLater(() -> new LeaderboardUI(monthlyController, allTimeController, dailyController));
     }

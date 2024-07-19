@@ -12,7 +12,7 @@ public class ClearScoresInteractor implements ClearScoresInputBoundary{
     }
 
     @Override
-    public ClearScoresOutputData clearScores() {
+    public ClearScoresOutputData clearScores(ClearScoresInputData inputData) {
         leaderboard.clearScores();
         ClearScoresOutputData outputData = new ClearScoresOutputData(leaderboard.getScores());
         presenter.present(outputData);

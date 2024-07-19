@@ -1,19 +1,40 @@
 package interface_adapter.controller;
 
 import interface_adapter.presenter.LeaderboardPresenter;
-import use_case.Leaderboard.LeaderboardUseCase;
+import use_case.Leaderboard.add_score.AddScoreInputBoundary;
+import use_case.Leaderboard.add_score.AddScoreInputData;
+import use_case.Leaderboard.add_score.AddScoreOutputData;
+import use_case.Leaderboard.clear_scores.ClearScoresInputBoundary;
+import use_case.Leaderboard.clear_scores.ClearScoresInputData;
+import use_case.Leaderboard.clear_scores.ClearScoresOutputData;
+import use_case.Leaderboard.remove_score.RemoveScoreInputBoundary;
+import use_case.Leaderboard.remove_score.RemoveScoreInputData;
+import use_case.Leaderboard.remove_score.RemoveScoreOutputData;
+import use_case.Leaderboard.update_score.UpdateScoreInputBoundary;
+import use_case.Leaderboard.update_score.UpdateScoreInputData;
+import use_case.Leaderboard.update_score.UpdateScoreOutputData;
 
 import javax.swing.*;
+import java.util.Map;
 
 /**
  * LeaderboardController helps the interaction between the use case and the presenter.
  */
 public class LeaderboardController {
-    private final LeaderboardUseCase usecase;
+    private final AddScoreInputBoundary addScoreUseCase;
+    private final RemoveScoreInputBoundary removeScoreUseCase;
+    private final UpdateScoreInputBoundary updateScoreUseCase;
+    private final ClearScoresInputBoundary clearScoresUseCase;
     private final LeaderboardPresenter presenter;
 
-    public LeaderboardController(LeaderboardUseCase usecase, LeaderboardPresenter presenter) {
-        this.usecase = usecase;
+    public LeaderboardController(AddScoreInputBoundary addScoreUseCase, RemoveScoreInputBoundary removeScoreUseCase,
+                                 UpdateScoreInputBoundary updateScoreUseCase,
+                                 ClearScoresInputBoundary clearScoreUseCase,
+                                 LeaderboardPresenter presenter) {
+        this.addScoreUseCase = addScoreUseCase;
+        this.removeScoreUseCase = removeScoreUseCase;
+        this.updateScoreUseCase = updateScoreUseCase;
+        this.clearScoresUseCase = clearScoreUseCase;
         this.presenter = presenter;
     }
 
@@ -23,7 +44,9 @@ public class LeaderboardController {
      * @param score The score to add.
      */
     public void addScore(String username, int score) {
-        usecase.addScore(username, score);
+        AddScoreInputData inputData = new AddScoreInputData(username, score);
+        AddScoreOutputData outputData = addScoreUseCase.addScore(inputData);
+        presenter.present(outputData);
     }
 
     /**
@@ -31,7 +54,9 @@ public class LeaderboardController {
      * @param username The username of the user.
      */
     public void removeScore(String username) {
-        usecase.removeScore(username);
+        RemoveScoreInputData inputData = new RemoveScoreInputData(username);
+        RemoveScoreOutputData outputData = removeScoreUseCase.removeScore(inputData);
+        presenter.present(outputData);
     }
 
     /**
@@ -40,14 +65,19 @@ public class LeaderboardController {
      * @param score The new score to add to current score.
      */
     public void updateScore(String username, int score) {
-        usecase.updateScore(username, score);
+        UpdateScoreInputData inputData = new UpdateScoreInputData(username, score);
+        UpdateScoreOutputData  outputData = updateScoreUseCase.updateScore(inputData);
+        presenter.present(outputData);
     }
 
     /**
      * Clears all scores from the leaderboard.
      */
     public void clearScores() {
-        usecase.clearScores();
+        ClearScoresInputData inputData = new ClearScoresInputData();
+        ClearScoresOutputData outputData = clearScoresUseCase.clearScores(inputData);
+        presenter.present(outputData);
+
     }
 
     /**
@@ -56,4 +86,29 @@ public class LeaderboardController {
     public void displayLeaderboard(JPanel panel) {
         presenter.displayLeaderboard(panel);
     }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

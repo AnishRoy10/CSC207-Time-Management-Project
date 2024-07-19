@@ -1,7 +1,6 @@
 package framework.view;
 
 import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -23,8 +22,6 @@ public class JoinCoursePrompt {
     private JPanel labelPanel;
     private JPanel fieldPanel;
     private JPanel buttonPanel;
-    private JPanel responsePanel;
-    private JLabel responseLabel;
     private JLabel courseNameLabel;
     private JTextField courseNameField;
     private JButton joinButton;
@@ -49,13 +46,7 @@ public class JoinCoursePrompt {
         fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.Y_AXIS));
 
         labelPanel.add(courseNameLabel);
-        fieldPanel.add(courseNameField);
-
-        responsePanel = new JPanel();
-        responseLabel.setLayout(new GridBagLayout());
-
-        responseLabel = new JLabel();
-        responsePanel.add(responseLabel);
+        fieldPanel.add(courseNameField);;
 
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new BorderLayout());
@@ -72,7 +63,6 @@ public class JoinCoursePrompt {
         
         frame.add(labelPanel, BorderLayout.NORTH);
         frame.add(fieldPanel, BorderLayout.CENTER);
-        frame.add(responsePanel, BorderLayout.CENTER);
         frame.add(buttonPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
     }
@@ -91,13 +81,15 @@ public class JoinCoursePrompt {
 
         controller.execute(courseName);
 
-        boolean successful = viewModel.getResponse();
-
-        if (successful) {
+        if (viewModel.getResponse()) {
             frame.dispose();
             return;
         }
 
-        responseLabel.setText(viewModel.getMessage());
+        JOptionPane.showMessageDialog(
+            frame,
+            viewModel.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
     }
 }

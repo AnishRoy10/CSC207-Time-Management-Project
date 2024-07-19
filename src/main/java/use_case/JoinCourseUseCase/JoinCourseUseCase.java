@@ -2,9 +2,9 @@ package use_case.JoinCourseUseCase;
 
 import java.io.IOException;
 
+import data_access.CourseDataAccessObject;
 import data_access.FileCacheUserDataAccessObject;
 import entity.User;
-import repositories.CourseRepository;
 
 /**
  * Interactor for joining courses. This interactor ensures a logged in user can only join an
@@ -12,7 +12,7 @@ import repositories.CourseRepository;
  */
 public class JoinCourseUseCase implements JoinCourseInputBoundary {
     private final JoinCourseOutputBoundary outputBoundary; 
-	private final CourseRepository courseRepository;
+	private final CourseDataAccessObject courseDataAccessObject;
 	private final FileCacheUserDataAccessObject userDataAccessObject;
 
 	/**
@@ -20,9 +20,13 @@ public class JoinCourseUseCase implements JoinCourseInputBoundary {
 	 * @param repository	 repository for courses
 	 * @param outputBoundary output boundary for user response
 	 */
-	public JoinCourseUseCase(JoinCourseOutputBoundary outputBoundary, CourseRepository courseRepository, FileCacheUserDataAccessObject userDataAccessObject) {
+	public JoinCourseUseCase(
+		JoinCourseOutputBoundary outputBoundary,
+		CourseDataAccessObject courseDataAccessObject,
+		FileCacheUserDataAccessObject userDataAccessObject)
+	{
 		this.outputBoundary = outputBoundary;
-		this.courseRepository = courseRepository;
+		this.courseDataAccessObject = courseDataAccessObject;
 		this.userDataAccessObject = userDataAccessObject;
 	}
 
@@ -40,21 +44,27 @@ public class JoinCourseUseCase implements JoinCourseInputBoundary {
 		try {
 			user = userDataAccessObject.ReadFromCache();
 		} catch (IOException | ClassNotFoundException e) {
-			JoinCourseResponseModel responseModel = new JoinCourseResponseModel(false, "An error occurred fetching the current user.");
+			JoinCourseResponseModel responseModel = new JoinCourseResponseModel(
+				false,
+				"An error occurred fetching the current user.");
 			outputBoundary.present(responseModel);
 			return;
 		} 
 
 		// check that the course exists
-		if (!courseRepository.courseExists(courseName)) {
-			JoinCourseResponseModel outputData = new JoinCourseResponseModel(false, "Course not found.");
+		if (!courseDataAccessObject.courseExists(courseName)) {
+			JoinCourseResponseModel outputData = new JoinCourseResponseModel(
+				false,
+				"Course not found.");
 			outputBoundary.present(outputData);
 			return;
 		}
 
 		// finally, add the user to the course and present a response
-		courseRepository.loadCourse(courseName).addUser(user);
-		JoinCourseResponseModel outputData = new JoinCourseResponseModel(true, "User successfully added.");
+		courseDataAccessObject.findByName(courseName).addUser(user);
+		JoinCourseResponseModel outputData = new JoinCourseResponseModel(
+			true,
+			"User successfully added.");
 		outputBoundary.present(outputData);
 	}  
 }

@@ -1,15 +1,15 @@
 package use_case.UserSignupUseCase;
 
 import entity.User;
-import interface_adapter.controller.UserSignupController;
-import interface_adapter.presenter.UserSignupPresenter;
-import interface_adapter.viewmodel.UserSignupViewModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import repositories.UserRepository;
-import data_access.FileCacheUserDataAccessObject;
+import use_case.UserUseCases.UserSignupUseCase.UserSignupOutputBoundary;
+import use_case.UserUseCases.UserSignupUseCase.UserSignupRequestModel;
+import use_case.UserUseCases.UserSignupUseCase.UserSignupResponseModel;
+import use_case.UserUseCases.UserSignupUseCase.UserSignupUseCase;
 
 import java.io.IOException;
 

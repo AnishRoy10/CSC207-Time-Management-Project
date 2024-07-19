@@ -1,9 +1,9 @@
 package data_access;
 
-import use_case.Leaderboard.add_score.AddScoreDataAccessInterface;
-import use_case.Leaderboard.clear_scores.ClearScoresDataAccessInterface;
-import use_case.Leaderboard.remove_score.RemoveScoreDataAccessInterface;
-import use_case.Leaderboard.update_score.UpdateScoreDataAccessInterface;
+import use_case.LeaderboardUseCases.add_score.AddScoreDataAccessInterface;
+import use_case.LeaderboardUseCases.clear_scores.ClearScoresDataAccessInterface;
+import use_case.LeaderboardUseCases.remove_score.RemoveScoreDataAccessInterface;
+import use_case.LeaderboardUseCases.update_score.UpdateScoreDataAccessInterface;
 
 import java.util.HashMap;
 import java.util.Map;

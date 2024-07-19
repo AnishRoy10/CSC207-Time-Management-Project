@@ -1,8 +1,8 @@
 package interface_adapter.setTimer;
 
 import interface_adapter.viewmodel.RunningTimerViewModel;
-import use_case.SetTimerUseCase.SetTimerOutputBoundary;
-import use_case.SetTimerUseCase.SetTimerOutputData;
+import use_case.TimerUseCases.SetTimerUseCase.SetTimerOutputBoundary;
+import use_case.TimerUseCases.SetTimerUseCase.SetTimerOutputData;
 
 public class SetTimerPresenter implements SetTimerOutputBoundary {
 

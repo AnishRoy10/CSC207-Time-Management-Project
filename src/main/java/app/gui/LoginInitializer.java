@@ -5,9 +5,9 @@ import framework.view.UserLoginView;
 import interface_adapter.controller.UserLoginController;
 import interface_adapter.presenter.UserLoginPresenter;
 import interface_adapter.viewmodel.UserLoginViewModel;
-import use_case.UserLoginUseCase.UserLoginInputBoundary;
-import use_case.UserLoginUseCase.UserLoginOutputBoundary;
-import use_case.UserLoginUseCase.UserLoginUseCase;
+import use_case.UserUseCases.UserLoginUseCase.UserLoginInputBoundary;
+import use_case.UserUseCases.UserLoginUseCase.UserLoginOutputBoundary;
+import use_case.UserUseCases.UserLoginUseCase.UserLoginUseCase;
 
 import java.io.IOException;
 

@@ -1,15 +1,14 @@
 package interface_adapter.presenter;
 
 import entity.Leaderboard;
-import use_case.Leaderboard.add_score.AddScoreOutputBoundary;
-import use_case.Leaderboard.add_score.AddScoreOutputData;
-import use_case.Leaderboard.clear_scores.ClearScoresOutputData;
-import use_case.Leaderboard.remove_score.RemoveScoreOutputBoundary;
-import use_case.Leaderboard.remove_score.RemoveScoreOutputData;
-import use_case.Leaderboard.update_score.UpdateScoreOutputBoundary;
-import use_case.Leaderboard.update_score.UpdateScoreOutputData;
-import use_case.Leaderboard.clear_scores.ClearScoresOutputBoundary;
-import use_case.Leaderboard.clear_scores.ClearScoresOutputData;
+import use_case.LeaderboardUseCases.add_score.AddScoreOutputBoundary;
+import use_case.LeaderboardUseCases.add_score.AddScoreOutputData;
+import use_case.LeaderboardUseCases.clear_scores.ClearScoresOutputData;
+import use_case.LeaderboardUseCases.remove_score.RemoveScoreOutputBoundary;
+import use_case.LeaderboardUseCases.remove_score.RemoveScoreOutputData;
+import use_case.LeaderboardUseCases.update_score.UpdateScoreOutputBoundary;
+import use_case.LeaderboardUseCases.update_score.UpdateScoreOutputData;
+import use_case.LeaderboardUseCases.clear_scores.ClearScoresOutputBoundary;
 
 import javax.swing.*;
 import java.util.Map;

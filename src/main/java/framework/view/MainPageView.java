@@ -1,5 +1,6 @@
 package framework.view;
 
+import app.gui.TimerExecutable;
 import app.gui.TodoListInitializer;
 
 import javax.swing.*;
@@ -76,10 +77,7 @@ public class MainPageView extends JFrame {
      * Placeholder method to open the Leaderboard feature.
      * This method should be implemented to open the Leaderboard view of the application.
      */
-    private void openLeaderboard() {
-        // Placeholder implementation
-        JOptionPane.showMessageDialog(this, "Leaderboard feature to be implemented");
-    }
+    private void openLeaderboard() {LeaderboardUI.main(null);}
 
     /**
      * Opens the To-do List feature of the application.
@@ -94,8 +92,7 @@ public class MainPageView extends JFrame {
      * This method should be implemented to open the Timer view of the application.
      */
     private void openTimer() {
-        // Placeholder implementation
-        JOptionPane.showMessageDialog(this, "Timer feature to be implemented");
+        TimerExecutable.main(null);
     }
 
 //    /**

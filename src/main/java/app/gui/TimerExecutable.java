@@ -6,7 +6,7 @@ import interface_adapter.setTimer.SetTimerViewModel;
 import interface_adapter.setTimer.SetTimerController;
 import framework.view.SetTimerView;
 import interface_adapter.viewmodel.RunningTimerViewModel;
-import use_case.SetTimerUseCase.SetTimerInteractor;
+import use_case.TimerUseCases.SetTimerUseCase.SetTimerInteractor;
 
 public class TimerExecutable {
     public static void main(String[] args) {

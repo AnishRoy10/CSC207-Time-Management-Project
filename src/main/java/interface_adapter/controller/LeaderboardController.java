@@ -1,21 +1,20 @@
 package interface_adapter.controller;
 
 import interface_adapter.presenter.LeaderboardPresenter;
-import use_case.Leaderboard.add_score.AddScoreInputBoundary;
-import use_case.Leaderboard.add_score.AddScoreInputData;
-import use_case.Leaderboard.add_score.AddScoreOutputData;
-import use_case.Leaderboard.clear_scores.ClearScoresInputBoundary;
-import use_case.Leaderboard.clear_scores.ClearScoresInputData;
-import use_case.Leaderboard.clear_scores.ClearScoresOutputData;
-import use_case.Leaderboard.remove_score.RemoveScoreInputBoundary;
-import use_case.Leaderboard.remove_score.RemoveScoreInputData;
-import use_case.Leaderboard.remove_score.RemoveScoreOutputData;
-import use_case.Leaderboard.update_score.UpdateScoreInputBoundary;
-import use_case.Leaderboard.update_score.UpdateScoreInputData;
-import use_case.Leaderboard.update_score.UpdateScoreOutputData;
+import use_case.LeaderboardUseCases.add_score.AddScoreInputBoundary;
+import use_case.LeaderboardUseCases.add_score.AddScoreInputData;
+import use_case.LeaderboardUseCases.add_score.AddScoreOutputData;
+import use_case.LeaderboardUseCases.clear_scores.ClearScoresInputBoundary;
+import use_case.LeaderboardUseCases.clear_scores.ClearScoresInputData;
+import use_case.LeaderboardUseCases.clear_scores.ClearScoresOutputData;
+import use_case.LeaderboardUseCases.remove_score.RemoveScoreInputBoundary;
+import use_case.LeaderboardUseCases.remove_score.RemoveScoreInputData;
+import use_case.LeaderboardUseCases.remove_score.RemoveScoreOutputData;
+import use_case.LeaderboardUseCases.update_score.UpdateScoreInputBoundary;
+import use_case.LeaderboardUseCases.update_score.UpdateScoreInputData;
+import use_case.LeaderboardUseCases.update_score.UpdateScoreOutputData;
 
 import javax.swing.*;
-import java.util.Map;
 
 /**
  * LeaderboardController helps the interaction between the use case and the presenter.

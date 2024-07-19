@@ -6,10 +6,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import repositories.TodoListRepository;
-import use_case.RemoveTaskUseCase.RemoveTaskOutputBoundary;
-import use_case.RemoveTaskUseCase.RemoveTaskRequestModel;
-import use_case.RemoveTaskUseCase.RemoveTaskResponseModel;
-import use_case.RemoveTaskUseCase.RemoveTaskUseCase;
+import use_case.TodoListUseCases.RemoveTaskUseCase.RemoveTaskOutputBoundary;
+import use_case.TodoListUseCases.RemoveTaskUseCase.RemoveTaskRequestModel;
+import use_case.TodoListUseCases.RemoveTaskUseCase.RemoveTaskResponseModel;
+import use_case.TodoListUseCases.RemoveTaskUseCase.RemoveTaskUseCase;
 
 import java.time.LocalDateTime;
 import java.util.List;

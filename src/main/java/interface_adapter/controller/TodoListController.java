@@ -1,17 +1,17 @@
 package interface_adapter.controller;
 
-import use_case.AddTaskUseCase.AddTaskInputBoundary;
-import use_case.AddTaskUseCase.AddTaskRequestModel;
-import use_case.CompleteTaskUseCase.CompleteTaskInputBoundary;
-import use_case.CompleteTaskUseCase.CompleteTaskRequestModel;
-import use_case.FilterTasksUseCase.FilterTasksInputBoundary;
-import use_case.FilterTasksUseCase.FilterTasksRequestModel;
-import use_case.LoadTodoListUseCase.LoadTodoListInputBoundary;
-import use_case.LoadTodoListUseCase.LoadTodoListRequestModel;
-import use_case.RemoveTaskUseCase.RemoveTaskInputBoundary;
-import use_case.RemoveTaskUseCase.RemoveTaskRequestModel;
-import use_case.SortTasksUseCase.SortTasksInputBoundary;
-import use_case.SortTasksUseCase.SortTasksRequestModel;
+import use_case.TodoListUseCases.AddTaskUseCase.AddTaskInputBoundary;
+import use_case.TodoListUseCases.AddTaskUseCase.AddTaskRequestModel;
+import use_case.TodoListUseCases.CompleteTaskUseCase.CompleteTaskInputBoundary;
+import use_case.TodoListUseCases.CompleteTaskUseCase.CompleteTaskRequestModel;
+import use_case.TodoListUseCases.FilterTasksUseCase.FilterTasksInputBoundary;
+import use_case.TodoListUseCases.FilterTasksUseCase.FilterTasksRequestModel;
+import use_case.TodoListUseCases.LoadTodoListUseCase.LoadTodoListInputBoundary;
+import use_case.TodoListUseCases.LoadTodoListUseCase.LoadTodoListRequestModel;
+import use_case.TodoListUseCases.RemoveTaskUseCase.RemoveTaskInputBoundary;
+import use_case.TodoListUseCases.RemoveTaskUseCase.RemoveTaskRequestModel;
+import use_case.TodoListUseCases.SortTasksUseCase.SortTasksInputBoundary;
+import use_case.TodoListUseCases.SortTasksUseCase.SortTasksRequestModel;
 
 import java.time.LocalDateTime;
 

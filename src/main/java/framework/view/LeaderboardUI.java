@@ -7,11 +7,11 @@ import entity.Leaderboard;
 import entity.MonthlyLeaderboard;
 import interface_adapter.controller.LeaderboardController;
 import interface_adapter.presenter.LeaderboardPresenter;
-import use_case.Leaderboard.add_score.*;
-import use_case.Leaderboard.clear_scores.ClearScoresInputBoundary;
-import use_case.Leaderboard.clear_scores.ClearScoresUseCase;
-import use_case.Leaderboard.remove_score.*;
-import use_case.Leaderboard.update_score.*;
+import use_case.LeaderboardUseCases.add_score.*;
+import use_case.LeaderboardUseCases.clear_scores.ClearScoresInputBoundary;
+import use_case.LeaderboardUseCases.clear_scores.ClearScoresUseCase;
+import use_case.LeaderboardUseCases.remove_score.*;
+import use_case.LeaderboardUseCases.update_score.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +37,7 @@ public class LeaderboardUI {
 
     private void initializeUI() {
         JFrame frame = new JFrame("Leaderboard");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
         JPanel buttonPanel = new JPanel();

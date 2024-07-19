@@ -1,7 +1,7 @@
 package interface_adapter.controller;
 
-import use_case.UserSignupUseCase.UserSignupInputBoundary;
-import use_case.UserSignupUseCase.UserSignupRequestModel;
+import use_case.UserUseCases.UserSignupUseCase.UserSignupInputBoundary;
+import use_case.UserUseCases.UserSignupUseCase.UserSignupRequestModel;
 
 /**
  * Controller for handling user signup requests.

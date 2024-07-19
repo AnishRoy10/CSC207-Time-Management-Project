@@ -1,7 +1,7 @@
 package interface_adapter.setTimer;
 
-import use_case.SetTimerUseCase.SetTimerInputBoundary;
-import use_case.SetTimerUseCase.SetTimerInputData;
+import use_case.TimerUseCases.SetTimerUseCase.SetTimerInputBoundary;
+import use_case.TimerUseCases.SetTimerUseCase.SetTimerInputData;
 
 /**
  * Controller for the timer which handles the set timer use case.

@@ -34,6 +34,7 @@ public class CourseDataAccessObject implements CourseRepository {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ArrayList<Course> ReadFromCache() throws IOException, ClassNotFoundException {
         ArrayList<Course> result;
         try (FileInputStream fis = new FileInputStream(fileCache);

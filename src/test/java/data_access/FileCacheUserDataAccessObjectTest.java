@@ -1,17 +1,21 @@
 package data_access;
 
 import entity.Course;
+import entity.Task;
 import entity.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileCacheUserDataAccessObjectTest {
     private FileCacheUserDataAccessObject fileCacheUserDAO;
-    private final String testFilePath = "test_userCache.txt";
+    private final String testFilePath = "test_userCache.json";
 
     @BeforeEach
     void setUp() throws IOException {
@@ -33,6 +37,8 @@ class FileCacheUserDataAccessObjectTest {
             User[] friends = {};
             Course[] courses = {new Course("CSC207", "Software Design")};
             User user = new User("user1", "password1", friends, courses);
+            Task task = new Task("task1", "description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "CSC207");
+            user.addTask(task);
             fileCacheUserDAO.WriteToCache(user);
         });
     }
@@ -43,24 +49,27 @@ class FileCacheUserDataAccessObjectTest {
             User[] friends = {};
             Course[] courses = {new Course("CSC207", "Software Design")};
             User user = new User("user1", "password1", friends, courses);
+            Task task = new Task("task1", "description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "CSC207");
+            user.addTask(task);
             fileCacheUserDAO.WriteToCache(user);
 
-            User readUser = fileCacheUserDAO.ReadFromCache();
+            User readUser = fileCacheUserDAO.ReadFromCache("user1");
             assertNotNull(readUser);
             assertEquals(user.getUsername(), readUser.getUsername());
             assertEquals(user.getFriends().exportFriendsNames(), readUser.getFriends().exportFriendsNames());
             assertEquals(user.getCourses().get(0).getName(), readUser.getCourses().get(0).getName());
+            assertEquals(user.getTodoList().getTasks().get(0).getTitle(), readUser.getTodoList().getTasks().get(0).getTitle());
         });
     }
 
     @Test
-    void testReadFromCacheEmptyFile() throws IOException, ClassNotFoundException {
-        User readUser = fileCacheUserDAO.ReadFromCache();
+    void testReadFromCacheEmptyFile() {
+        User readUser = fileCacheUserDAO.ReadFromCache("nonExistingUser");
         assertNull(readUser);
     }
 
     @Test
-    void testUserExists() throws IOException, ClassNotFoundException {
+    void testUserExists() throws IOException {
         User[] friends = {};
         Course[] courses = {new Course("CSC207", "Software Design")};
         User user = new User("existingUser", "password", friends, courses);
@@ -71,7 +80,7 @@ class FileCacheUserDataAccessObjectTest {
     }
 
     @Test
-    void testFindByUsername() throws IOException, ClassNotFoundException {
+    void testFindByUsername() throws IOException {
         User[] friends = {};
         Course[] courses = {new Course("CSC207", "Software Design")};
         User user = new User("findUser", "password", friends, courses);

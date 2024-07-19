@@ -63,7 +63,7 @@ public class UserSignupUseCase implements UserSignupInputBoundary {
 
             UserSignupResponseModel responseModel = new UserSignupResponseModel(true, "User signed up successfully.");
             userSignupOutputBoundary.present(responseModel);
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Error during sign up", e);
             UserSignupResponseModel responseModel = new UserSignupResponseModel(false, "An error occurred during sign up.");
             userSignupOutputBoundary.present(responseModel);

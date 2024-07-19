@@ -17,16 +17,9 @@ public class User implements Serializable {
     private final FriendsList friends; // Friends list of this user
     private final List<Course> courses; // Courses this user is in
     private final TodoList todo; // To-do list associated with this user
-    private int score; // The users score
+    private int score; // The user's score
     private Timer timer; // A timer set by the user
-    /**
-     * Constructs a new User object.
-     *
-     * @param username The username for this user
-     * @param password The password for this user
-     * @param friends  Friends for this user
-     * @param courses  Courses this user is in
-     */
+
     public User(String username, String password, User[] friends, Course[] courses) {
         this.username = username;
         this.password = hashPassword(password); // Hash the password
@@ -117,14 +110,24 @@ public class User implements Serializable {
         this.score = score;
     }
 
+    // Getter for timer
+    public Timer getTimer() {
+        return timer;
+    }
+
     // Setter for timer
     public void addTimer(Timer timer) {
         this.timer = timer;
     }
 
+    // Getter for the to-do list
+    public TodoList getTodoList() {
+        return todo;
+    }
+
     // Hash the password (to be properly done later. SHA-256 perhaps?)
     private String hashPassword(String password) {
-        return password;
+        return password; // Placeholder for hashing
     }
 
     @Override

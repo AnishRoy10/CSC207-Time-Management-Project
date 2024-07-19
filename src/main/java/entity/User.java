@@ -83,11 +83,6 @@ public class User implements Serializable {
         return friends;
     }
 
-    // Add a friend to the friends list
-    public void addFriend(User user) {
-        this.friends.addFriend(user);
-    }
-
     /**
     * Attempt to remove a friend from this user.
     * 

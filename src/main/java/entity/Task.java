@@ -1,6 +1,8 @@
 package entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * The Task class represents a task in the to-do list.

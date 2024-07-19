@@ -75,10 +75,9 @@ public class Course implements Serializable {
      */
     public void addUser(User user) {
         // prevent duplicate users in a course
-        if (users.contains((user))) {
-            return;
+        if (!users.contains(user)) {
+            users.add(user);
         }
-        users.add(user);
     }
 
     /**
@@ -91,4 +90,6 @@ public class Course implements Serializable {
     public boolean removeUser(User user) {
         return users.remove(user);
     }
+
+
 }

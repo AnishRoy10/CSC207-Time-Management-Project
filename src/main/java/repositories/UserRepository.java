@@ -1,8 +1,7 @@
 package repositories;
 
-import java.io.IOException;
-
 import entity.User;
+import java.io.IOException;
 
 /**
  * UserRepository provides an interface for User data access operations.

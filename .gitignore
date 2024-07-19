@@ -1,5 +1,9 @@
-/idea/
+/.idea/
+/.idea/shelf/
+/.idea/compiler.xml
+/.idea/jarRepositories.xml
+/.idea/misc.xml
+/.idea/vcs.xml
+/.idea/workspace.xml
 /target/
-
-# Visual Studio Code tasks & settings
-/.vscode/
+/CSC207-Time-Management-Project.iml

@@ -1,34 +1,112 @@
 package interface_adapter.controller;
 
-import use_case.AddTaskUseCase;
+import use_case.TodoListUseCases.AddTaskUseCase.AddTaskInputBoundary;
+import use_case.TodoListUseCases.AddTaskUseCase.AddTaskRequestModel;
+import use_case.TodoListUseCases.CompleteTaskUseCase.CompleteTaskInputBoundary;
+import use_case.TodoListUseCases.CompleteTaskUseCase.CompleteTaskRequestModel;
+import use_case.TodoListUseCases.FilterTasksUseCase.FilterTasksInputBoundary;
+import use_case.TodoListUseCases.FilterTasksUseCase.FilterTasksRequestModel;
+import use_case.TodoListUseCases.LoadTodoListUseCase.LoadTodoListInputBoundary;
+import use_case.TodoListUseCases.LoadTodoListUseCase.LoadTodoListRequestModel;
+import use_case.TodoListUseCases.RemoveTaskUseCase.RemoveTaskInputBoundary;
+import use_case.TodoListUseCases.RemoveTaskUseCase.RemoveTaskRequestModel;
+import use_case.TodoListUseCases.SortTasksUseCase.SortTasksInputBoundary;
+import use_case.TodoListUseCases.SortTasksUseCase.SortTasksRequestModel;
+
 import java.time.LocalDateTime;
-import entity.Course;
 
 /**
- * The TodoListController class acts as a mediator between the UI and the use case.
+ * Controller for the to-do list, coordinating the use cases and handling user interactions.
  */
 public class TodoListController {
-    private final AddTaskUseCase addTaskUseCase;
+    private final AddTaskInputBoundary addTaskUseCase;
+    private final RemoveTaskInputBoundary removeTaskUseCase;
+    private final CompleteTaskInputBoundary completeTaskUseCase;
+    private final SortTasksInputBoundary sortTasksUseCase;
+    private final FilterTasksInputBoundary filterTasksUseCase;
+    private final LoadTodoListInputBoundary loadTodoListUseCase;
 
     /**
-     * Constructs a TodoListController with the specified AddTaskUseCase.
+     * Constructs a TodoListController with the specified use cases.
      *
-     * @param addTaskUseCase The use case for adding tasks
+     * @param addTaskUseCase        the use case for adding tasks
+     * @param removeTaskUseCase     the use case for removing tasks
+     * @param completeTaskUseCase   the use case for completing tasks
+     * @param sortTasksUseCase      the use case for sorting tasks
+     * @param filterTasksUseCase    the use case for filtering tasks
+     * @param loadTodoListUseCase   the use case for loading the to-do list
      */
-    public TodoListController(AddTaskUseCase addTaskUseCase) {
+    public TodoListController(AddTaskInputBoundary addTaskUseCase, RemoveTaskInputBoundary removeTaskUseCase,
+                              CompleteTaskInputBoundary completeTaskUseCase, SortTasksInputBoundary sortTasksUseCase,
+                              FilterTasksInputBoundary filterTasksUseCase, LoadTodoListInputBoundary loadTodoListUseCase) {
         this.addTaskUseCase = addTaskUseCase;
+        this.removeTaskUseCase = removeTaskUseCase;
+        this.completeTaskUseCase = completeTaskUseCase;
+        this.sortTasksUseCase = sortTasksUseCase;
+        this.filterTasksUseCase = filterTasksUseCase;
+        this.loadTodoListUseCase = loadTodoListUseCase;
     }
 
     /**
-     * Adds a task using the use case.
+     * Adds a task to the to-do list.
      *
-     * @param title       The title of the task
-     * @param description The description of the task
-     * @param startDate   The start date and time of the task
-     * @param deadline    The deadline date and time for the task
-     * @param course      The course associated with the task
+     * @param title       the title of the task
+     * @param description the description of the task
+     * @param startDate   the start date of the task
+     * @param deadline    the deadline of the task
+     * @param course      the course associated with the task
      */
-    public void addTask(String title, String description, LocalDateTime startDate, LocalDateTime deadline, Course course) {
-        addTaskUseCase.addTask(title, description, startDate, deadline, course);
+    public void addTask(String title, String description, LocalDateTime startDate, LocalDateTime deadline, String course) {
+        AddTaskRequestModel requestModel = new AddTaskRequestModel(title, description, startDate, deadline, course);
+        addTaskUseCase.execute(requestModel);
+    }
+
+    /**
+     * Removes a task from the to-do list.
+     *
+     * @param taskId the ID of the task to be removed
+     */
+    public void removeTask(int taskId) {
+        RemoveTaskRequestModel requestModel = new RemoveTaskRequestModel(taskId);
+        removeTaskUseCase.execute(requestModel);
+    }
+
+    /**
+     * Toggles the completion status of a task.
+     *
+     * @param taskId the ID of the task to be toggled
+     */
+    public void toggleTaskCompletion(int taskId) {
+        CompleteTaskRequestModel requestModel = new CompleteTaskRequestModel(taskId);
+        completeTaskUseCase.execute(requestModel);
+    }
+
+    /**
+     * Sorts the tasks in the to-do list.
+     *
+     * @param criterion the sorting criterion
+     * @param ascending whether the sorting should be in ascending order
+     */
+    public void sortTasks(String criterion, boolean ascending) {
+        SortTasksRequestModel requestModel = new SortTasksRequestModel(criterion, ascending);
+        sortTasksUseCase.execute(requestModel);
+    }
+
+    /**
+     * Filters the tasks in the to-do list based on completion status.
+     *
+     * @param showCompleted whether to show completed tasks
+     */
+    public void filterTasks(boolean showCompleted) {
+        FilterTasksRequestModel requestModel = new FilterTasksRequestModel(showCompleted);
+        filterTasksUseCase.execute(requestModel);
+    }
+
+    /**
+     * Loads the to-do list.
+     */
+    public void loadTodoList() {
+        LoadTodoListRequestModel requestModel = new LoadTodoListRequestModel();
+        loadTodoListUseCase.execute(requestModel);
     }
 }

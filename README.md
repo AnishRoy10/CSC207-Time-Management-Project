@@ -3,7 +3,7 @@
 - [Features](#Quick-Rundown-of-the-Features)
 - [How to Run](#How-to-Run-the-Time-Management-Application)
 - [To-do List Feature](#To-do-List-Feature)
-- [Leaderboard Feature](#da)
+- [Leaderboard Feature](#Leaderboard-Feature)
 - [Timer Feature](#Timer-Feature)
 - [Clean Architecture](#Clean-Architecture)
 

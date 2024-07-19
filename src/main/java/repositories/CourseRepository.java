@@ -24,7 +24,7 @@ public interface CourseRepository {
 	 * @param courseName  the name of the course to check
 	 * @return            the success value
 	 */
-	boolean courseExists(String courseName) throws IOException, ClassNotFoundException;
+	boolean courseExists(String courseName);
 
 	/**
 	 * Fetch a course by its name.
@@ -32,5 +32,5 @@ public interface CourseRepository {
 	 * @param courseName the name of the target course
 	 * @return           the course, if it exists, or null
 	 */
-	Course findByName(String courseName) throws IOException, ClassNotFoundException;
+	Course findByName(String courseName);
 }

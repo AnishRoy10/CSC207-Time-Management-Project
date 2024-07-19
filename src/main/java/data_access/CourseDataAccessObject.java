@@ -14,11 +14,11 @@ public class CourseDataAccessObject implements CourseRepository {
     private File fileCache;
     private String activeDirectory;
 
-    public CourseDataAccessObject() {
+    public CourseDataAccessObject() throws IOException {
 
     }
 
-    public CourseDataAccessObject(String path) {
+    public CourseDataAccessObject(String path) throws IOException {
 
     }
 

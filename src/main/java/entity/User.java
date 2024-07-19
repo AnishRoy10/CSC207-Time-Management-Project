@@ -18,6 +18,7 @@ public class User implements Serializable {
     private final List<Course> courses; // Courses this user is in
     private final TodoList todo; // To-do list associated with this user
     private int score; // The users score
+    private Timer timer; // A timer set by the user
     /**
      * Constructs a new User object.
      *
@@ -114,6 +115,11 @@ public class User implements Serializable {
     // Setter for score
     public void setScore(int score) {
         this.score = score;
+    }
+
+    // Setter for timer
+    public void addTimer(Timer timer) {
+        this.timer = timer;
     }
 
     // Hash the password (to be properly done later. SHA-256 perhaps?)

@@ -1,4 +1,6 @@
-package app.gui;
+package framework.view;
+
+import app.gui.TodoListInitializer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,12 +11,12 @@ import java.awt.event.ActionListener;
  * It is displayed to the user after a successful login. The main page provides buttons for accessing
  * various features of the application such as the Calendar, Leaderboard, To-do List, and Timer.
  */
-public class MainPage extends JFrame {
+public class MainPageView extends JFrame {
 
     /**
-     * Constructor for MainPage. Sets up the UI components and layout for the main navigation screen.
+     * Constructor for MainPageView. Sets up the UI components and layout for the main navigation screen.
      */
-    public MainPage() {
+    public MainPageView() {
         setTitle("Time Management Application");
         setSize(300, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -96,16 +98,16 @@ public class MainPage extends JFrame {
         JOptionPane.showMessageDialog(this, "Timer feature to be implemented");
     }
 
-    /**
-     * The main method serves as the entry point for the application.
-     * It creates and displays the MainPage window, which is the central navigation interface for the user.
-     *
-     * @param args Command line arguments (not used in this application).
-     */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            MainPage main = new MainPage();
-            main.setVisible(true);
-        });
-    }
+//    /**
+//     * The main method serves as the entry point for the application.
+//     * It creates and displays the MainPageView window, which is the central navigation interface for the user.
+//     *
+//     * @param args Command line arguments (not used in this application).
+//     */
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> {
+//            MainPageView main = new MainPageView();
+//            main.setVisible(true);
+//        });
+//    }
 }

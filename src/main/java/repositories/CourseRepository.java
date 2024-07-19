@@ -19,6 +19,13 @@ public interface CourseRepository {
 	ArrayList<Course> ReadFromCache() throws IOException, ClassNotFoundException;
 
 	/**
+	 * Save a course object.
+	 * @param course 	   the course to save
+	 * @throws IOException if an i/o error occurs
+	 */
+	void WriteToCache(Course course) throws IOException;
+	
+	/**
 	 * See if a course exists.
 	 * 
 	 * @param courseName  the name of the course to check

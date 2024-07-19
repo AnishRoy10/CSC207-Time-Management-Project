@@ -1,5 +1,6 @@
 package framework.view;
 
+import app.gui.LeaderboardInitializer;
 import app.gui.TimerExecutable;
 import app.gui.TodoListInitializer;
 
@@ -77,7 +78,7 @@ public class MainPageView extends JFrame {
      * Placeholder method to open the Leaderboard feature.
      * This method should be implemented to open the Leaderboard view of the application.
      */
-    private void openLeaderboard() {LeaderboardUI.main(null);}
+    private void openLeaderboard() {LeaderboardInitializer.main(null);}
 
     /**
      * Opens the To-do List feature of the application.

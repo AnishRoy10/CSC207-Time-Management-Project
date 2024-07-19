@@ -1,5 +1,6 @@
-package interface_adapter.setTimer;
+package interface_adapter.presenter;
 
+import interface_adapter.viewmodel.SetTimerViewModel;
 import interface_adapter.viewmodel.RunningTimerViewModel;
 import use_case.SetTimerUseCase.SetTimerOutputBoundary;
 import use_case.SetTimerUseCase.SetTimerOutputData;

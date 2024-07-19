@@ -1,7 +1,7 @@
 package framework.view;
 
-import interface_adapter.setTimer.SetTimerController;
-import interface_adapter.setTimer.SetTimerViewModel;
+import interface_adapter.controller.SetTimerController;
+import interface_adapter.viewmodel.SetTimerViewModel;
 import interface_adapter.viewmodel.RunningTimerViewModel;
 
 import javax.swing.*;

@@ -1,4 +1,4 @@
-package interface_adapter.setTimer;
+package interface_adapter.controller;
 
 import use_case.SetTimerUseCase.SetTimerInputBoundary;
 import use_case.SetTimerUseCase.SetTimerInputData;

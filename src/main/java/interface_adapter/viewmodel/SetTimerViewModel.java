@@ -1,4 +1,4 @@
-package interface_adapter.setTimer;
+package interface_adapter.viewmodel;
 
 import interface_adapter.ViewModel;
 

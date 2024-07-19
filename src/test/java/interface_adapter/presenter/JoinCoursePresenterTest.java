@@ -3,11 +3,11 @@ package interface_adapter.presenter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import interface_adapter.JoinCourseUseCase.JoinCoursePresenter;
 import interface_adapter.JoinCourseUseCase.JoinCourseViewModel;
+import org.junit.jupiter.api.BeforeEach;
 import use_case.JoinCourseUseCase.JoinCourseResponseModel;
 
 public class JoinCoursePresenterTest {

@@ -1,21 +1,33 @@
 package data_access;
 
-import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import org.junit.Test;
+import entity.Course;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
-import entity.Course;
+import java.io.File;
+import java.io.IOException;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CourseDataAccessObjectTest {
     CourseDataAccessObject obj;
+    private final String testFilePath = "test_courseCache.txt";
 
     @BeforeEach
-    public void run() throws IOException, ClassNotFoundException {
-        obj = new CourseDataAccessObject();
+    public void run() throws IOException {
+        obj = new CourseDataAccessObject(testFilePath);
+    }
+
+    @AfterEach
+    void tearDown() {
+        // Clean up by deleting the test file after each test
+        File testFile = new File(testFilePath);
+        if (testFile.exists()) {
+            testFile.delete();
+        }
     }
 
     @Test
@@ -44,7 +56,8 @@ public class CourseDataAccessObjectTest {
             fail("(testFetchCourse) The DAO was unable to write a course to the file.");
         }
 
-        assertEquals(obj.findByName("CSC207"), crs);
+        assertEquals(obj.findByName("CSC207").getName(), crs.getName());
+        assertEquals(obj.findByName("CSC207").getDescription(), crs.getDescription());
     }
 }
 

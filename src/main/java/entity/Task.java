@@ -1,12 +1,13 @@
 package entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * The Task class represents a task in the to-do list.
  * Each task has a title, an optional description, completion status, start date, deadline, and an associated course.
  */
-public class Task {
+public class Task implements Serializable {
     // Title of the task (required)
     private String title;
 

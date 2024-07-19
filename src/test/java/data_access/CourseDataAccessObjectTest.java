@@ -1,6 +1,8 @@
 package data_access;
 
 import entity.Course;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,29 +37,21 @@ public class CourseDataAccessObjectTest {
         Course crs1 = new Course("CSC108", "Intro to Comp. Prog.");
         Course crs2 = new Course("CSC148", "Intro to Comp. Sci.");
 
-        try {
-            obj.WriteToCache(crs1);
-            obj.WriteToCache(crs2);
-        } catch (IOException e) {
-            fail("(testReadWriteCourse) The DAO was unable to write a course to the file.");
-        }
+        obj.WriteToCache(crs1);
+        obj.WriteToCache(crs2);
 
-        assertTrue(obj.courseExists("CSC108"));
-        assertTrue(obj.courseExists("CSC148"));
+        Assertions.assertTrue(obj.courseExists("CSC108"));
+        Assertions.assertTrue(obj.courseExists("CSC148"));
     }
 
     @Test
     public void testFetchCourse() {
         Course crs = new Course("CSC207", "Software Design");
 
-        try {
-            obj.WriteToCache(crs);
-        } catch (IOException e) {
-            fail("(testFetchCourse) The DAO was unable to write a course to the file.");
-        }
+        obj.WriteToCache(crs);
 
-        assertEquals(obj.findByName("CSC207").getName(), crs.getName());
-        assertEquals(obj.findByName("CSC207").getDescription(), crs.getDescription());
+        Assertions.assertEquals(obj.findByName("CSC207").getName(), crs.getName());
+        Assertions.assertEquals(obj.findByName("CSC207").getDescription(), crs.getDescription());
     }
 }
 

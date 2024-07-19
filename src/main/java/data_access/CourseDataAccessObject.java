@@ -34,31 +34,32 @@ public class CourseDataAccessObject implements CourseRepository {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ArrayList<Course> ReadFromCache() throws IOException, ClassNotFoundException {
-        ArrayList<Course> result;
-        try (FileInputStream fis = new FileInputStream(fileCache);
-            ObjectInputStream ois = new ObjectInputStream(fis)) {
-            result = (ArrayList<Course>) ois.readObject();
-        } catch (EOFException e) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileCache))) {
+            return (ArrayList<Course>) ois.readObject();
+        } catch (Exception e) {
             return null;
-        } 
-        return result;
+        }
     }
 
     @Override
-    public void WriteToCache(Course course) throws IOException {
+    public boolean WriteToCache(Course course) {
         ArrayList<Course> toWrite = new ArrayList<>();
         try {
             ArrayList<Course> temp = ReadFromCache();
             if (temp != null) {
                 toWrite.addAll(temp);
             }
-        } catch (ClassNotFoundException ignored) {
-            // surely something will go here later
+        } catch (IOException | ClassNotFoundException e) {
+            return false;
         }
         toWrite.add(course);
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileCache))) {
             oos.writeObject(toWrite);
+            return true;
+        } catch (IOException e) {
+            return false;
         }
     }
 

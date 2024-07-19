@@ -20,10 +20,10 @@ public interface CourseRepository {
 
 	/**
 	 * Save a course object.
-	 * @param course 	   the course to save
-	 * @throws IOException if an i/o error occurs
+	 * @param course the course to save
+	 * @return       if the course was successfully saved
 	 */
-	void WriteToCache(Course course) throws IOException;
+	boolean WriteToCache(Course course);
 	
 	/**
 	 * See if a course exists.

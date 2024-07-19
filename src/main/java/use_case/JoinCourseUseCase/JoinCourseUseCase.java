@@ -5,6 +5,8 @@ import java.io.IOException;
 import data_access.CourseDataAccessObject;
 import data_access.FileCacheUserDataAccessObject;
 import entity.User;
+import repositories.CourseRepository;
+import repositories.UserRepository;
 
 /**
  * Interactor for joining courses. This interactor ensures a logged in user can only join an
@@ -12,8 +14,8 @@ import entity.User;
  */
 public class JoinCourseUseCase implements JoinCourseInputBoundary {
     private final JoinCourseOutputBoundary outputBoundary; 
-	private final CourseDataAccessObject courseDataAccessObject;
-	private final FileCacheUserDataAccessObject userDataAccessObject;
+	private final CourseRepository courseDataAccessObject;
+	private final UserRepository userDataAccessObject;
 
 	/**
 	 * Construct a new use case instance.
@@ -22,8 +24,8 @@ public class JoinCourseUseCase implements JoinCourseInputBoundary {
 	 */
 	public JoinCourseUseCase(
 		JoinCourseOutputBoundary outputBoundary,
-		CourseDataAccessObject courseDataAccessObject,
-		FileCacheUserDataAccessObject userDataAccessObject)
+		CourseRepository courseDataAccessObject,
+		UserRepository userDataAccessObject)
 	{
 		this.outputBoundary = outputBoundary;
 		this.courseDataAccessObject = courseDataAccessObject;

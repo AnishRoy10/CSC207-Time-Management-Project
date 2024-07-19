@@ -1,11 +1,12 @@
 package entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * The Course class represents a course that users can join.
  */
-public class Course {
+public class Course implements Serializable {
     // Name of this course
     private String name;
 

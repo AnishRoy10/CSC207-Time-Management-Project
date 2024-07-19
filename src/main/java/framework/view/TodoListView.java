@@ -1,7 +1,7 @@
 package framework.view;
 
 import com.github.lgooddatepicker.components.DateTimePicker;
-import interface_adapter.TodoListViewModel;
+import interface_adapter.viewmodel.TodoListViewModel;
 import interface_adapter.controller.TodoListController;
 import use_case.TaskData;
 
@@ -28,6 +28,7 @@ public class TodoListView extends JFrame {
     private final JCheckBox showCompletedCheckBox;
     private final JComboBox<String> sortCriteriaComboBox;
     private final JCheckBox ascendingCheckBox;
+    private JFrame parentFrame;
 
     /**
      * Constructs the TodoListView with the specified controller and viewModel.
@@ -41,7 +42,15 @@ public class TodoListView extends JFrame {
 
         setTitle("Todo List");
         setSize(1200, 700);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                if (parentFrame != null) {
+                    parentFrame.setVisible(true);
+                }
+            }
+        });
         setLayout(new BorderLayout());
 
         // Set a modern font for the entire application

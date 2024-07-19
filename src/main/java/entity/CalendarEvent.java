@@ -1,6 +1,7 @@
 package entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.io.Serializable;
 
 /**
  * The CalendarEvent class represents an event in the calendar of the user.
@@ -9,7 +10,8 @@ import java.util.ArrayList;
  * day of the week, and priority level.
  */
 
-public class CalendarEvent {
+public class CalendarEvent implements Serializable {
+    private static final long serialVersionUID = 5L; // Add serial version UID for serialization compatibility
     private String name;
 
     private String description;

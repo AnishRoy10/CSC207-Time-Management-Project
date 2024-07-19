@@ -19,8 +19,9 @@ public class JoinCourseUseCase implements JoinCourseInputBoundary {
 
 	/**
 	 * Construct a new use case instance.
-	 * @param repository	 repository for courses
-	 * @param outputBoundary output boundary for user response
+	 * @param outputBoundary 		 output boundary for user response
+	 * @param courseDataAccessObject data access object for courses
+	 * @param userDataAccessObject   data access object for users
 	 */
 	public JoinCourseUseCase(
 		JoinCourseOutputBoundary outputBoundary,

@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class FriendsList implements Serializable {
     /**
@@ -32,7 +33,15 @@ public class FriendsList implements Serializable {
             this.friends.add(user);
         }
     }
-
+    //Given an array of users, return a user by username
+    public User findUserByName(String name, User[] users) {
+        for (int i = 0; i < users.length; i++) {
+            if (Objects.equals(users[i].getUsername(), name)){
+                return users[i];
+            }
+        }
+        return null;
+    }
     //Remove a friend if in FriendsList
     public void removeFriend(User user) {
         this.friends.remove(user);

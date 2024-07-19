@@ -1,5 +1,6 @@
 package framework.view;
 
+import data_access.LeaderboardDataAccessObject;
 import entity.AllTimeLeaderboard;
 import entity.DailyLeaderboard;
 import entity.Leaderboard;
@@ -8,7 +9,7 @@ import interface_adapter.controller.LeaderboardController;
 import interface_adapter.presenter.LeaderboardPresenter;
 import use_case.Leaderboard.add_score.*;
 import use_case.Leaderboard.clear_scores.ClearScoresInputBoundary;
-import use_case.Leaderboard.clear_scores.ClearScoresInteractor;
+import use_case.Leaderboard.clear_scores.ClearScoresUseCase;
 import use_case.Leaderboard.remove_score.*;
 import use_case.Leaderboard.update_score.*;
 
@@ -98,25 +99,27 @@ public class LeaderboardUI {
         Leaderboard allTimeLeaderboard = new AllTimeLeaderboard("All-Time Leaderboard");
         Leaderboard dailyLeaderboard = new DailyLeaderboard("Daily Leaderboard", today);
 
+        LeaderboardDataAccessObject leaderboardDAO = new LeaderboardDataAccessObject();
+
         LeaderboardPresenter monthlyPresenter = new LeaderboardPresenter(monthlyLeaderboard);
         LeaderboardPresenter allTimePresenter = new LeaderboardPresenter(allTimeLeaderboard);
         LeaderboardPresenter dailyPresenter = new LeaderboardPresenter(dailyLeaderboard);
 
-        AddScoreInputBoundary monthlyAddScoreUseCase = new AddScoreInteractor(monthlyLeaderboard, monthlyPresenter);
-        AddScoreInputBoundary allTimeAddScoreUseCase = new AddScoreInteractor(allTimeLeaderboard, allTimePresenter);
-        AddScoreInputBoundary dailyAddScoreUseCase = new AddScoreInteractor(dailyLeaderboard, dailyPresenter);
+        AddScoreInputBoundary monthlyAddScoreUseCase = new AddScoreUseCase(monthlyLeaderboard, monthlyPresenter, leaderboardDAO);
+        AddScoreInputBoundary allTimeAddScoreUseCase = new AddScoreUseCase(allTimeLeaderboard, allTimePresenter, leaderboardDAO);
+        AddScoreInputBoundary dailyAddScoreUseCase = new AddScoreUseCase(dailyLeaderboard, dailyPresenter, leaderboardDAO);
 
-        RemoveScoreInputBoundary monthlyRemoveScoreUseCase = new RemoveScoreInteractor(monthlyLeaderboard, monthlyPresenter);
-        RemoveScoreInputBoundary allTimeRemoveScoreUseCase = new RemoveScoreInteractor(allTimeLeaderboard, allTimePresenter);
-        RemoveScoreInputBoundary dailyRemoveScoreUseCase = new RemoveScoreInteractor(dailyLeaderboard, dailyPresenter);
+        RemoveScoreInputBoundary monthlyRemoveScoreUseCase = new RemoveScoreUseCase(monthlyLeaderboard, monthlyPresenter, leaderboardDAO);
+        RemoveScoreInputBoundary allTimeRemoveScoreUseCase = new RemoveScoreUseCase(allTimeLeaderboard, allTimePresenter, leaderboardDAO);
+        RemoveScoreInputBoundary dailyRemoveScoreUseCase = new RemoveScoreUseCase(dailyLeaderboard, dailyPresenter, leaderboardDAO);
 
-        UpdateScoreInputBoundary monthlyUpdateScoreUseCase = new UpdateScoreInteractor(monthlyLeaderboard, monthlyPresenter);
-        UpdateScoreInputBoundary allTimeUpdateScoreUseCase = new UpdateScoreInteractor(allTimeLeaderboard, allTimePresenter);
-        UpdateScoreInputBoundary dailyUpdateScoreUseCase = new UpdateScoreInteractor(dailyLeaderboard, dailyPresenter);
+        UpdateScoreInputBoundary monthlyUpdateScoreUseCase = new UpdateScoreUseCase(monthlyLeaderboard, monthlyPresenter, leaderboardDAO);
+        UpdateScoreInputBoundary allTimeUpdateScoreUseCase = new UpdateScoreUseCase(allTimeLeaderboard, allTimePresenter, leaderboardDAO);
+        UpdateScoreInputBoundary dailyUpdateScoreUseCase = new UpdateScoreUseCase(dailyLeaderboard, dailyPresenter, leaderboardDAO);
 
-        ClearScoresInputBoundary monthlyClearScoresUseCase = new ClearScoresInteractor(monthlyLeaderboard, monthlyPresenter);
-        ClearScoresInputBoundary allTimeClearScoresUseCase = new ClearScoresInteractor(allTimeLeaderboard, allTimePresenter);
-        ClearScoresInputBoundary dailyClearScoresUseCase = new ClearScoresInteractor(dailyLeaderboard, dailyPresenter);
+        ClearScoresInputBoundary monthlyClearScoresUseCase = new ClearScoresUseCase(monthlyLeaderboard, monthlyPresenter, leaderboardDAO);
+        ClearScoresInputBoundary allTimeClearScoresUseCase = new ClearScoresUseCase(allTimeLeaderboard, allTimePresenter, leaderboardDAO);
+        ClearScoresInputBoundary dailyClearScoresUseCase = new ClearScoresUseCase(dailyLeaderboard, dailyPresenter, leaderboardDAO);
 
         LeaderboardController monthlyController = new LeaderboardController(
                 monthlyAddScoreUseCase,

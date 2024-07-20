@@ -5,7 +5,7 @@ import framework.view.UserSignupView;
 import interface_adapter.controller.UserSignupController;
 import interface_adapter.presenter.UserSignupPresenter;
 import interface_adapter.viewmodel.UserSignupViewModel;
-import use_case.UserSignupUseCase.UserSignupUseCase;
+import use_case.UserUseCases.UserSignupUseCase.UserSignupUseCase;
 
 import java.io.IOException;
 

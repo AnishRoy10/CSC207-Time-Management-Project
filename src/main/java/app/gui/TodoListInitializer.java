@@ -6,12 +6,12 @@ import interface_adapter.viewmodel.TodoListViewModel;
 import data_access.TodoListDataAccessObject;
 import repositories.TodoListRepository;
 import framework.view.TodoListView;
-import use_case.AddTaskUseCase.AddTaskUseCase;
-import use_case.CompleteTaskUseCase.CompleteTaskUseCase;
-import use_case.FilterTasksUseCase.FilterTasksUseCase;
-import use_case.LoadTodoListUseCase.LoadTodoListUseCase;
-import use_case.RemoveTaskUseCase.RemoveTaskUseCase;
-import use_case.SortTasksUseCase.SortTasksUseCase;
+import use_case.TodoListUseCases.AddTaskUseCase.AddTaskUseCase;
+import use_case.TodoListUseCases.CompleteTaskUseCase.CompleteTaskUseCase;
+import use_case.TodoListUseCases.FilterTasksUseCase.FilterTasksUseCase;
+import use_case.TodoListUseCases.LoadTodoListUseCase.LoadTodoListUseCase;
+import use_case.TodoListUseCases.RemoveTaskUseCase.RemoveTaskUseCase;
+import use_case.TodoListUseCases.SortTasksUseCase.SortTasksUseCase;
 
 public class TodoListInitializer {
     public static void main(String[] args) {

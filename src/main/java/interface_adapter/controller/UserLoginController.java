@@ -1,7 +1,7 @@
 package interface_adapter.controller;
 
-import use_case.UserLoginUseCase.UserLoginInputBoundary;
-import use_case.UserLoginUseCase.UserLoginRequestModel;
+import use_case.UserUseCases.UserLoginUseCase.UserLoginInputBoundary;
+import use_case.UserUseCases.UserLoginUseCase.UserLoginRequestModel;
 
 /**
  * Controller class for user login.

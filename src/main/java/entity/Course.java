@@ -90,4 +90,6 @@ public class Course implements Serializable {
     public boolean removeUser(User user) {
         return users.remove(user);
     }
+
+
 }

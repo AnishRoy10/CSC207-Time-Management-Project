@@ -10,43 +10,49 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
+/**
+ * DAO for storing and retrieving TodoLists from a JSON file.
+ */
 public class TodoListDataAccessObject implements TodoListRepository {
-    private static final String DIRECTORY_PATH = "saves";
-    private static final String FILE_PATH = DIRECTORY_PATH + "/todo_list.json";
+    private final File fileCache;
     private final Gson gson;
 
-    public TodoListDataAccessObject() {
-        gson = new GsonBuilder()
+    public TodoListDataAccessObject(String filePath) throws IOException {
+        this.fileCache = new File(filePath);
+        if (!fileCache.exists()) {
+            fileCache.createNewFile();
+        }
+        this.gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer())
+                .setPrettyPrinting()
                 .create();
     }
 
     @Override
-    public TodoList loadTodoList() {
-        try (FileReader reader = new FileReader(FILE_PATH)) {
-            Type todoListType = new TypeToken<TodoList>() {}.getType();
-            return gson.fromJson(reader, todoListType);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public TodoList loadTodoList(String username) throws IOException {
+        if (fileCache.length() == 0) {
             return new TodoList();
+        }
+        try (Reader reader = new FileReader(fileCache)) {
+            Type todoListType = new TypeToken<Map<String, TodoList>>() {}.getType();
+            Map<String, TodoList> todoMap = gson.fromJson(reader, todoListType);
+            return todoMap.getOrDefault(username, new TodoList());
         }
     }
 
     @Override
-    public void saveTodoList(TodoList todoList) {
-        try {
-            File directory = new File(DIRECTORY_PATH);
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-            try (FileWriter writer = new FileWriter(FILE_PATH)) {
-                gson.toJson(todoList, writer);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void saveTodoList(String username, TodoList todoList) throws IOException {
+        Map<String, TodoList> todoMap = new HashMap<>();
+        todoMap.put(username, todoList);
+        try (Writer writer = new FileWriter(fileCache)) {
+            gson.toJson(todoMap, writer);
         }
     }
 }

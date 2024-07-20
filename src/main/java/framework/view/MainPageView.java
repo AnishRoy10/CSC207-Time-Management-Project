@@ -15,11 +15,13 @@ import java.awt.event.ActionListener;
  * various features of the application such as the Calendar, Leaderboard, To-do List, and Timer.
  */
 public class MainPageView extends JFrame {
+    private final String username;
 
     /**
      * Constructor for MainPageView. Sets up the UI components and layout for the main navigation screen.
      */
-    public MainPageView() {
+    public MainPageView(String username) {
+        this.username = username;
         setTitle("Time Management Application");
         setSize(300, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,7 +86,7 @@ public class MainPageView extends JFrame {
      * This method is responsible for initializing and displaying the To-do List view.
      */
     private void openTodoList() {
-        TodoListInitializer.main(null);
+        TodoListInitializer.initializeTodoList(username);
     }
 
     /**
@@ -103,7 +105,7 @@ public class MainPageView extends JFrame {
 //     */
 //    public static void main(String[] args) {
 //        SwingUtilities.invokeLater(() -> {
-//            MainPageView main = new MainPageView();
+//            MainPageView main = new MainPageView(username);
 //            main.setVisible(true);
 //        });
 //    }

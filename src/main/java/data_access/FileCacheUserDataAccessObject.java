@@ -1,44 +1,41 @@
 package data_access;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import entity.User;
-import entity.Course;
 import repositories.UserRepository;
+
 import java.io.*;
+import java.lang.reflect.Type;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * DAO for storing the active user in a txt file
+ * The FileCacheUserDataAccessObject class is responsible for managing the caching of User objects
+ * using a JSON file. This class provides methods to write a User object to the cache, read a User
+ * object from the cache, check if a User exists in the cache, and find a User by username.
  */
-
-public class FileCacheUserDataAccessObject implements UserRepository{
-    private File fileCache;
-    private String activeDirectory;
-
-    /**
-     * Constructs a new FileCacheUserDataAccessObject and creates a new file if it doesn't exist.
-     *
-     * @throws IOException If an I/O error occurs.
-     */
-    public FileCacheUserDataAccessObject() throws IOException {
-        activeDirectory = System.getProperty("user.dir");
-        System.out.println(activeDirectory);
-        fileCache = new File(activeDirectory+"\\src\\main\\java\\data_access\\userCache.txt");
-        if (!fileCache.exists()) {
-            fileCache.createNewFile();
-        }
-    }
+public class FileCacheUserDataAccessObject implements UserRepository {
+    private final File fileCache;
+    private final Gson gson;
 
     /**
-     * Constructs a new FileCacheUserDataAccessObject with a specified file path for testing.
+     * Constructs a new FileCacheUserDataAccessObject with the specified file path.
      *
      * @param filePath The path to the cache file.
      * @throws IOException If an I/O error occurs.
      */
     public FileCacheUserDataAccessObject(String filePath) throws IOException {
-        this.activeDirectory = null;
         this.fileCache = new File(filePath);
         if (!fileCache.exists()) {
             fileCache.createNewFile();
         }
+        this.gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer())
+                .setPrettyPrinting()
+                .create();
     }
 
     /**
@@ -49,27 +46,50 @@ public class FileCacheUserDataAccessObject implements UserRepository{
      */
     @Override
     public void WriteToCache(User user) throws IOException {
-        try (FileOutputStream fos = new FileOutputStream(fileCache);
-             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-            oos.writeObject(user);
+        Map<String, User> userMap = readAllUsers();
+        userMap.put(user.getUsername(), user);
+        try (Writer writer = new FileWriter(fileCache)) {
+            gson.toJson(userMap, writer);
         }
     }
 
     /**
-     * Reads a User object from the cache.
+     * Reads a User object from the cache. This method reads the first user from the cache file.
      *
      * @return The User object read from the cache, or null if the file is empty.
      * @throws IOException If an I/O error occurs.
-     * @throws ClassNotFoundException If the User class is not found.
      */
     @Override
-    public User ReadFromCache() throws IOException, ClassNotFoundException {
-        try (FileInputStream fis = new FileInputStream(fileCache);
-             ObjectInputStream ois = new ObjectInputStream(fis)) {
-            return (User) ois.readObject();
-        } catch (EOFException e) {
-            // Return null if the file is empty
+    public User ReadFromCache() throws IOException {
+        if (fileCache.length() == 0) {
             return null;
+        }
+        try (Reader reader = new FileReader(fileCache)) {
+            Type userType = new TypeToken<Map<String, User>>() {}.getType();
+            Map<String, User> userMap = gson.fromJson(reader, userType);
+            if (userMap != null && !userMap.isEmpty()) {
+                return userMap.values().iterator().next(); // Return the first user
+            }
+            return null;
+        }
+    }
+
+    /**
+     * Reads a User object from the cache by username.
+     *
+     * @param username The username of the user to read.
+     * @return The User object with the specified username, or null if not found.
+     * @throws IOException If an I/O error occurs.
+     */
+    @Override
+    public User ReadFromCache(String username) throws IOException {
+        if (fileCache.length() == 0) {
+            return null;
+        }
+        try (Reader reader = new FileReader(fileCache)) {
+            Type userType = new TypeToken<Map<String, User>>() {}.getType();
+            Map<String, User> userMap = gson.fromJson(reader, userType);
+            return userMap.get(username);
         }
     }
 
@@ -79,72 +99,33 @@ public class FileCacheUserDataAccessObject implements UserRepository{
      * @param username The username to check.
      * @return True if the user exists, false otherwise.
      * @throws IOException If an I/O error occurs.
-     * @throws ClassNotFoundException If the User class is not found.
      */
     @Override
-    public boolean UserExists(String username) throws IOException, ClassNotFoundException {
-        User user = ReadFromCache();
-        return user != null && user.getUsername().equals(username);
+    public boolean UserExists(String username) throws IOException {
+        User user = findByUsername(username);
+        return user != null;
     }
-
-
 
     /**
-     * Finds a user by username.
+     * Finds a user by username in the cache.
      *
      * @param username The username to find.
-     * @return The User object with the specified username.
+     * @return The User object with the specified username, or null if not found.
      * @throws IOException If an I/O error occurs.
-     * @throws ClassNotFoundException If the User class is not found.
      */
-    public User findByUsername(String username) throws IOException, ClassNotFoundException {
-        User user = ReadFromCache();
-        if (user != null && user.getUsername().equals(username)) {
-            return user;
-        } else {
-            return null;
+    @Override
+    public User findByUsername(String username) throws IOException {
+        return ReadFromCache(username);
+    }
+
+    private Map<String, User> readAllUsers() throws IOException {
+        if (fileCache.length() == 0) {
+            return new HashMap<>();
+        }
+        try (Reader reader = new FileReader(fileCache)) {
+            Type userType = new TypeToken<Map<String, User>>() {}.getType();
+            Map<String, User> userMap = gson.fromJson(reader, userType);
+            return userMap != null ? userMap : new HashMap<>();
         }
     }
-
-
-    /*  This commented block is for testing user read/write to file
-    public void TestUserSerialization() throws IOException, ClassNotFoundException {
-        User[] users = new User[1];
-        User[] emtpyUsers = new User[10];
-        Course[] courses = new Course[1];
-        Course dummyCourse = new Course("CSC207", "Software Design");
-        courses[0] = dummyCourse;
-        User dummy = new User("user2", emtpyUsers, courses);
-        users[0] = dummy;
-        User newUser = new User("user1", users, courses);
-        WriteToCache(newUser);
-    }
-*/
-//    public static void main(String[] args) throws IOException, ClassNotFoundException {
-//        FileCacheUserDataAccessObject f = new FileCacheUserDataAccessObject();
-//        f.TestUserSerialization();
-//        User readUser = f.ReadFromCache();
-//        System.out.println(readUser.getUsername());
-//        System.out.println(readUser.getFriends().exportFriendsNames());
-//        System.out.println(readUser.getCourses().get(0).getName());
-//    }
-
-//    public static void main(String[] args) {
-//        try {
-//            FileCacheUserDataAccessObject cacheDAO = new FileCacheUserDataAccessObject();
-//            User user = cacheDAO.ReadFromCache();
-//            if (user != null) {
-//                System.out.println("Username: " + user.getUsername());
-//                System.out.println("Password: " + user.getPassword());
-//                System.out.println("Friends: " + user.getFriends().toString());
-//                System.out.println("Courses: ");
-//                user.getCourses().forEach(course -> System.out.println(course.getName()));
-//            } else {
-//                System.out.println("No user found in cache.");
-//            }
-//        } catch (IOException | ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
 }

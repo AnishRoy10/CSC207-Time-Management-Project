@@ -20,6 +20,7 @@ public class User implements Serializable {
     private int score; // The users score
     private Timer timer; // A timer set by the user
     private Calendar calendar; // The user's Calendar
+    private int aNumber;
     /**
      * Constructs a new User object.
      *
@@ -28,6 +29,8 @@ public class User implements Serializable {
      * @param friends  Friends for this user
      * @param courses  Courses this user is in
      */
+
+
     public User(String username, String password, User[] friends, Course[] courses) {
         this.username = username;
         this.password = hashPassword(password); // Hash the password
@@ -36,6 +39,7 @@ public class User implements Serializable {
         this.todo = new TodoList();
         this.score = 0;
         this.calendar = new Calendar();
+        this.aNumber = 5;
     }
 
     // Getter for the username
@@ -128,9 +132,19 @@ public class User implements Serializable {
         this.score = score;
     }
 
+    // Getter for timer
+    public Timer getTimer() {
+        return timer;
+    }
+
     // Setter for timer
     public void addTimer(Timer timer) {
         this.timer = timer;
+    }
+
+    // Getter for the to-do list
+    public TodoList getTodoList() {
+        return todo;
     }
 
     // Hash the password (to be properly done later. SHA-256 perhaps?)
@@ -149,5 +163,14 @@ public class User implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(username);
+    }
+
+    // Getter and Setter for aNumber
+    public int getANumber() {
+        return aNumber;
+    }
+
+    public void setANumber(int aNumber) {
+        this.aNumber = aNumber;
     }
 }

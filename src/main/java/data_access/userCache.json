@@ -1,0 +1,57 @@
+{
+  "swagman100": {
+    "username": "swagman100",
+    "password": "Password1",
+    "friends": {
+      "friends": []
+    },
+    "courses": [],
+    "todo": {
+      "tasks": [
+        {
+          "id": 1,
+          "title": "ssfas",
+          "description": "ffsaf",
+          "completed": false,
+          "startDate": "2024-07-04T03:30:00",
+          "deadline": "2024-07-18T04:00:00",
+          "course": "dsada"
+        },
+        {
+          "id": 2,
+          "title": "ssasaf",
+          "description": "gagdaf",
+          "completed": false,
+          "startDate": "2024-07-25T04:00:00",
+          "deadline": "2024-07-31T04:00:00",
+          "course": "dada"
+        }
+      ]
+    },
+    "score": 0,
+    "aNumber": 5
+  },
+  "swagman2": {
+    "username": "swagman2",
+    "password": "Password1",
+    "friends": {
+      "friends": []
+    },
+    "courses": [],
+    "todo": {
+      "tasks": [
+        {
+          "id": 1,
+          "title": "swagman2",
+          "description": "Tasks",
+          "completed": false,
+          "startDate": "2024-07-09T03:00:00",
+          "deadline": "2024-07-17T03:00:00",
+          "course": "dsad"
+        }
+      ]
+    },
+    "score": 0,
+    "aNumber": 5
+  }
+}

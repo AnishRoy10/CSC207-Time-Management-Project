@@ -1,10 +1,11 @@
 package use_case.TodoListUseCases.RemoveTaskUseCase;
 
 import entity.Task;
-import entity.TodoList;
-import repositories.TodoListRepository;
+import entity.User;
+import repositories.UserRepository;
 import use_case.TaskData;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,43 +14,54 @@ import java.util.stream.Collectors;
  * Use case for removing a task.
  */
 public class RemoveTaskUseCase implements RemoveTaskInputBoundary {
-    private final TodoListRepository todoListRepository;
+    private final UserRepository userRepository;
     private final RemoveTaskOutputBoundary removeTaskOutputBoundary;
 
-    public RemoveTaskUseCase(TodoListRepository todoListRepository, RemoveTaskOutputBoundary removeTaskOutputBoundary) {
-        this.todoListRepository = todoListRepository;
+    public RemoveTaskUseCase(UserRepository userRepository, RemoveTaskOutputBoundary removeTaskOutputBoundary) {
+        this.userRepository = userRepository;
         this.removeTaskOutputBoundary = removeTaskOutputBoundary;
     }
 
     @Override
     public void execute(RemoveTaskRequestModel requestModel) {
-        TodoList todoList = todoListRepository.loadTodoList();
-        Optional<Task> taskOptional = todoList.getTasks().stream()
-                .filter(task -> task.getId() == requestModel.getTaskId())
-                .findFirst();
+        try {
+            // Load the user
+            User user = userRepository.findByUsername(requestModel.getUsername());
+            if (user == null) {
+                throw new RuntimeException("User not found");
+            }
 
-        if (taskOptional.isPresent()) {
-            Task task = taskOptional.get();
-            todoList.removeTask(task);
-            todoListRepository.saveTodoList(todoList);
+            // Get the user's to-do list
+            Optional<Task> taskOptional = user.getTodoList().getTasks().stream()
+                    .filter(task -> task.getId() == requestModel.getTaskId())
+                    .findFirst();
 
-            List<TaskData> tasks = todoList.getTasks().stream()
-                    .map(t -> new TaskData(
-                            t.getId(),
-                            t.getTitle(),
-                            t.getDescription(),
-                            t.getStartDate(),
-                            t.getDeadline(),
-                            t.isCompleted(),
-                            t.getCourse(),
-                            t.getCompletionDate()
-                    ))
-                    .collect(Collectors.toList());
+            if (taskOptional.isPresent()) {
+                Task task = taskOptional.get();
+                user.getTodoList().removeTask(task);
+                userRepository.WriteToCache(user);
 
-            RemoveTaskResponseModel responseModel = new RemoveTaskResponseModel(tasks, task.getId());
-            removeTaskOutputBoundary.present(responseModel);
-        } else {
-            throw new RuntimeException("Task not found");
+                List<TaskData> tasks = user.getTodoList().getTasks().stream()
+                        .map(t -> new TaskData(
+                                t.getId(),
+                                t.getTitle(),
+                                t.getDescription(),
+                                t.getStartDate(),
+                                t.getDeadline(),
+                                t.isCompleted(),
+                                t.getCourse(),
+                                t.getCompletionDate()
+                        ))
+                        .collect(Collectors.toList());
+
+                RemoveTaskResponseModel responseModel = new RemoveTaskResponseModel(tasks, task.getId());
+                removeTaskOutputBoundary.present(responseModel);
+            } else {
+                throw new RuntimeException("Task not found");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the error appropriately
         }
     }
 }

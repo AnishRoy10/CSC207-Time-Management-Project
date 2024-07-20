@@ -6,10 +6,12 @@ package use_case.TodoListUseCases.SortTasksUseCase;
 public class SortTasksRequestModel {
     private String criteria;
     private boolean ascending;
+    private String username;
 
-    public SortTasksRequestModel(String criteria, boolean ascending) {
+    public SortTasksRequestModel(String criteria, boolean ascending, String username) {
         this.criteria = criteria;
         this.ascending = ascending;
+        this.username = username;
     }
 
     // Getters and setters
@@ -28,5 +30,13 @@ public class SortTasksRequestModel {
 
     public void setAscending(boolean ascending) {
         this.ascending = ascending;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

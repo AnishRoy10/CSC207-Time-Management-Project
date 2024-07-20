@@ -55,9 +55,10 @@ public class TodoListController {
      * @param startDate   the start date of the task
      * @param deadline    the deadline of the task
      * @param course      the course associated with the task
+     * @param username    the username of the user
      */
-    public void addTask(String title, String description, LocalDateTime startDate, LocalDateTime deadline, String course) {
-        AddTaskRequestModel requestModel = new AddTaskRequestModel(title, description, startDate, deadline, course);
+    public void addTask(String title, String description, LocalDateTime startDate, LocalDateTime deadline, String course, String username) {
+        AddTaskRequestModel requestModel = new AddTaskRequestModel(title, description, startDate, deadline, course, username);
         addTaskUseCase.execute(requestModel);
     }
 
@@ -65,9 +66,10 @@ public class TodoListController {
      * Removes a task from the to-do list.
      *
      * @param taskId the ID of the task to be removed
+     * @param username the username of the user
      */
-    public void removeTask(int taskId) {
-        RemoveTaskRequestModel requestModel = new RemoveTaskRequestModel(taskId);
+    public void removeTask(int taskId, String username) {
+        RemoveTaskRequestModel requestModel = new RemoveTaskRequestModel(taskId, username);
         removeTaskUseCase.execute(requestModel);
     }
 
@@ -75,9 +77,10 @@ public class TodoListController {
      * Toggles the completion status of a task.
      *
      * @param taskId the ID of the task to be toggled
+     * @param username the username of the user
      */
-    public void toggleTaskCompletion(int taskId) {
-        CompleteTaskRequestModel requestModel = new CompleteTaskRequestModel(taskId);
+    public void toggleTaskCompletion(int taskId, String username) {
+        CompleteTaskRequestModel requestModel = new CompleteTaskRequestModel(taskId, username);
         completeTaskUseCase.execute(requestModel);
     }
 
@@ -86,9 +89,10 @@ public class TodoListController {
      *
      * @param criterion the sorting criterion
      * @param ascending whether the sorting should be in ascending order
+     * @param username the username of the user
      */
-    public void sortTasks(String criterion, boolean ascending) {
-        SortTasksRequestModel requestModel = new SortTasksRequestModel(criterion, ascending);
+    public void sortTasks(String criterion, boolean ascending, String username) {
+        SortTasksRequestModel requestModel = new SortTasksRequestModel(criterion, ascending, username);
         sortTasksUseCase.execute(requestModel);
     }
 
@@ -96,17 +100,20 @@ public class TodoListController {
      * Filters the tasks in the to-do list based on completion status.
      *
      * @param showCompleted whether to show completed tasks
+     * @param username the username of the user
      */
-    public void filterTasks(boolean showCompleted) {
-        FilterTasksRequestModel requestModel = new FilterTasksRequestModel(showCompleted);
+    public void filterTasks(boolean showCompleted, String username) {
+        FilterTasksRequestModel requestModel = new FilterTasksRequestModel(showCompleted, username);
         filterTasksUseCase.execute(requestModel);
     }
 
     /**
      * Loads the to-do list.
+     *
+     * @param username the username of the user
      */
-    public void loadTodoList() {
-        LoadTodoListRequestModel requestModel = new LoadTodoListRequestModel();
+    public void loadTodoList(String username) {
+        LoadTodoListRequestModel requestModel = new LoadTodoListRequestModel(username);
         loadTodoListUseCase.execute(requestModel);
     }
 }

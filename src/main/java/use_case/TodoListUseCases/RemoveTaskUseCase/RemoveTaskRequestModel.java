@@ -5,12 +5,14 @@ package use_case.TodoListUseCases.RemoveTaskUseCase;
  */
 public class RemoveTaskRequestModel {
     private int taskId;
+    private String username;
 
-    public RemoveTaskRequestModel(int taskId) {
+    public RemoveTaskRequestModel(int taskId, String username) {
         this.taskId = taskId;
+        this.username = username;
     }
 
-    // Getter and setter
+    // Getters and setters
 
     public int getTaskId() {
         return taskId;
@@ -18,5 +20,13 @@ public class RemoveTaskRequestModel {
 
     public void setTaskId(int taskId) {
         this.taskId = taskId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

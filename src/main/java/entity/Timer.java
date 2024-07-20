@@ -8,6 +8,7 @@ Represents a timer.
  Each timer has a start time, end time and elasped time.
  */
 public class Timer implements Serializable {
+    private static final long serialVersionUID = 9L;
 
     private final long start_time;
     private final long end_time;

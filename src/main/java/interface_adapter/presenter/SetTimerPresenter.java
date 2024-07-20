@@ -5,6 +5,9 @@ import interface_adapter.viewmodel.RunningTimerViewModel;
 import use_case.SetTimerUseCase.SetTimerOutputBoundary;
 import use_case.SetTimerUseCase.SetTimerOutputData;
 
+/**
+ * Presenter for the timer, implementing the output boundaries for setting the timer.
+ */
 public class SetTimerPresenter implements SetTimerOutputBoundary {
 
     private final SetTimerViewModel setTimerViewModel;

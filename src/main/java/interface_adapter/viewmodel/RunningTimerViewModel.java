@@ -2,6 +2,10 @@ package interface_adapter.viewmodel;
 
 import interface_adapter.ViewModel;
 
+/**
+ * ViewModel for the running timer view, providing a data structure to
+ * hold the timer data.
+ */
 public class RunningTimerViewModel extends ViewModel {
 
     public static final String TITLE_LABEL = "Timer View";

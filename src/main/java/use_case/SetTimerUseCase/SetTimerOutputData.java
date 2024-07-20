@@ -1,5 +1,7 @@
 package use_case.SetTimerUseCase;
-
+/**
+ * Output data for the set timer use case.
+ */
 public class SetTimerOutputData {
     private final int hours;
     private final int minutes;

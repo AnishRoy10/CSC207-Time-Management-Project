@@ -2,9 +2,8 @@ package use_case.SetTimerUseCase;
 
 import entity.Timer;
 
-/*
-The SetTimeUseCase class handles the use case of setting the time for
-the use_case.timer and creating a Timer class to represent the Timer.
+/**
+Use case interactor for the set timer use case.
  */
 public class SetTimerInteractor implements SetTimerInputBoundary {
     final SetTimerDataAccessInterface userDataAccessObject;

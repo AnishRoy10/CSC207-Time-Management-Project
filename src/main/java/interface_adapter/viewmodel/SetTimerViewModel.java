@@ -2,6 +2,9 @@ package interface_adapter.viewmodel;
 
 import interface_adapter.ViewModel;
 
+/**
+ * ViewModel for the set timer view, providing a data structure to hold label titles.
+ */
 public class SetTimerViewModel extends ViewModel {
 
     public static final String TITLE_LABEL = "Set Timer View";

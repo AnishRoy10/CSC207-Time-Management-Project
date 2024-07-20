@@ -33,6 +33,7 @@ public class TimerPresenter implements SetTimerOutputBoundary, UpdateTimerOutput
 
     @Override
     public void prepareFailView(String errorMessage) {
+        runningTimerViewModel.setMessage(errorMessage);
 
     }
 

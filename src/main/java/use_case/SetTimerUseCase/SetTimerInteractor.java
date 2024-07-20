@@ -17,18 +17,25 @@ public class SetTimerInteractor implements SetTimerInputBoundary {
 
 
     public void execute(SetTimerInputData setTimerInputData) {
-        Timer timer = new Timer(setTimerInputData.getHours(),
-                setTimerInputData.getMinutes(),
-                setTimerInputData.getSeconds());
+        if (setTimerInputData.getHours() == 0 ||
+                setTimerInputData.getMinutes() == 0 ||
+                setTimerInputData.getSeconds() == 0) {
+            userPresenter.prepareFailView("Invalid Input");
+        }
+        else {
+            Timer timer = new Timer(setTimerInputData.getHours(),
+                    setTimerInputData.getMinutes(),
+                    setTimerInputData.getSeconds());
 
-        userDataAccessObject.save(timer);
+            userDataAccessObject.save(timer);
 
-        long timerLength = timer.timerLength();
-        int hours = (int) (timerLength / 3600000);
-        int minutes = (int) ((timerLength - hours*3600000) / 60000);
-        int seconds = (int) ((timerLength - hours*3600000 - minutes*60000) / 1000);
+            long timerLength = timer.timerLength();
+            int hours = (int) (timerLength / 3600000);
+            int minutes = (int) ((timerLength - hours * 3600000) / 60000);
+            int seconds = (int) ((timerLength - hours * 3600000 - minutes * 60000) / 1000);
 
-        SetTimerOutputData setTimerOutputData = new SetTimerOutputData(hours, minutes, seconds);
-        userPresenter.prepareSuccessView(setTimerOutputData);
+            SetTimerOutputData setTimerOutputData = new SetTimerOutputData(hours, minutes, seconds);
+            userPresenter.prepareSuccessView(setTimerOutputData);
+        }
     }
 }

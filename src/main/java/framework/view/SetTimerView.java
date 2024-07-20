@@ -82,6 +82,8 @@ public class SetTimerView extends JFrame{
                 runningTimerView.setVisible(true);
                 dispose();
             });
+        } else if ("Invalid Input".equals(runningTimerViewModel.getMessage())) {
+            JOptionPane.showMessageDialog(this, "Invalid Input.");
         }
         clearInputFields();
     }

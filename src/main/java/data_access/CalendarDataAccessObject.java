@@ -1,10 +1,12 @@
 package data_access;
 
+import entity.CalendarEvent;
 import use_case.ViewEventsUseCase.ViewEventsDataAccessInterface;
 import entity.Calendar;
 import java.io.IOException;
 
-public class CalendarDataAccessObject implements ViewEventsDataAccessInterface{
+public class CalendarDataAccessObject implements ViewEventsDataAccessInterface, AddEventDataAccessInterface
+{
     FileCacheUserDataAccessObject fileCacheUserDataAccessObject;
 
     public CalendarDataAccessObject() throws IOException {
@@ -14,4 +16,5 @@ public class CalendarDataAccessObject implements ViewEventsDataAccessInterface{
     public Calendar getCalendar() throws IOException, ClassNotFoundException {
         return this.fileCacheUserDataAccessObject.ReadFromCache().getCalendar();
     }
+    public void addEvent(CalendarEvent event) {this.fileCacheUserDataAccessObject.ReadFromCache().addEvent(event);}
 }

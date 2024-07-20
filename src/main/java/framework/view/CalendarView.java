@@ -4,6 +4,7 @@ import com.github.lgooddatepicker.optionalusertools.DateHighlightPolicy;
 import com.github.lgooddatepicker.zinternaltools.HighlightInformation;
 import entity.Calendar;
 import entity.CalendarEvent;
+import interface_adapter.AddEvent.AddEventController;
 import interface_adapter.ViewEvents.ViewEventsController;
 import interface_adapter.ViewEvents.ViewEventsViewModel;
 
@@ -19,19 +20,23 @@ import java.time.Month;
 public class CalendarView {
     private static ViewEventsViewModel viewEventsViewModel;
     private static ViewEventsController viewEventsController;
+    private static AddEventController addEventController;
     private static JFrame frame = new JFrame();
     private static JPanel panel = new JPanel();
     private static JPanel eventListPanel;
     private static CalendarPanel calendarPanel;
-    private JButton eventViewerButton = new JButton("View Events On Selected Day");
+    private static JButton eventViewerButton = new JButton("View Events On Selected Day");
     private static JTextField nameField;
     private static JTextArea descriptionArea;
     private static DateTimePicker startDatePicker;
     private static DateTimePicker endDatePicker;
     private static JTextField priorityLevelField;
-    public CalendarView(ViewEventsViewModel viewEventsViewModel, ViewEventsController viewEventsController) {
+    public CalendarView(ViewEventsViewModel viewEventsViewModel, ViewEventsController viewEventsController,
+                        AddEventController addEventController) {
         this.viewEventsViewModel = viewEventsViewModel;
         this.viewEventsController = viewEventsController;
+        this.addEventController = addEventController;
+
         frame.setTitle("Calendar Screen");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -159,8 +164,10 @@ public class CalendarView {
         LocalDateTime startDate = startDatePicker.getDateTimeStrict();
         LocalDateTime endDate = endDatePicker.getDateTimeStrict();
         String priorityLevel = priorityLevelField.getText();
-        CalendarEvent newEvent = new CalendarEvent(name, description, priorityLevel, startDate, endDate);
-        showEventsOnDay();
+        try{
+        addEventController.execute(name, description, startDate, endDate, priorityLevel);}
+        catch (IOException | ClassNotFoundException e) {}
+        this.showEventsOnDay();
     }
 
 

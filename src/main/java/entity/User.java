@@ -19,6 +19,7 @@ public class User implements Serializable {
     private final TodoList todo; // To-do list associated with this user
     private int score; // The users score
     private Timer timer; // A timer set by the user
+    private Calendar calendar; // The user's Calendar
     /**
      * Constructs a new User object.
      *
@@ -85,6 +86,15 @@ public class User implements Serializable {
     public void removeTask(Task task) {
         this.todo.removeTask(task);
     }
+
+    // Get the User's calendar
+    public Calendar getCalendar() {return this.calendar();}
+
+    // Get the User's events
+    public List<CalendarEvent> getEvents() {return this.calendar.getAllEvents();}
+
+    // Add an event to the User's calendar
+    public void addEvent(CalendarEvent event) {this.calendar.addEvent(event);}
 
     // Getter for the courses
     public List<Course> getCourses() {

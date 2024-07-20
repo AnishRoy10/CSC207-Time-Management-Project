@@ -35,6 +35,7 @@ public class User implements Serializable {
         this.courses = new ArrayList<>(Arrays.asList(courses));
         this.todo = new TodoList();
         this.score = 0;
+        this.calendar = new Calendar();
     }
 
     // Getter for the username

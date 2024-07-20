@@ -7,17 +7,24 @@ import interface_adapter.controller.TimerController;
 import framework.view.SetTimerView;
 import interface_adapter.viewmodel.RunningTimerViewModel;
 import use_case.SetTimerUseCase.SetTimerInteractor;
+import use_case.UpdateTimerUseCase.UpdateTimerDataAccessInterface;
+import use_case.UpdateTimerUseCase.UpdateTimerInteractor;
 
 public class TimerExecutable {
+    static class Temp implements UpdateTimerDataAccessInterface {
+
+    }
     public static void main(String[] args) {
         SetTimerViewModel setTimerViewModel = new SetTimerViewModel("set timer");
         RunningTimerViewModel runningTimerViewModel = new RunningTimerViewModel("running timer");
 
         InMemoryTimerDataAccessObject dataAccessObject = new InMemoryTimerDataAccessObject();
+        UpdateTimerDataAccessInterface temp = new Temp();
 
         TimerPresenter presenter = new TimerPresenter(setTimerViewModel, runningTimerViewModel);
         SetTimerInteractor setTimerInteractor = new SetTimerInteractor(dataAccessObject, presenter);
-        TimerController controller = new TimerController(setTimerInteractor);
+        UpdateTimerInteractor updateTimerInteractor = new UpdateTimerInteractor(temp, presenter);
+        TimerController controller = new TimerController(setTimerInteractor, updateTimerInteractor);
 
         SetTimerView view = new SetTimerView(controller, setTimerViewModel, runningTimerViewModel);
         view.setVisible(true);

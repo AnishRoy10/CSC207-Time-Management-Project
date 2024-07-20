@@ -2,6 +2,7 @@ package framework.view;
 
 
 import data_access.InMemoryTimerDataAccessObject;
+import interface_adapter.controller.TimerController;
 import interface_adapter.viewmodel.RunningTimerViewModel;
 
 import javax.swing.*;
@@ -12,9 +13,16 @@ import java.awt.event.ActionListener;
 
 public class RunningTimerView extends JFrame {
 
+    private final TimerController timerController;
+    private final RunningTimerViewModel runningTimerViewModel;
+
     private final JLabel timerLabel;
 
-    public RunningTimerView() {
+    public RunningTimerView(TimerController timerController,
+                            RunningTimerViewModel runningTimerViewModel) {
+        this.timerController = timerController;
+        this.runningTimerViewModel = runningTimerViewModel;
+
         setTitle(RunningTimerViewModel.TITLE_LABEL);
         setSize(1200, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -36,13 +44,16 @@ public class RunningTimerView extends JFrame {
 
         ActionListener updateTimer = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // update timer use case
-
+                updateTimer();
             }
         };
         Timer actionTimer = new Timer(100, updateTimer);
         actionTimer.setRepeats(true);
         actionTimer.start();
 
+    }
+
+    private void updateTimer() {
+        timerController.execute_update_timer();
     }
 }

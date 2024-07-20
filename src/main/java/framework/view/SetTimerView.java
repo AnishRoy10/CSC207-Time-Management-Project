@@ -1,6 +1,6 @@
 package framework.view;
 
-import interface_adapter.controller.SetTimerController;
+import interface_adapter.controller.TimerController;
 import interface_adapter.viewmodel.SetTimerViewModel;
 import interface_adapter.viewmodel.RunningTimerViewModel;
 
@@ -13,7 +13,7 @@ public class SetTimerView extends JFrame{
 
     private final SetTimerViewModel setTimerViewModel;
     private final RunningTimerViewModel runningTimerViewModel;
-    private final SetTimerController setTimerController;
+    private final TimerController timerController;
 
     private final JTextField hoursInputField;
     private final JTextField minutesInputField;
@@ -21,10 +21,10 @@ public class SetTimerView extends JFrame{
 
     private final JButton setTimerButton;
 
-    public SetTimerView(SetTimerController setTimerController,
+    public SetTimerView(TimerController setTimerController,
                         SetTimerViewModel setTimerViewModel,
                         RunningTimerViewModel runningTimerViewModel) {
-        this.setTimerController = setTimerController;
+        this.timerController = setTimerController;
         this.setTimerViewModel = setTimerViewModel;
         this.runningTimerViewModel = runningTimerViewModel;
 
@@ -73,11 +73,12 @@ public class SetTimerView extends JFrame{
         String hours = hoursInputField.getText();
         String minutes = minutesInputField.getText();
         String seconds = secondsInputField.getText();
-        setTimerController.execute(hours, minutes, seconds);
+        timerController.execute_set_timer(hours, minutes, seconds);
 
         if ("Success".equals(runningTimerViewModel.getMessage())) {
             SwingUtilities.invokeLater(() -> {
-                RunningTimerView runningTimerView = new RunningTimerView();
+                RunningTimerView runningTimerView = new RunningTimerView(
+                        timerController, runningTimerViewModel);
                 runningTimerView.setVisible(true);
                 dispose();
             });

@@ -4,17 +4,19 @@ import interface_adapter.viewmodel.SetTimerViewModel;
 import interface_adapter.viewmodel.RunningTimerViewModel;
 import use_case.SetTimerUseCase.SetTimerOutputBoundary;
 import use_case.SetTimerUseCase.SetTimerOutputData;
+import use_case.UpdateTimerUseCase.UpdateTimerOutputBoundary;
+import use_case.UpdateTimerUseCase.UpdateTimerOutputData;
 
 /**
  * Presenter for the timer, implementing the output boundaries for setting the timer.
  */
-public class SetTimerPresenter implements SetTimerOutputBoundary {
+public class TimerPresenter implements SetTimerOutputBoundary, UpdateTimerOutputBoundary {
 
     private final SetTimerViewModel setTimerViewModel;
     private final RunningTimerViewModel runningTimerViewModel;
 
-    public SetTimerPresenter(SetTimerViewModel setTimerViewModel,
-                             RunningTimerViewModel runningTimerViewModel) {
+    public TimerPresenter(SetTimerViewModel setTimerViewModel,
+                          RunningTimerViewModel runningTimerViewModel) {
         this.setTimerViewModel = setTimerViewModel;
         this.runningTimerViewModel = runningTimerViewModel;
 
@@ -31,6 +33,11 @@ public class SetTimerPresenter implements SetTimerOutputBoundary {
 
     @Override
     public void prepareFailView(String errorMessage) {
+
+    }
+
+    @Override
+    public void prepareSuccessView(UpdateTimerOutputData response) {
 
     }
 }

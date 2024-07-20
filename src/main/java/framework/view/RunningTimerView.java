@@ -55,5 +55,7 @@ public class RunningTimerView extends JFrame {
 
     private void updateTimer() {
         timerController.execute_update_timer();
+        timerLabel.setText(RunningTimerViewModel.HOURS +
+                ":" + RunningTimerViewModel.MINUTES + ":" + RunningTimerViewModel.SECONDS);
     }
 }

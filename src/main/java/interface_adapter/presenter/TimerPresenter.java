@@ -38,6 +38,9 @@ public class TimerPresenter implements SetTimerOutputBoundary, UpdateTimerOutput
 
     @Override
     public void prepareSuccessView(UpdateTimerOutputData response) {
-
+        RunningTimerViewModel.setHOURS(Integer.toString(response.getHours()));
+        RunningTimerViewModel.setMINUTES(Integer.toString(response.getMinutes()));
+        RunningTimerViewModel.setSECONDS(Integer.toString(response.getSeconds()));
+        runningTimerViewModel.setMessage("Success");
     }
 }

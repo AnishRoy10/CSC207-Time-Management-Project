@@ -117,6 +117,9 @@ public class User implements Serializable {
         this.score = score;
     }
 
+    // Getter for timer
+    public Timer getTimer() { return this.timer; }
+
     // Setter for timer
     public void addTimer(Timer timer) {
         this.timer = timer;

@@ -3,6 +3,7 @@ package interface_adapter.controller;
 import use_case.SetTimerUseCase.SetTimerInputBoundary;
 import use_case.SetTimerUseCase.SetTimerInputData;
 import use_case.UpdateTimerUseCase.UpdateTimerInputBoundary;
+import use_case.UpdateTimerUseCase.UpdateTimerInputData;
 
 /**
  * Controller for the timer which handles the set timer use case.
@@ -50,6 +51,7 @@ public class TimerController {
     }
 
     public void execute_update_timer() {
-        // execute use case
+        UpdateTimerInputData updateTimerInputData = new UpdateTimerInputData();
+        userUpdateTimerUseCaseInteractor.execute(updateTimerInputData);
     }
 }

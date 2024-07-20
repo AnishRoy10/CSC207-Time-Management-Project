@@ -1,5 +1,7 @@
 package use_case.UpdateTimerUseCase;
 
-public interface UpdateTimerDataAccessInterface {
+import entity.User;
 
+public interface UpdateTimerDataAccessInterface {
+    User load();
 }

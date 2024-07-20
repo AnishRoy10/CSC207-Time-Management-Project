@@ -2,6 +2,8 @@ package entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.io.Serializable;
+import java.util.List;
+
 /**
  * The CalendarEvent class represents an event in the calendar of the user.
  * Each event has a name, an optional description, its status (whether it has passed, is ongoing, or yet to start),
@@ -155,6 +157,19 @@ public class CalendarEvent implements Serializable{
         else if (LocalDateTime.now().isBefore(this.endDate)) {this.status = "In Progress";}
         else {this.status = "Finished";}
     }
+
+    public static List<CalendarEvent> eventsBetweenDates(LocalDateTime dateOne, LocalDateTime dateTwo, List<CalendarEvent> eventList) {
+        List<CalendarEvent> includedEventList = new ArrayList<CalendarEvent>();
+        for (CalendarEvent event : eventList) {
+            boolean conditionOne = dateOne.isBefore(event.getStartDate());
+            boolean conditionTwo =
+                    (event.getHasEndDate() ? dateTwo.isAfter(event.getEndDate()) : dateTwo.isAfter(event.getStartDate()));
+            if (conditionOne && conditionTwo){includedEventList.add(event);}
+        }
+        return includedEventList;
+    }
+
+    public static List<CalendarEvent> return
 
     /**
      * Returns a string representation of the event.

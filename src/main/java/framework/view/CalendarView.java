@@ -4,15 +4,20 @@ import com.github.lgooddatepicker.optionalusertools.DateHighlightPolicy;
 import com.github.lgooddatepicker.zinternaltools.HighlightInformation;
 import entity.Calendar;
 import entity.CalendarEvent;
+import interface_adapter.ViewEvents.ViewEventsController;
+import interface_adapter.ViewEvents.ViewEventsViewModel;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import java.util.List;
 import java.awt.*;
 import java.time.*;
 import java.time.Month;
 
 public class CalendarView {
-    private static Calendar calendar;
+    private static ViewEventsViewModel viewEventsViewModel;
+    private static ViewEventsController viewEventsController;
     private static JFrame frame = new JFrame();
     private static JPanel panel = new JPanel();
     private static JPanel eventListPanel;
@@ -23,9 +28,10 @@ public class CalendarView {
     private static DateTimePicker startDatePicker;
     private static DateTimePicker endDatePicker;
     private static JTextField priorityLevelField;
-    public CalendarView(Calendar calendar) {
-        this.calendar = calendar;
-        frame.setTitle("Calendar Events Viewer");
+    public CalendarView(ViewEventsViewModel viewEventsViewModel, ViewEventsController viewEventsController) {
+        this.viewEventsViewModel = viewEventsViewModel;
+        this.viewEventsController = viewEventsController;
+        frame.setTitle("Calendar Screen");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         DatePickerSettings dateSettings = new DatePickerSettings();
@@ -102,9 +108,8 @@ public class CalendarView {
         }
 
         public HighlightInformation getHighlightInformationOrNull(LocalDate date) {
-            LocalDateTime startOfDate = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 0, 0);
-            LocalDateTime endOfDate = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), 23, 59);
-            if (calendar.hasEventsBetweenDates(startOfDate, endOfDate)) {
+            viewEventsController.execute(date);
+            if (! viewEventsViewModel.getEventListToBeShown().isEmpty()) {
                 return new HighlightInformation(Color.green, (Color) null, "This day has an event");
             } else {
                 return null;
@@ -121,11 +126,8 @@ public class CalendarView {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         LocalDate date = calendarPanel.getSelectedDate();
-        LocalDateTime start = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(),
-                0, 0);
-        LocalDateTime end = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(),
-                23, 59);
-        for (CalendarEvent calEvent : calendar.eventsBetweenDates(start, end)) {
+        ViewEventsController.execute(date);
+        for (CalendarEvent calEvent : viewEventsViewModel.getEventListToBeShown()) {
             JPanel eventPanel = new EventCard(calEvent);
             eventListPanel.add(eventPanel, gbc);
             eventListPanel.revalidate();

@@ -98,7 +98,7 @@ public class Calendar implements Serializable{
      */
     public List<CalendarEvent> eventsBetweenDates(LocalDateTime dateOne, LocalDateTime dateTwo) {
         List<CalendarEvent> eventList = this.getAllEvents();
-        List<CalendarEvent> includedEventList = new ArrayList<CalendarEvent>();
+        List<CalendarEvent> includedEventList = new ArrayList<>();
         for (CalendarEvent event : eventList) {
             boolean conditionOne = dateOne.isBefore(event.getStartDate());
             boolean conditionTwo =

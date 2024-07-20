@@ -93,7 +93,8 @@ public class MainPage extends JFrame {
      */
     private void openTimer() {
         // Placeholder implementation
-        JOptionPane.showMessageDialog(this, "Timer feature to be implemented");
+        TimerInitializer.main(null);
+//        JOptionPane.showMessageDialog(this, "Timer feature to be implemented");
     }
 
     /**

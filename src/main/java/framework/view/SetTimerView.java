@@ -30,7 +30,7 @@ public class SetTimerView extends JFrame{
 
         setTitle(SetTimerViewModel.TITLE_LABEL);
         setSize(1200, 720);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         UIManager.put("TextField.font", new Font("Segoe UI", Font.PLAIN, 14));

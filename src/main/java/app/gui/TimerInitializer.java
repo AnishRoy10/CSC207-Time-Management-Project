@@ -10,7 +10,7 @@ import use_case.SetTimerUseCase.SetTimerInteractor;
 import use_case.UpdateTimerUseCase.UpdateTimerDataAccessInterface;
 import use_case.UpdateTimerUseCase.UpdateTimerInteractor;
 
-public class TimerExecutable {
+public class TimerInitializer {
     static class Temp implements UpdateTimerDataAccessInterface {
 
     }

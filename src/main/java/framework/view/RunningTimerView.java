@@ -25,7 +25,7 @@ public class RunningTimerView extends JFrame {
 
         setTitle(RunningTimerViewModel.TITLE_LABEL);
         setSize(1200, 720);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         UIManager.put("Label.font", new Font("Segoe UI", Font.PLAIN, 14));

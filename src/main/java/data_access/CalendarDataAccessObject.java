@@ -17,5 +17,6 @@ public class CalendarDataAccessObject implements ViewEventsDataAccessInterface, 
     public Calendar getCalendar() throws IOException, ClassNotFoundException {
         return this.fileCacheUserDataAccessObject.ReadFromCache().getCalendar();
     }
-    public void addEvent(CalendarEvent event) {this.fileCacheUserDataAccessObject.ReadFromCache().addEvent(event);}
+    public void addEvent(CalendarEvent event) throws IOException, ClassNotFoundException
+    {this.fileCacheUserDataAccessObject.ReadFromCache().addEvent(event);}
 }

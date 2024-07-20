@@ -46,7 +46,7 @@ public class FileCacheUserDataAccessObject implements UserRepository {
      */
     @Override
     public void WriteToCache(User user) throws IOException {
-        Map<String, User> userMap = new HashMap<>();
+        Map<String, User> userMap = readAllUsers();
         userMap.put(user.getUsername(), user);
         try (Writer writer = new FileWriter(fileCache)) {
             gson.toJson(userMap, writer);
@@ -116,5 +116,16 @@ public class FileCacheUserDataAccessObject implements UserRepository {
     @Override
     public User findByUsername(String username) throws IOException {
         return ReadFromCache(username);
+    }
+
+    private Map<String, User> readAllUsers() throws IOException {
+        if (fileCache.length() == 0) {
+            return new HashMap<>();
+        }
+        try (Reader reader = new FileReader(fileCache)) {
+            Type userType = new TypeToken<Map<String, User>>() {}.getType();
+            Map<String, User> userMap = gson.fromJson(reader, userType);
+            return userMap != null ? userMap : new HashMap<>();
+        }
     }
 }

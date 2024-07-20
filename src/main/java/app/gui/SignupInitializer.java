@@ -21,7 +21,7 @@ public class SignupInitializer {
     public static void initializeSignup() {
         try {
             // Initialize the user repository with the file path
-            String filePath = "src/main/java/data_access/userCache.json"; // replace with your actual file path
+            String filePath = "src/main/java/data_access/userCache.json";
             FileCacheUserDataAccessObject userRepository = new FileCacheUserDataAccessObject(filePath);
             // Initialize the view model for the signup view
             UserSignupViewModel signupViewModel = new UserSignupViewModel();

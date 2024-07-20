@@ -1,22 +1,27 @@
 package repositories;
 
 import entity.TodoList;
+import java.io.IOException;
 
 /**
- * Repository interface for accessing the to-do list.
+ * TodoListRepository provides an interface for TodoList data access operations.
  */
 public interface TodoListRepository {
     /**
-     * Loads the to-do list from the data source.
+     * Loads the TodoList for a specific user.
      *
-     * @return The loaded to-do list.
+     * @param username The username of the user.
+     * @return The TodoList of the user.
+     * @throws IOException If an I/O error occurs.
      */
-    TodoList loadTodoList();
+    TodoList loadTodoList(String username) throws IOException;
 
     /**
-     * Saves the to-do list to the data source.
+     * Saves the TodoList for a specific user.
      *
-     * @param todoList The to-do list to be saved.
+     * @param username The username of the user.
+     * @param todoList The TodoList to save.
+     * @throws IOException If an I/O error occurs.
      */
-    void saveTodoList(TodoList todoList);
+    void saveTodoList(String username, TodoList todoList) throws IOException;
 }

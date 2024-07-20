@@ -10,28 +10,26 @@ import use_case.ViewEventsUseCase.ViewEventsUseCaseInteractor;
 import java.io.IOException;
 
 public class CalendarInitializer{
-    // Initializes a dataAccessObject for the calendar to use
-    private static CalendarDataAccessObject calendarDataAccessObject;
-    public CalendarInitializer() throws IOException {
-        calendarDataAccessObject = new CalendarDataAccessObject();
-    }
     public static void main(String[] args) {
-        // Initialize the view models
-        ViewEventsViewModel viewEventsViewModel = new ViewEventsViewModel();
+        try {
+            // Initialize the view models
+            ViewEventsViewModel viewEventsViewModel = new ViewEventsViewModel();
 
-        // Initialize the presenter
-        ViewEventsPresenter viewEventsPresenter = new ViewEventsPresenter(viewEventsViewModel);
+            // Initialize the presenter
+            ViewEventsPresenter viewEventsPresenter = new ViewEventsPresenter(viewEventsViewModel);
 
-        // Initialize the use case interactors
-        ViewEventsUseCaseInteractor viewEventsUseCaseInteractor =
-                new ViewEventsUseCaseInteractor(calendarDataAccessObject, viewEventsPresenter);
-        AddEventUseCaseInteractor addEventUseCaseInteractor = new AddEventUseCaseInteractor(calendarDataAccessObject);
+            // Initialize the use case interactors
+            CalendarDataAccessObject calendarDataAccessObject = new CalendarDataAccessObject();
+            ViewEventsUseCaseInteractor viewEventsUseCaseInteractor =
+                    new ViewEventsUseCaseInteractor(calendarDataAccessObject, viewEventsPresenter);
+            AddEventUseCaseInteractor addEventUseCaseInteractor = new AddEventUseCaseInteractor(calendarDataAccessObject);
 
-        // Initialize the controllers
-        ViewEventsController viewEventsController = new ViewEventsController(viewEventsUseCaseInteractor);
-        AddEventController addEventController = new AddEventController(addEventUseCaseInteractor);
-        CalendarView calendarView = new CalendarView(viewEventsViewModel, viewEventsController, addEventController);
-        //
+            // Initialize the controllers
+            ViewEventsController viewEventsController = new ViewEventsController(viewEventsUseCaseInteractor);
+            AddEventController addEventController = new AddEventController(addEventUseCaseInteractor);
 
+            CalendarView calendarView = new CalendarView(viewEventsViewModel, viewEventsController, addEventController);
+        }
+        catch(IOException e) {System.out.println("Could Not Initialize a CalendarDataAccessObject");}
     }
 }

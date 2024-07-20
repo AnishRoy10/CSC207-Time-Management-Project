@@ -65,10 +65,7 @@ public class MainPage extends JFrame {
      * Placeholder method to open the Calendar feature.
      * This method should be implemented to open the Calendar view of the application.
      */
-    private void openCalendar() {
-        // Placeholder implementation
-        JOptionPane.showMessageDialog(this, "Calendar feature to be implemented");
-    }
+    private void openCalendar() {CalendarInitializer.main(null);}
 
     /**
      * Placeholder method to open the Leaderboard feature.

@@ -4,7 +4,7 @@ import entity.Calendar;
 import entity.CalendarEvent;
 
 import java.util.ArrayList;
-
+ // Not yet implemented
 public class CheckConflictsUseCase {
     private Calendar calendar;
 

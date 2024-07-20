@@ -18,7 +18,7 @@ public class User implements Serializable {
     private final List<Course> courses; // Courses this user is in
     private final TodoList todo; // To-do list associated with this user
     private int score;
-    private Calendar calendar;// The User's Calendar
+    private Calendar calendar; // The User's Calendar
     /**
      * Constructs a new User object.
      *

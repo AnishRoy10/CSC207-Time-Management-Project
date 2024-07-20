@@ -148,7 +148,7 @@ public class CalendarView {
 
             }
         }
-        catch (IOException | ClassNotFoundException ignored) {}
+        catch (IOException | ClassNotFoundException ignored) {System.out.println("IOException Found");}
     }
     private Component createLabeledComponent(String label, Component component) {
         JPanel panel = new JPanel(new BorderLayout());

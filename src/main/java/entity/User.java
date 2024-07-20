@@ -88,7 +88,7 @@ public class User implements Serializable {
     }
 
     // Get the User's calendar
-    public Calendar getCalendar() {return this.calendar();}
+    public Calendar getCalendar() {return this.calendar;}
 
     // Get the User's events
     public List<CalendarEvent> getEvents() {return this.calendar.getAllEvents();}

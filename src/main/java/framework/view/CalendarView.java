@@ -10,6 +10,7 @@ import interface_adapter.ViewEvents.ViewEventsViewModel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import java.io.IOException;
 import java.util.List;
 import java.awt.*;
 import java.time.*;
@@ -108,35 +109,41 @@ public class CalendarView {
         }
 
         public HighlightInformation getHighlightInformationOrNull(LocalDate date) {
-            viewEventsController.execute(date);
-            if (! viewEventsViewModel.getEventListToBeShown().isEmpty()) {
-                return new HighlightInformation(Color.green, (Color) null, "This day has an event");
-            } else {
-                return null;
+            try {
+                viewEventsController.execute(date);
+                if (!viewEventsViewModel.getEventListToBeShown().isEmpty()) {
+                    return new HighlightInformation(Color.green, (Color) null, "This day has an event");
+                } else {
+                    return null;
+                }
             }
+            catch (IOException | ClassNotFoundException e) {return null;}
         }
     }
 
-    private void showEventsOnDay() {
-        eventListPanel.removeAll();
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = GridBagConstraints.RELATIVE;
-        gbc.weightx = 1.0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+    private void showEventsOnDay(){
+        try {
+            eventListPanel.removeAll();
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridx = 0;
+            gbc.gridy = GridBagConstraints.RELATIVE;
+            gbc.weightx = 1.0;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        LocalDate date = calendarPanel.getSelectedDate();
-        viewEventsController.execute(date);
-        for (CalendarEvent calEvent : viewEventsViewModel.getEventListToBeShown()) {
-            JPanel eventPanel = new EventCard(calEvent);
-            eventListPanel.add(eventPanel, gbc);
-            eventListPanel.revalidate();
-            eventListPanel.repaint();
-            frame.setVisible(true);
-            panel.setVisible(true);
-            eventListPanel.setVisible(true);
+            LocalDate date = calendarPanel.getSelectedDate();
+            viewEventsController.execute(date);
+            for (CalendarEvent calEvent : viewEventsViewModel.getEventListToBeShown()) {
+                JPanel eventPanel = new EventCard(calEvent);
+                eventListPanel.add(eventPanel, gbc);
+                eventListPanel.revalidate();
+                eventListPanel.repaint();
+                frame.setVisible(true);
+                panel.setVisible(true);
+                eventListPanel.setVisible(true);
 
+            }
         }
+        catch (IOException | ClassNotFoundException ignored) {}
     }
     private Component createLabeledComponent(String label, Component component) {
         JPanel panel = new JPanel(new BorderLayout());

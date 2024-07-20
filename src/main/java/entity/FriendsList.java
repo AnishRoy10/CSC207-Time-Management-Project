@@ -33,6 +33,9 @@ public class FriendsList implements Serializable {
             this.friends.add(user);
         }
     }
+    public int getSize(){
+        return this.friends.size();
+    }
     //Given an array of users, return a user by username
     public User findUserByName(String name, User[] users) {
         for (int i = 0; i < users.length; i++) {
@@ -47,6 +50,14 @@ public class FriendsList implements Serializable {
         this.friends.remove(user);
     }
 
+    public void removeUserByName(String name) {
+        for (int i = 0; i < this.friends.size(); i++) {
+            if (this.friends.get(i).getUsername().equals(name)) {
+                this.friends.remove(i);
+                i--;
+            }
+        }
+    }
     //Convert the FriendsList ArrayList into an Array
     public Object[] exportFriendsList() {
         return this.friends.toArray();

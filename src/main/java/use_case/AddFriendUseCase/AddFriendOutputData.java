@@ -2,7 +2,6 @@ package use_case.AddFriendUseCase;
 
 import entity.FriendsList;
 import entity.User;
-
 public class AddFriendOutputData {
     private User user;
     private FriendsList friendsList;

@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import entity.Course;
 import entity.FriendsList;
 import entity.User;
+import interface_adapter.FriendsListViewModel;
 import interface_adapter.controller.FriendsListController;
 
 public class FriendsListView {
-    private FriendsListController controller;
+    private FriendsListViewModel viewModel;
+    private FriendsListController friendsListController;
     private JFrame mainFrame;
     private JPanel friendsPanel;
     private JPanel inputPanel;
@@ -19,8 +21,9 @@ public class FriendsListView {
     private JButton addButton;
     private FriendsList friendsList; //Temporary data structure
 
-    public FriendsListView(FriendsListController controller) {
-        this.controller = controller;
+    public FriendsListView() {
+        this.viewModel = new FriendsListViewModel();
+        //this.friendsListController = new FriendsListController();
         mainFrame = new JFrame("Friends");
         friendsList = new FriendsList(null);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -48,8 +51,8 @@ public class FriendsListView {
         for (int i = 0; i < friendsUsernames.size(); i++){
             model.addElement(friendsUsernames.get(i));
         }
-        friendsListDisplay.setModel(model);
-         */
+        friendsListDisplay.setModel(model);*/
+
     }
 
     public void AddFriend(){
@@ -61,7 +64,7 @@ public class FriendsListView {
         }
     }
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         SwingUtilities.invokeLater(FriendsListView::new);
-    }*/
+    }
 }

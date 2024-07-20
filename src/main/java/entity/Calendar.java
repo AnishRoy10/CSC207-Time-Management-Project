@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 
 public class Calendar implements Serializable{
-    private static final long serialVersionUID = 8L; // Add a serial version UID
+    private static final long serialVersionUID = 1124412L; // Add a serial version UID
     /**
      * A map that holds the events in the calendar, with the key being the date of the event.
      */

@@ -18,7 +18,7 @@ public class ViewEventsUseCaseInteractor implements ViewEventsInputBoundary{
         this.calendarDataAccessObject = calendarDataAccessObject;
         this.viewEventsPresenter = viewEventsPresenter;
     }
-    public void execute(ViewEventsInputData viewEventsInputData) throws IOException, ClassNotFoundException {
+    public void execute(ViewEventsInputData viewEventsInputData) throws IOException, ClassNotFoundException{
         Calendar calendar = calendarDataAccessObject.getCalendar();
         LocalDateTime start = viewEventsInputData.getStart();
         LocalDateTime end = viewEventsInputData.getEnd();

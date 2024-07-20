@@ -1,8 +1,10 @@
 package use_case.ViewEventsUseCase;
 
-import entity.Calendar
+import entity.Calendar;
 import entity.CalendarEvent;
 import interface_adapter.ViewEvents.ViewEventsPresenter;
+
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ public class ViewEventsUseCaseInteractor implements ViewEventsInputBoundary{
         this.calendarDataAccessObject = calendarDataAccessObject;
         this.viewEventsPresenter = viewEventsPresenter;
     }
-    public execute(ViewEventsInputData viewEventsInputData) {
+    public void execute(ViewEventsInputData viewEventsInputData) throws IOException, ClassNotFoundException {
         Calendar calendar = calendarDataAccessObject.getCalendar();
         LocalDateTime start = viewEventsInputData.getStart();
         LocalDateTime end = viewEventsInputData.getEnd();

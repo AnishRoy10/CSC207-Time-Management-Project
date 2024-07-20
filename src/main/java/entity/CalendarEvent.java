@@ -169,8 +169,6 @@ public class CalendarEvent implements Serializable{
         return includedEventList;
     }
 
-    public static List<CalendarEvent> return
-
     /**
      * Returns a string representation of the event.
      *

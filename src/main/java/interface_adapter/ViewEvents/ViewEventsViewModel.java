@@ -9,7 +9,7 @@ public class ViewEventsViewModel {
     private List<CalendarEvent> eventList;
 
     public ViewEventsViewModel() {
-        eventList = new ArrayList<CalendarEvent>();
+        eventList = new ArrayList<>();
     }
 
     public List<CalendarEvent> getEventListToBeShown() {return this.eventList;}

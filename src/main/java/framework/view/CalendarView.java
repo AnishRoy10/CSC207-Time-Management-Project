@@ -126,7 +126,7 @@ public class CalendarView {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         LocalDate date = calendarPanel.getSelectedDate();
-        ViewEventsController.execute(date);
+        viewEventsController.execute(date);
         for (CalendarEvent calEvent : viewEventsViewModel.getEventListToBeShown()) {
             JPanel eventPanel = new EventCard(calEvent);
             eventListPanel.add(eventPanel, gbc);
@@ -153,7 +153,6 @@ public class CalendarView {
         LocalDateTime endDate = endDatePicker.getDateTimeStrict();
         String priorityLevel = priorityLevelField.getText();
         CalendarEvent newEvent = new CalendarEvent(name, description, priorityLevel, startDate, endDate);
-        calendar.addEvent(newEvent);
         showEventsOnDay();
     }
 
@@ -175,6 +174,5 @@ public class CalendarView {
             calendar.addEvent(eventer);
             calendar.addEvent(eventerTwo);
             calendar.addEvent(eventerThree);
-            new CalendarView(calendar);
         }
 }

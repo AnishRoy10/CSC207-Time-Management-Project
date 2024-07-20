@@ -16,9 +16,6 @@ public class ViewEventsController {
         LocalDateTime end = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(),
                 23, 59);
         ViewEventsInputData viewEventsInputData = new ViewEventsInputData(start, end);
-        ViewEventsUseCaseInteractor.execute(viewEventsInputData);
+        viewEventsUseCaseInteractor.execute(viewEventsInputData);
     }
-
-
-
 }

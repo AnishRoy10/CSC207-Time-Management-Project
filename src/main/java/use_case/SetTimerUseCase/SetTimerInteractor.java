@@ -17,8 +17,8 @@ public class SetTimerInteractor implements SetTimerInputBoundary {
 
 
     public void execute(SetTimerInputData setTimerInputData) {
-        if (setTimerInputData.getHours() == 0 ||
-                setTimerInputData.getMinutes() == 0 ||
+        if (setTimerInputData.getHours() == 0 &&
+                setTimerInputData.getMinutes() == 0 &&
                 setTimerInputData.getSeconds() == 0) {
             userPresenter.prepareFailView("Invalid Input");
         }

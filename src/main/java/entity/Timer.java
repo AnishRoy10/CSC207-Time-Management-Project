@@ -45,9 +45,13 @@ public class Timer implements Serializable {
 
     /**
      * Updates the elapsed time since timer has started.
+     * Elapsed time cannot be greater than the timer length.
      */
     public void updateElapsed_time() {
         elapsed_time = System.currentTimeMillis() - start_time;
+        if (elapsed_time + start_time > end_time) {
+            elapsed_time = end_time - start_time;
+        }
     }
 
     /**

@@ -74,6 +74,7 @@ public class SetTimerView extends JFrame{
         String minutes = minutesInputField.getText();
         String seconds = secondsInputField.getText();
         timerController.execute_set_timer(hours, minutes, seconds);
+        System.out.println(runningTimerViewModel.getMessage());
 
         if ("Success".equals(runningTimerViewModel.getMessage())) {
             SwingUtilities.invokeLater(() -> {

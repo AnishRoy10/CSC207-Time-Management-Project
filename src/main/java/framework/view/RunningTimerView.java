@@ -10,6 +10,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class RunningTimerView extends JFrame {
 
@@ -49,7 +51,15 @@ public class RunningTimerView extends JFrame {
         };
         Timer actionTimer = new Timer(100, updateTimer);
         actionTimer.setRepeats(true);
+        actionTimer.setInitialDelay(1000);
         actionTimer.start();
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                actionTimer.stop();
+            }
+        });
 
     }
 

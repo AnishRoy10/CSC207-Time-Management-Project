@@ -1,12 +1,14 @@
 package entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
 Represents a timer.
  Each timer has a start time, end time and elasped time.
  */
-public class Timer {
+public class Timer implements Serializable {
+
     private final long start_time;
     private final long end_time;
     private long elapsed_time;
@@ -18,7 +20,7 @@ public class Timer {
      * @param seconds The amount of seconds the timer lasts
      */
     public Timer(int hours, int minutes, int seconds) {
-        long timer_length = hours * 36000000L + minutes * 60000L + seconds * 1000L;
+        long timer_length = hours * 3600000L + minutes * 60000L + seconds * 1000L;
         start_time = System.currentTimeMillis();
         end_time = start_time + timer_length;
         elapsed_time = 0;

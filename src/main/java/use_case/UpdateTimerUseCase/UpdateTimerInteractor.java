@@ -20,9 +20,9 @@ public class UpdateTimerInteractor implements UpdateTimerInputBoundary {
         timer.updateElapsed_time();
         long remaining_time = timer.timerLength() - timer.getElapsed_time();
 
-        int hours = (int) (remaining_time / 36000000);
-        int minutes = (int) ((remaining_time - hours*36000000) / 60000);
-        int seconds = (int) ((remaining_time - hours*36000000 - minutes*60000) / 1000);
+        int hours = (int) (remaining_time / 3600000);
+        int minutes = (int) ((remaining_time - hours*3600000) / 60000);
+        int seconds = (int) ((remaining_time - hours*3600000 - minutes*60000) / 1000);
 
         UpdateTimerOutputData updateTimerOutputData = new UpdateTimerOutputData(hours, minutes, seconds);
         userPresenter.prepareSuccessView(updateTimerOutputData);

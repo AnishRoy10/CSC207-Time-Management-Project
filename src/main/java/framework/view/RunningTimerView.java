@@ -1,11 +1,14 @@
 package framework.view;
 
 
+import data_access.InMemoryTimerDataAccessObject;
 import interface_adapter.viewmodel.RunningTimerViewModel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class RunningTimerView extends JFrame {
 
@@ -30,6 +33,16 @@ public class RunningTimerView extends JFrame {
 
         timerPanel.add(timerLabel);
         add(timerPanel, BorderLayout.CENTER);
+
+        ActionListener updateTimer = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // update timer use case
+
+            }
+        };
+        Timer actionTimer = new Timer(100, updateTimer);
+        actionTimer.setRepeats(true);
+        actionTimer.start();
 
     }
 }

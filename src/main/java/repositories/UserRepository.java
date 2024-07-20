@@ -16,10 +16,18 @@ public interface UserRepository {
     void WriteToCache(User user) throws IOException;
 
     /**
+     * Reads a User object from the cache.
+     *
+     * @return The User object read from the cache.
+     * @throws IOException If an I/O error occurs.
+     */
+    User ReadFromCache() throws IOException;
+
+    /**
      * Reads a User object from the cache by username.
      *
-     * @param username The username of the user.
-     * @return The User object read from the cache.
+     * @param username The username to read.
+     * @return The User object with the specified username.
      * @throws IOException If an I/O error occurs.
      */
     User ReadFromCache(String username) throws IOException;

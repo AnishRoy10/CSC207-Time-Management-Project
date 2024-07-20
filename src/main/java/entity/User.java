@@ -19,6 +19,7 @@ public class User implements Serializable {
     private final TodoList todo; // To-do list associated with this user
     private int score; // The user's score
     private Timer timer; // A timer set by the user
+    private int aNumber;
 
     public User(String username, String password, User[] friends, Course[] courses) {
         this.username = username;
@@ -27,6 +28,7 @@ public class User implements Serializable {
         this.courses = new ArrayList<>(Arrays.asList(courses));
         this.todo = new TodoList();
         this.score = 0;
+        this.aNumber = 5;
     }
 
     // Getter for the username
@@ -142,4 +144,14 @@ public class User implements Serializable {
     public int hashCode() {
         return Objects.hash(username);
     }
+
+    // Getter and Setter for aNumber
+    public int getANumber() {
+        return aNumber;
+    }
+
+    public void setANumber(int aNumber) {
+        this.aNumber = aNumber;
+    }
 }
+

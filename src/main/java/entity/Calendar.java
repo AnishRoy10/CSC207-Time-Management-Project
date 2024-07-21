@@ -144,8 +144,8 @@ public class Calendar implements Serializable{
                 "High", start, end);
         Calendar calendar = new Calendar();
         calendar.addEvent(eventer);
-        LocalDateTime startDate = LocalDateTime.of(2024, Month.JULY, 12, 0, 0);
-        LocalDateTime endDate = LocalDateTime.of(2024, Month.JULY, 12, 23, 59);
+        LocalDateTime startDate = LocalDateTime.of(2024, Month.JULY, 13, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(2024, Month.JULY, 13, 23, 59);
         boolean toBePrinted = calendar.hasEventsBetweenDates(startDate, endDate);
         System.out.println(toBePrinted);
     }

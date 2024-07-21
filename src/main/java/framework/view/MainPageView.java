@@ -72,8 +72,7 @@ public class MainPageView extends JFrame {
      * Placeholder method to open the Calendar feature.
      * This method should be implemented to open the Calendar view of the application.
      */
-    private void openCalendar() {
-        CalendarInitializer.main(null);}
+    private void openCalendar() {CalendarInitializer.initializeCalendar(username);}
 
     /**
      * Placeholder method to open the Leaderboard feature.

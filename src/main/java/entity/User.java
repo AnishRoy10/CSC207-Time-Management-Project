@@ -1,6 +1,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.Objects;
  * The User class represents a user of the program.
  */
 public class User implements Serializable {
-    private static final long serialVersionUID = 1L; // Add serial version UID for serialization compatibility
+    private static final long serialVersionUID = 12351L; // Add serial version UID for serialization compatibility
 
     private String username; // The username of this user
     private String password; // Hashed password for the user

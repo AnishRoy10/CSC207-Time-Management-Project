@@ -17,28 +17,44 @@ import java.awt.*;
 import java.time.*;
 import java.time.Month;
 
+import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
+
 public class CalendarView {
     private static ViewEventsViewModel viewEventsViewModel;
     private static ViewEventsController viewEventsController;
     private static AddEventController addEventController;
-    private static JFrame frame = new JFrame();
-    private static JPanel panel = new JPanel();
-    private static JPanel eventListPanel;
-    private static CalendarPanel calendarPanel;
-    private static JButton eventViewerButton = new JButton("View Events On Selected Day");
-    private static JTextField nameField;
-    private static JTextArea descriptionArea;
-    private static DateTimePicker startDatePicker;
-    private static DateTimePicker endDatePicker;
-    private static JTextField priorityLevelField;
+    private final JFrame frame = new JFrame();
+    private final JPanel panel;
+    private final JPanel eventListPanel;
+    private final CalendarPanel calendarPanel;
+    private final JButton eventViewerButton = new JButton("View Events On Selected Day");
+    private final JTextField nameField;
+    private final JTextArea descriptionArea;
+    private final DateTimePicker startDatePicker;
+    private final DateTimePicker endDatePicker;
+    private final JTextField priorityLevelField;
+    private JFrame parentFrame;
     public CalendarView(ViewEventsViewModel viewEventsViewModel, ViewEventsController viewEventsController,
                         AddEventController addEventController) {
         this.viewEventsViewModel = viewEventsViewModel;
         this.viewEventsController = viewEventsController;
         this.addEventController = addEventController;
-
+        frame.revalidate();
+        frame.repaint();
         frame.setTitle("Calendar Screen");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                if (parentFrame != null) {
+                    parentFrame.setVisible(true);
+                }
+                panel.removeAll();
+                panel.revalidate();
+                panel.repaint();
+                panel.setVisible(true);
+            }
+        });
 
         DatePickerSettings dateSettings = new DatePickerSettings();
         dateSettings.setHighlightPolicy(new EventHighlightPolicy());
@@ -47,8 +63,10 @@ public class CalendarView {
         calendarPanel.setSelectedDate(LocalDate.now());
         calendarPanel.setBorder(new LineBorder(Color.lightGray));
 
+        panel = new JPanel();
         panel.add(calendarPanel, BorderLayout.NORTH);
         panel.add(eventViewerButton, BorderLayout.WEST);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         eventViewerButton.addActionListener(e -> showEventsOnDay());
 
         eventListPanel = new JPanel(new GridBagLayout());

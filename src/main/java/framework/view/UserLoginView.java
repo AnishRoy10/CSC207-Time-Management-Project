@@ -107,7 +107,7 @@ public class UserLoginView extends JFrame {
                 // If login is successful, open MainPageView
                 if ("Login successful.".equals(userLoginViewModel.getMessage())) {
                     SwingUtilities.invokeLater(() -> {
-                        MainPageView mainPage = new MainPageView();
+                        MainPageView mainPage = new MainPageView(username);
                         mainPage.setVisible(true);
                         dispose(); // Close the login view
                     });
@@ -129,4 +129,3 @@ public class UserLoginView extends JFrame {
         panel.add(messageLabel);
     }
 }
-

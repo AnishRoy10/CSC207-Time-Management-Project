@@ -11,13 +11,15 @@ public class AddTaskRequestModel {
     private LocalDateTime startDate;
     private LocalDateTime deadline;
     private String course;
+    private String username;
 
-    public AddTaskRequestModel(String title, String description, LocalDateTime startDate, LocalDateTime deadline, String course) {
+    public AddTaskRequestModel(String title, String description, LocalDateTime startDate, LocalDateTime deadline, String course, String username) {
         this.title = title;
         this.description = description;
         this.startDate = startDate;
         this.deadline = deadline;
         this.course = course;
+        this.username = username;
     }
 
     // Getters and setters
@@ -60,5 +62,13 @@ public class AddTaskRequestModel {
 
     public void setCourse(String course) {
         this.course = course;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

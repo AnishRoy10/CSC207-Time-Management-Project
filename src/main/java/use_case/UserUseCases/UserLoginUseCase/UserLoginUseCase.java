@@ -44,7 +44,7 @@ public class UserLoginUseCase implements UserLoginInputBoundary {
 
             UserLoginResponseModel responseModel = new UserLoginResponseModel(true, "Login successful.");
             userLoginOutputBoundary.present(responseModel);
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             UserLoginResponseModel responseModel = new UserLoginResponseModel(false, "An error occurred during login.");
             userLoginOutputBoundary.present(responseModel);
         }

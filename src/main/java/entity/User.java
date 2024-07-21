@@ -17,8 +17,9 @@ public class User implements Serializable {
     private final FriendsList friends; // Friends list of this user
     private final List<Course> courses; // Courses this user is in
     private final TodoList todo; // To-do list associated with this user
-    private int score; // The users score
+    private int score; // The user's score
     private Timer timer; // A timer set by the user
+    private int aNumber;
     /**
      * Constructs a new User object.
      *
@@ -34,11 +35,12 @@ public class User implements Serializable {
         this.courses = new ArrayList<>(Arrays.asList(courses));
         this.todo = new TodoList();
         this.score = 0;
+        this.aNumber = 5;
     }
 
     /**
     * Get this users username.
-    * 
+    *
     * @return the username of this user
     */
     public String getUsername() {
@@ -47,7 +49,7 @@ public class User implements Serializable {
 
     /**
     * Change this users username.
-    * 
+    *
     * @param username the new username for this user
     */
     public void setUsername(String username) {
@@ -56,13 +58,13 @@ public class User implements Serializable {
 
     /**
     * Add a friend to this user.
-    * 
+    *
     * @param user the new friend for this user
     */
     public void addFriend(User user) {
         this.friends.addFriend(user);
     }
-    
+
     // Getter for the password
     public String getPassword() {
         return password;
@@ -85,7 +87,7 @@ public class User implements Serializable {
 
     /**
     * Attempt to remove a friend from this user.
-    * 
+    *
     * @param user the friend to remove
     */
     public void removeFriend(User user) {
@@ -94,7 +96,7 @@ public class User implements Serializable {
 
     /**
     * Add a task to this users todolist.
-    * 
+    *
     * @param task the task to add
     */
     public void addTask(Task task) {
@@ -103,7 +105,7 @@ public class User implements Serializable {
 
     /**
     * Remove a task from this users todolist.
-    * 
+    *
     * @param task the task to remove
     */
     public void removeTask(Task task) {
@@ -112,7 +114,7 @@ public class User implements Serializable {
 
     /**
     * Place this user in a new course.
-    * 
+    *
     * @param course the course to put this user in
     */
     public void addCourse(Course course) {
@@ -121,7 +123,7 @@ public class User implements Serializable {
             this.courses.add(course);
         }
     }
-    
+
     // Getter for the courses
     public List<Course> getCourses() {
         return courses;
@@ -137,14 +139,24 @@ public class User implements Serializable {
         this.score = score;
     }
 
+    // Getter for timer
+    public Timer getTimer() {
+        return timer;
+    }
+
     // Setter for timer
     public void addTimer(Timer timer) {
         this.timer = timer;
     }
 
+    // Getter for the to-do list
+    public TodoList getTodoList() {
+        return todo;
+    }
+
     // Hash the password (to be properly done later. SHA-256 perhaps?)
     private String hashPassword(String password) {
-        return password;
+        return password; // Placeholder for hashing
     }
 
     @Override
@@ -159,11 +171,11 @@ public class User implements Serializable {
     public int hashCode() {
         return Objects.hash(username);
     }
-    
+
     /**
     * Attempts to remove this user from the target course.
     * Returns whether the removal was successful.
-    * 
+    *
     * @param course the course to remove this user from
     * @return       success value of the method
     */
@@ -173,4 +185,14 @@ public class User implements Serializable {
         }
         return false;
     }
+
+    // Getter and Setter for aNumber
+    public int getANumber() {
+        return aNumber;
+    }
+
+    public void setANumber(int aNumber) {
+        this.aNumber = aNumber;
+    }
 }
+

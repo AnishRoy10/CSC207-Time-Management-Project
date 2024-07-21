@@ -21,7 +21,6 @@ public class CalendarDataAccessObject implements ViewEventsDataAccessInterface, 
         this.fileCacheUserDataAccessObject =
                 new FileCacheUserDataAccessObject("src/main/java/data_access/userCache.json");
         user = fileCacheUserDataAccessObject.findByUsername(username);
-        System.out.println(fileCacheUserDataAccessObject.UserExists(username));
     }
     // Method for getting the logged in user's calendar
     public Calendar getCalendar() throws IOException, ClassNotFoundException {

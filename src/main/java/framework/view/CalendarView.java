@@ -34,6 +34,8 @@ public class CalendarView {
     private final DateTimePicker endDatePicker;
     private final JTextField priorityLevelField;
     private JFrame parentFrame;
+
+    // Initializing controllers, view models, and setting up jpanels.
     public CalendarView(ViewEventsViewModel viewEventsViewModel, ViewEventsController viewEventsController,
                         AddEventController addEventController) {
         this.viewEventsViewModel = viewEventsViewModel;
@@ -43,6 +45,10 @@ public class CalendarView {
         frame.repaint();
         frame.setTitle("Calendar Screen");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        /**
+         * when calendarview is closed it reverts back to the option menu,
+         * deleting and the calendar panel to avoid bugs.
+         */
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent windowEvent) {
@@ -55,25 +61,30 @@ public class CalendarView {
                 panel.setVisible(true);
             }
         });
-
+        // Settings for the visual calendar
         DatePickerSettings dateSettings = new DatePickerSettings();
         dateSettings.setHighlightPolicy(new EventHighlightPolicy());
 
+        // Implementation of the visual calendar
         calendarPanel = new CalendarPanel(dateSettings);
         calendarPanel.setSelectedDate(LocalDate.now());
         calendarPanel.setBorder(new LineBorder(Color.lightGray));
 
+        // creating the panel which holds the visual panel, along with
+        // its view events button.
         panel = new JPanel();
         panel.add(calendarPanel, BorderLayout.NORTH);
         panel.add(eventViewerButton, BorderLayout.WEST);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         eventViewerButton.addActionListener(e -> showEventsOnDay());
 
+        // Initializing panel for showing the events cards.
         eventListPanel = new JPanel(new GridBagLayout());
         JScrollPane eventListScrollPane = new JScrollPane(eventListPanel);
         eventListScrollPane.setBorder(BorderFactory.createEmptyBorder());
         eventListScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
+        // Panel for inputting the new event to be added to the calendar
         JPanel eventAddingPanel = new JPanel();
         eventAddingPanel.setLayout(new BoxLayout(eventAddingPanel, BoxLayout.Y_AXIS));
         eventAddingPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -97,6 +108,7 @@ public class CalendarView {
         eventAddingPanel.add(Box.createVerticalStrut(10));
         eventAddingPanel.add(addTaskButton);
 
+        // Setting the frame settings and adding panels
         frame.add(eventAddingPanel, BorderLayout.SOUTH);
         frame.add(eventListScrollPane, BorderLayout.WEST);
         frame.add(panel, BorderLayout.EAST);
@@ -110,11 +122,7 @@ public class CalendarView {
         frame.setVisible(true);
     }
 
-
-    private static GridBagConstraints getConstraints(int gridx, int gridy, int gridwidth) {
-        return getConstraints(gridx, gridy, gridwidth, 17);
-    }
-
+    // Technical method from the LGoodDatePicker library
     private static GridBagConstraints getConstraints(int gridx, int gridy, int gridwidth, int anchor) {
         GridBagConstraints gc = new GridBagConstraints();
         gc.fill = 0;
@@ -144,6 +152,10 @@ public class CalendarView {
         }
     }
 
+     /** Method called when view events button is pressed, which activates the ViewEvents use case
+      * proccess throughout the relevant controller, and getting the relevant information through
+      * the relevant view model.
+      */
     private void showEventsOnDay(){
         try {
             eventListPanel.removeAll();
@@ -168,6 +180,7 @@ public class CalendarView {
         }
         catch (IOException | ClassNotFoundException ignored) {System.out.println("IOException Found");}
     }
+    // Method for creating a labelled comonent on the eventadding panel
     private Component createLabeledComponent(String label, Component component) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JLabel(label), BorderLayout.NORTH);
@@ -176,6 +189,11 @@ public class CalendarView {
         panel.setBorder(new EmptyBorder(5, 0, 10, 0));
         return panel;
     }
+
+    /**
+     * method called when add event button is pushed. Calls the relevant controller for the
+     * add event use case to be executed.
+     */
     private void addEvent(){
         String name = nameField.getText();
         String description = descriptionArea.getText();
@@ -187,24 +205,4 @@ public class CalendarView {
         catch (IOException | ClassNotFoundException e) {}
         this.showEventsOnDay();
     }
-
-
-        public static void main(String[] args) {
-            LocalDateTime start = LocalDateTime.of(2024, Month.JULY, 15, 15, 30);
-            LocalDateTime end = LocalDateTime.of(2024, Month.JULY, 15, 16, 30);
-            CalendarEvent eventer = new CalendarEvent("Awesome title name", "An awesome description",
-                    null, start, end);
-            LocalDateTime startTwo = LocalDateTime.of(2024, Month.JULY, 16, 17, 30);
-            LocalDateTime endTwo = LocalDateTime.of(2024, Month.JULY, 16, 18, 45);
-            CalendarEvent eventerTwo = new CalendarEvent("Less awesome name title", "Less awesome description",
-                    "Low", startTwo, endTwo);
-            LocalDateTime startThree = LocalDateTime.of(2024, Month.JULY, 15, 2, 30);
-            LocalDateTime endThree = LocalDateTime.of(2024, Month.JULY, 15, 5, 0);
-            CalendarEvent eventerThree = new CalendarEvent("Even more awesome name title", "Even more awesome description",
-                    "High", startThree, endThree);
-            Calendar calendar = new Calendar();
-            calendar.addEvent(eventer);
-            calendar.addEvent(eventerTwo);
-            calendar.addEvent(eventerThree);
-        }
 }

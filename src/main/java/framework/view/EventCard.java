@@ -11,7 +11,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
- * TaskCard represents the UI component for displaying a task's details.
+ * EventCard represents the UI component for displaying an event's details.
  */
 public class EventCard extends JPanel {
     private final CalendarEvent event;
@@ -67,21 +67,5 @@ public class EventCard extends JPanel {
         add(fillerCenterPanel, BorderLayout.CENTER);
         add(detailsPanel, BorderLayout.WEST);
         add(descriptionPanel, BorderLayout.CENTER);
-    }
-
-    public static void main(String[] args) {
-
-        LocalDateTime start = LocalDateTime.of(2024, Month.JULY, 15, 12, 30);
-        LocalDateTime end = LocalDateTime.of(2024, Month.JULY, 15, 14, 30);
-        CalendarEvent eventer = new CalendarEvent("Awesome Saucer", "Bad Description",
-                "high", start, end);
-        JPanel panel = new EventCard(eventer);
-        JFrame frame = new JFrame();
-        frame.add(panel, BorderLayout.CENTER);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setTitle("Event Visualizer");
-        frame.setSize(500, 300);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
     }
 }

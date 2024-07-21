@@ -12,6 +12,8 @@ public class CheckConflictsUseCase {
      * Checks for conflicts in the calendar between events
      *
      * @param calendar The calendar which is checked for conflicts
+     *
+     * Not an implemented use case yet, nor does it adhear to clean architecture at this stage.
      */
 
     public CheckConflictsUseCase(Calendar calendar) {this.calendar = calendar;}

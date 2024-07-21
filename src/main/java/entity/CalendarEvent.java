@@ -130,7 +130,7 @@ public class CalendarEvent implements Serializable{
         this.description = description;
     }
 
-    // Setter method for the
+    // Setter methods
 
     // Setter method for the status of the event
     public void setStatus(String stat) {
@@ -151,12 +151,16 @@ public class CalendarEvent implements Serializable{
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
-
+    // Updates the status of the event
     public void updateStatus() {
         if (LocalDateTime.now().isBefore(this.startDate)) {this.status = "Upcoming";}
         else if (LocalDateTime.now().isBefore(this.endDate)) {this.status = "In Progress";}
         else {this.status = "Finished";}
     }
+
+    /**
+     * returns events in eventList that start after dateOne and before dateTwo
+     */
 
     public static List<CalendarEvent> eventsBetweenDates(LocalDateTime dateOne, LocalDateTime dateTwo, List<CalendarEvent> eventList) {
         List<CalendarEvent> includedEventList = new ArrayList<CalendarEvent>();

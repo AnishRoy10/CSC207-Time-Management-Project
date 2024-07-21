@@ -7,6 +7,10 @@ import use_case.AddEventUseCase.AddEventUseCaseInteractor;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+/**
+ * Controller for the AddEvent use case. Turns the input data from the view into an
+ * event object that the interactor more easily makes use of.
+ */
 public class AddEventController {
     private AddEventUseCaseInteractor addEventUseCaseInteractor;
 

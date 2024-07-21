@@ -137,16 +137,4 @@ public class Calendar implements Serializable{
         }
         return sb.toString();
     }
-    public static void main(String[] args) {
-        LocalDateTime start = LocalDateTime.of(2024, Month.JULY, 13, 21, 30);
-        LocalDateTime end = LocalDateTime.of(2024, Month.JULY, 13, 21, 40);
-        CalendarEvent eventer = new CalendarEvent("Awesome Saucer", "Bad Description",
-                "High", start, end);
-        Calendar calendar = new Calendar();
-        calendar.addEvent(eventer);
-        LocalDateTime startDate = LocalDateTime.of(2024, Month.JULY, 13, 0, 0);
-        LocalDateTime endDate = LocalDateTime.of(2024, Month.JULY, 13, 23, 59);
-        boolean toBePrinted = calendar.hasEventsBetweenDates(startDate, endDate);
-        System.out.println(toBePrinted);
-    }
 }

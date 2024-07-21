@@ -9,6 +9,7 @@ import interface_adapter.ViewModel;
 public class RunningTimerViewModel extends ViewModel {
 
     public static final String TITLE_LABEL = "Timer View";
+    public static final String PAUSE_LABEL = "Pause";
     public static String HOURS;
     public static String MINUTES;
     public static String SECONDS;

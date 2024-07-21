@@ -19,6 +19,7 @@ public class RunningTimerView extends JFrame {
     private final RunningTimerViewModel runningTimerViewModel;
 
     private final JLabel timerLabel;
+    private final JButton pauseButton;
 
     public RunningTimerView(TimerController timerController,
                             RunningTimerViewModel runningTimerViewModel) {
@@ -35,6 +36,9 @@ public class RunningTimerView extends JFrame {
 
         timerLabel = new JLabel(RunningTimerViewModel.HOURS +
                 ":" + RunningTimerViewModel.MINUTES + ":" + RunningTimerViewModel.SECONDS);
+
+        pauseButton = new JButton(RunningTimerViewModel.PAUSE_LABEL);
+        pauseButton.addActionListener(e -> pauseTimer());
 
         JPanel timerPanel = new JPanel();
         timerPanel.setLayout(new BoxLayout(timerPanel, BoxLayout.Y_AXIS));
@@ -67,5 +71,9 @@ public class RunningTimerView extends JFrame {
         timerController.execute_update_timer();
         timerLabel.setText(RunningTimerViewModel.HOURS +
                 ":" + RunningTimerViewModel.MINUTES + ":" + RunningTimerViewModel.SECONDS);
+    }
+
+    private void pauseTimer() {
+
     }
 }

@@ -20,6 +20,9 @@ public class RunningTimerView extends JFrame {
 
     private final JLabel timerLabel;
     private final JButton pauseButton;
+    private final JButton returnButton;
+
+    private final Timer actionTimer;
 
     public RunningTimerView(TimerController timerController,
                             RunningTimerViewModel runningTimerViewModel) {
@@ -31,7 +34,7 @@ public class RunningTimerView extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        UIManager.put("Label.font", new Font("Segoe UI", Font.PLAIN, 14));
+        UIManager.put("Label.font", new Font("Segoe UI", Font.PLAIN, 28));
         UIManager.put("Button.font", new Font("Segoe UI", Font.PLAIN, 14));
 
         timerLabel = new JLabel(RunningTimerViewModel.HOURS +
@@ -40,12 +43,18 @@ public class RunningTimerView extends JFrame {
         pauseButton = new JButton(RunningTimerViewModel.PAUSE_LABEL);
         pauseButton.addActionListener(e -> pauseTimer());
 
+        returnButton = new JButton(RunningTimerViewModel.RETURN_LABEL);
+        returnButton.addActionListener(e -> returnPrevious());
+        returnButton.setVisible(false);
+
         JPanel timerPanel = new JPanel();
         timerPanel.setLayout(new BoxLayout(timerPanel, BoxLayout.Y_AXIS));
         timerPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         timerPanel.setBackground(Color.WHITE);
 
         timerPanel.add(timerLabel);
+        timerPanel.add(pauseButton);
+        timerPanel.add(returnButton);
         add(timerPanel, BorderLayout.CENTER);
 
         ActionListener updateTimer = new ActionListener() {
@@ -53,7 +62,7 @@ public class RunningTimerView extends JFrame {
                 updateTimer();
             }
         };
-        Timer actionTimer = new Timer(100, updateTimer);
+        actionTimer = new Timer(100, updateTimer);
         actionTimer.setRepeats(true);
         actionTimer.setInitialDelay(1000);
         actionTimer.start();
@@ -71,9 +80,23 @@ public class RunningTimerView extends JFrame {
         timerController.execute_update_timer();
         timerLabel.setText(RunningTimerViewModel.HOURS +
                 ":" + RunningTimerViewModel.MINUTES + ":" + RunningTimerViewModel.SECONDS);
+        if (RunningTimerViewModel.HOURS.equals("0") &&
+        RunningTimerViewModel.MINUTES.equals("0") &&
+                RunningTimerViewModel.SECONDS.equals("0")) {
+            endTimer();
+        }
+    }
+
+    private void endTimer() {
+        actionTimer.stop();
+        returnButton.setVisible(true);
     }
 
     private void pauseTimer() {
+
+    }
+
+    public void returnPrevious() {
 
     }
 }

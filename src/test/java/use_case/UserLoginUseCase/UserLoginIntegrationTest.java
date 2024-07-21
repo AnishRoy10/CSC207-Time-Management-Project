@@ -9,7 +9,11 @@ import interface_adapter.viewmodel.UserSignupViewModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repositories.UserRepository;
-import use_case.UserSignupUseCase.*;
+import use_case.UserUseCases.UserLoginUseCase.UserLoginUseCase;
+import use_case.UserUseCases.UserSignupUseCase.UserSignupOutputBoundary;
+import use_case.UserUseCases.UserSignupUseCase.UserSignupRequestModel;
+import use_case.UserUseCases.UserSignupUseCase.UserSignupResponseModel;
+import use_case.UserUseCases.UserSignupUseCase.UserSignupUseCase;
 
 import java.io.IOException;
 

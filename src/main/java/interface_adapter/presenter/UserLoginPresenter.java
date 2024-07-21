@@ -1,7 +1,7 @@
 package interface_adapter.presenter;
 
-import use_case.UserLoginUseCase.UserLoginOutputBoundary;
-import use_case.UserLoginUseCase.UserLoginResponseModel;
+import use_case.UserUseCases.UserLoginUseCase.UserLoginOutputBoundary;
+import use_case.UserUseCases.UserLoginUseCase.UserLoginResponseModel;
 import interface_adapter.viewmodel.UserLoginViewModel;
 
 /**

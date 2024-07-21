@@ -2,7 +2,6 @@ package framework.view;
 
 import interface_adapter.controller.UserLoginController;
 import interface_adapter.viewmodel.UserLoginViewModel;
-import app.gui.MainPage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -105,10 +104,10 @@ public class UserLoginView extends JFrame {
                 userLoginController.login(username, password);
                 messageLabel.setText(userLoginViewModel.getMessage());
 
-                // If login is successful, open MainPage
+                // If login is successful, open MainPageView
                 if ("Login successful.".equals(userLoginViewModel.getMessage())) {
                     SwingUtilities.invokeLater(() -> {
-                        MainPage mainPage = new MainPage();
+                        MainPageView mainPage = new MainPageView(username);
                         mainPage.setVisible(true);
                         dispose(); // Close the login view
                     });
@@ -130,4 +129,3 @@ public class UserLoginView extends JFrame {
         panel.add(messageLabel);
     }
 }
-

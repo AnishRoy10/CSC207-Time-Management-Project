@@ -20,7 +20,7 @@ public class FriendsListView {
     public FriendsListView() {
         mainFrame = new JFrame("Friends");
         friendsList = new FriendsList(null);
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         mainFrame.setLayout(new BorderLayout());
         mainFrame.pack();
         mainFrame.setSize(1280, 720);

@@ -17,8 +17,9 @@ public class User implements Serializable {
     private final FriendsList friends; // Friends list of this user
     private final List<Course> courses; // Courses this user is in
     private final TodoList todo; // To-do list associated with this user
-    private int score; // The users score
+    private int score; // The user's score
     private Timer timer; // A timer set by the user
+    private int aNumber;
     /**
      * Constructs a new User object.
      *
@@ -34,16 +35,34 @@ public class User implements Serializable {
         this.courses = new ArrayList<>(Arrays.asList(courses));
         this.todo = new TodoList();
         this.score = 0;
+        this.aNumber = 5;
     }
 
-    // Getter for the username
+    /**
+    * Get this users username.
+    *
+    * @return the username of this user
+    */
     public String getUsername() {
         return username;
     }
 
-    // Setter for the username
+    /**
+    * Change this users username.
+    *
+    * @param username the new username for this user
+    */
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    /**
+    * Add a friend to this user.
+    *
+    * @param user the new friend for this user
+    */
+    public void addFriend(User user) {
+        this.friends.addFriend(user);
     }
 
     // Getter for the password
@@ -66,32 +85,38 @@ public class User implements Serializable {
         return friends;
     }
 
-    // Add a friend to the friends list
-    public void addFriend(User user) {
-        this.friends.addFriend(user);
-    }
-
-    // Remove a friend from the friends list
+    /**
+    * Attempt to remove a friend from this user.
+    *
+    * @param user the friend to remove
+    */
     public void removeFriend(User user) {
         this.friends.removeFriend(user);
     }
 
-    // Add a task to the to-do list
+    /**
+    * Add a task to this users todolist.
+    *
+    * @param task the task to add
+    */
     public void addTask(Task task) {
         this.todo.addTask(task);
     }
 
-    // Remove a task from the to-do list
+    /**
+    * Remove a task from this users todolist.
+    *
+    * @param task the task to remove
+    */
     public void removeTask(Task task) {
         this.todo.removeTask(task);
     }
 
-    // Getter for the courses
-    public List<Course> getCourses() {
-        return courses;
-    }
-
-    // Add a course to the user's courses
+    /**
+    * Place this user in a new course.
+    *
+    * @param course the course to put this user in
+    */
     public void addCourse(Course course) {
         course.addUser(this);
         if (!this.courses.contains(course)) {
@@ -99,12 +124,9 @@ public class User implements Serializable {
         }
     }
 
-    // Remove a course from the user's courses
-    public boolean removeCourse(Course course) {
-        if (this.courses.contains(course)) {
-            return course.removeUser(this);
-        }
-        return false;
+    // Getter for the courses
+    public List<Course> getCourses() {
+        return courses;
     }
 
     // Getter for score
@@ -125,9 +147,14 @@ public class User implements Serializable {
         this.timer = timer;
     }
 
+    // Getter for the to-do list
+    public TodoList getTodoList() {
+        return todo;
+    }
+
     // Hash the password (to be properly done later. SHA-256 perhaps?)
     private String hashPassword(String password) {
-        return password;
+        return password; // Placeholder for hashing
     }
 
     @Override
@@ -142,4 +169,28 @@ public class User implements Serializable {
     public int hashCode() {
         return Objects.hash(username);
     }
+
+    /**
+    * Attempts to remove this user from the target course.
+    * Returns whether the removal was successful.
+    *
+    * @param course the course to remove this user from
+    * @return       success value of the method
+    */
+    public boolean removeCourse(Course course) {
+        if (this.courses.contains(course)) {
+            return course.removeUser(this);
+        }
+        return false;
+    }
+
+    // Getter and Setter for aNumber
+    public int getANumber() {
+        return aNumber;
+    }
+
+    public void setANumber(int aNumber) {
+        this.aNumber = aNumber;
+    }
 }
+

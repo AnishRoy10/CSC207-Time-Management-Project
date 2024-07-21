@@ -2,6 +2,7 @@ package data_access;
 
 import entity.Course;
 import entity.Timer;
+import use_case.TimerUseCases.SetTimerUseCase.SetTimerDataAccessInterface;
 import entity.User;
 import use_case.SetTimerUseCase.SetTimerDataAccessInterface;
 import use_case.UpdateTimerUseCase.UpdateTimerDataAccessInterface;

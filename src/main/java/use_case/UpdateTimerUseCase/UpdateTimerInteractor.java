@@ -2,7 +2,9 @@ package use_case.UpdateTimerUseCase;
 
 import entity.Timer;
 import entity.User;
-
+/**
+ Use case interactor for the update timer use case.
+ */
 public class UpdateTimerInteractor implements UpdateTimerInputBoundary {
     final UpdateTimerDataAccessInterface userDataAccessObject;
     final UpdateTimerOutputBoundary userPresenter;

@@ -46,7 +46,7 @@ public class JoinCourseUseCase implements JoinCourseInputBoundary {
 		// try to fetch the current user
 		try {
 			user = userDataAccessObject.ReadFromCache();
-		} catch (IOException | ClassNotFoundException e) {
+		} catch (IOException e) {
 			JoinCourseResponseModel responseModel = new JoinCourseResponseModel(
 				false,
 				"An error occurred fetching the current user.");

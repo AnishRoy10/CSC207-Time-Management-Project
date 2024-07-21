@@ -1,4 +1,4 @@
-package use_case.UpdateTimerUseCase;
+package use_case.TimerUseCases.UpdateTimerUseCase;
 /**
  * Output data for the update timer use case.
  */

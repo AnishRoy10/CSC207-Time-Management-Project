@@ -2,10 +2,8 @@ package interface_adapter.controller;
 
 import use_case.TimerUseCases.SetTimerUseCase.SetTimerInputBoundary;
 import use_case.TimerUseCases.SetTimerUseCase.SetTimerInputData;
-import use_case.SetTimerUseCase.SetTimerInputBoundary;
-import use_case.SetTimerUseCase.SetTimerInputData;
-import use_case.UpdateTimerUseCase.UpdateTimerInputBoundary;
-import use_case.UpdateTimerUseCase.UpdateTimerInputData;
+import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerInputBoundary;
+import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerInputData;
 
 /**
  * Controller for the timer which handles the set timer use case.

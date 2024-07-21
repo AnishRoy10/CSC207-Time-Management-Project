@@ -5,7 +5,7 @@ import entity.Timer;
 import use_case.TimerUseCases.SetTimerUseCase.SetTimerDataAccessInterface;
 import entity.User;
 import use_case.SetTimerUseCase.SetTimerDataAccessInterface;
-import use_case.UpdateTimerUseCase.UpdateTimerDataAccessInterface;
+import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerDataAccessInterface;
 
 public class InMemoryTimerDataAccessObject implements SetTimerDataAccessInterface,
         UpdateTimerDataAccessInterface {

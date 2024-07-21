@@ -1,4 +1,4 @@
-package use_case.PauseTimerUseCase;
+package use_case.TimerUseCases.PauseTimerUseCase;
 
 public interface PauseTimerDataAccessInterface {
 }

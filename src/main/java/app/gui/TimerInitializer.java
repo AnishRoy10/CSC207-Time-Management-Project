@@ -1,15 +1,13 @@
 package app.gui;
 
 import data_access.InMemoryTimerDataAccessObject;
-import entity.User;
 import interface_adapter.presenter.TimerPresenter;
 import interface_adapter.viewmodel.SetTimerViewModel;
 import interface_adapter.controller.TimerController;
 import framework.view.SetTimerView;
 import interface_adapter.viewmodel.RunningTimerViewModel;
-import use_case.SetTimerUseCase.SetTimerInteractor;
-import use_case.UpdateTimerUseCase.UpdateTimerDataAccessInterface;
-import use_case.UpdateTimerUseCase.UpdateTimerInteractor;
+import use_case.TimerUseCases.SetTimerUseCase.SetTimerInteractor;
+import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerInteractor;
 
 public class TimerInitializer {
 

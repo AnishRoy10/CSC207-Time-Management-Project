@@ -26,7 +26,7 @@ public class FriendsListView {
         //this.friendsListController = new FriendsListController();
         mainFrame = new JFrame("Friends");
         friendsList = new FriendsList(null);
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         mainFrame.setLayout(new BorderLayout());
         mainFrame.pack();
         mainFrame.setSize(1280, 720);
@@ -59,7 +59,7 @@ public class FriendsListView {
         User[] empty = new User[1];
         Course[] empty2 = new Course[1];
         for (int i = 0; i < 100; i++) {
-            User dummy = new User("User", empty, empty2);
+            User dummy = new User("User", "Password", empty, empty2);
             friendsList.addFriend(dummy);
         }
     }

@@ -1,14 +1,14 @@
 package interface_adapter.presenter;
 
-import interface_adapter.TodoListViewModel;
+import interface_adapter.viewmodel.TodoListViewModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import use_case.*;
-import use_case.AddTaskUseCase.AddTaskResponseModel;
-import use_case.CompleteTaskUseCase.CompleteTaskResponseModel;
-import use_case.LoadTodoListUseCase.LoadTodoListResponseModel;
-import use_case.RemoveTaskUseCase.RemoveTaskResponseModel;
-import use_case.SortTasksUseCase.SortTasksResponseModel;
+import use_case.TodoListUseCases.AddTaskUseCase.AddTaskResponseModel;
+import use_case.TodoListUseCases.CompleteTaskUseCase.CompleteTaskResponseModel;
+import use_case.TodoListUseCases.LoadTodoListUseCase.LoadTodoListResponseModel;
+import use_case.TodoListUseCases.RemoveTaskUseCase.RemoveTaskResponseModel;
+import use_case.TodoListUseCases.SortTasksUseCase.SortTasksResponseModel;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

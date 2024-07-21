@@ -9,7 +9,7 @@ import java.util.Objects;
  * Each task has a title, an optional description, completion status, start date, deadline, and an associated course.
  */
 public class Task implements Serializable {
-    private static final long serialVersionUID = 1L; // Add a serial version UID
+    private static final long serialVersionUID = 3L; // Add a serial version UID
     private static int idCounter = 0; // Static counter to generate unique IDs
 
     private int id; // Unique identifier for the task

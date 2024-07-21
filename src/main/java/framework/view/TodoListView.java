@@ -1,7 +1,7 @@
 package framework.view;
 
 import com.github.lgooddatepicker.components.DateTimePicker;
-import interface_adapter.TodoListViewModel;
+import interface_adapter.viewmodel.TodoListViewModel;
 import interface_adapter.controller.TodoListController;
 import use_case.TaskData;
 
@@ -28,6 +28,7 @@ public class TodoListView extends JFrame {
     private final JCheckBox showCompletedCheckBox;
     private final JComboBox<String> sortCriteriaComboBox;
     private final JCheckBox ascendingCheckBox;
+    private final String username; // Add this line
     private JFrame parentFrame;
 
     /**
@@ -35,10 +36,12 @@ public class TodoListView extends JFrame {
      *
      * @param controller the controller to handle user actions
      * @param viewModel  the view model to provide data to the view
+     * @param username   the username of the logged-in user
      */
-    public TodoListView(TodoListController controller, TodoListViewModel viewModel) {
+    public TodoListView(TodoListController controller, TodoListViewModel viewModel, String username) {
         this.controller = controller;
         this.viewModel = viewModel;
+        this.username = username; // Add this line
 
         setTitle("Todo List");
         setSize(1200, 700);
@@ -119,7 +122,7 @@ public class TodoListView extends JFrame {
         add(filterSortPanel, BorderLayout.NORTH);
 
         // Ensure tasks are loaded initially
-        controller.loadTodoList();
+        controller.loadTodoList(username); // Updated to pass username
         loadTasks();
     }
 
@@ -148,7 +151,7 @@ public class TodoListView extends JFrame {
         LocalDateTime startDate = startDatePicker.getDateTimeStrict();
         LocalDateTime deadline = deadlinePicker.getDateTimeStrict();
         String course = courseField.getText();
-        controller.addTask(title, description, startDate, deadline, course);
+        controller.addTask(title, description, startDate, deadline, course, username); // Updated to pass username
         clearInputFields();
         loadTasks();
     }
@@ -170,7 +173,7 @@ public class TodoListView extends JFrame {
      * @param taskId the ID of the task to complete
      */
     private void completeTask(int taskId) {
-        controller.toggleTaskCompletion(taskId);
+        controller.toggleTaskCompletion(taskId, username); // Updated to pass username
         loadTasks();
     }
 
@@ -180,7 +183,7 @@ public class TodoListView extends JFrame {
      * @param taskId the ID of the task to remove
      */
     private void removeTask(int taskId) {
-        controller.removeTask(taskId);
+        controller.removeTask(taskId, username); // Updated to pass username
         loadTasks();
     }
 
@@ -221,7 +224,7 @@ public class TodoListView extends JFrame {
      */
     private void filterTasks() {
         boolean showCompleted = showCompletedCheckBox.isSelected();
-        controller.filterTasks(showCompleted);
+        controller.filterTasks(showCompleted, username); // Updated to pass username
         loadTasks();
     }
 
@@ -231,13 +234,10 @@ public class TodoListView extends JFrame {
     private void sortTasks() {
         String criterion = (String) sortCriteriaComboBox.getSelectedItem();
         boolean ascending = ascendingCheckBox.isSelected();
-        controller.sortTasks(criterion, ascending);
+        controller.sortTasks(criterion, ascending, username); // Updated to pass username
         loadTasks();
     }
 
-    /**
-     * Loads tasks from the view model and updates the UI.
-     */
     private void loadTasks() {
         taskListPanel.removeAll();
         List<TaskData> tasks = viewModel.getTasks();

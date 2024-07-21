@@ -1,4 +1,4 @@
-package use_case.RefreshFriendsUseCase;
+package use_case.FriendsListUseCases.RefreshFriendsUseCase;
 
 public interface RefreshFriendsInputBoundary {
     void execute(RefreshFriendInputData inputData);

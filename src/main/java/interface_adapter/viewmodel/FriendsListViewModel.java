@@ -1,4 +1,4 @@
-package interface_adapter;
+package interface_adapter.viewmodel;
 import entity.FriendsList;
 
 import javax.swing.*;
@@ -14,6 +14,10 @@ public class FriendsListViewModel{
 
     public FriendsList getFriendsList() {
         return friendsList;
+    }
+
+    public DefaultListModel<String> getDisplayedListModel() {
+        return displayedListModel;
     }
 
     public void setFriendsList(FriendsList friendsList) {

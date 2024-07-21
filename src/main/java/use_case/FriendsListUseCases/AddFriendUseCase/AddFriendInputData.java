@@ -1,4 +1,4 @@
-package use_case.AddFriendUseCase;
+package use_case.FriendsListUseCases.AddFriendUseCase;
 
 public class AddFriendInputData {
     private String name;

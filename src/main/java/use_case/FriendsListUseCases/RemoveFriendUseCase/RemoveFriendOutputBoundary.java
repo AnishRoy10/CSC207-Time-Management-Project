@@ -1,4 +1,4 @@
-package use_case.RemoveFriendUseCase;
+package use_case.FriendsListUseCases.RemoveFriendUseCase;
 
 public interface RemoveFriendOutputBoundary {
     void present(RemoveFriendOutputData outputData);

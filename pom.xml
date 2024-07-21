@@ -34,8 +34,6 @@
             <version>5.1.1</version>
          </dependency>
 
-        </dependency>
-
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>

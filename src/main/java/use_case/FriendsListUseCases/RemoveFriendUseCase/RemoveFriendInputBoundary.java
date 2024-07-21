@@ -1,6 +1,4 @@
-package use_case.RemoveFriendUseCase;
-
-import use_case.RefreshFriendsUseCase.RefreshFriendInputData;
+package use_case.FriendsListUseCases.RemoveFriendUseCase;
 
 import java.io.IOException;
 

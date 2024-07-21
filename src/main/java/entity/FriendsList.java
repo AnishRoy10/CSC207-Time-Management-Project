@@ -36,28 +36,13 @@ public class FriendsList implements Serializable {
     public int getSize(){
         return this.friends.size();
     }
-    //Given an array of users, return a user by username
-    public User findUserByName(String name, User[] users) {
-        for (int i = 0; i < users.length; i++) {
-            if (Objects.equals(users[i].getUsername(), name)){
-                return users[i];
-            }
-        }
-        return null;
-    }
+
     //Remove a friend if in FriendsList
     public void removeFriend(User user) {
         this.friends.remove(user);
     }
 
-    public void removeUserByName(String name) {
-        for (int i = 0; i < this.friends.size(); i++) {
-            if (this.friends.get(i).getUsername().equals(name)) {
-                this.friends.remove(i);
-                i--;
-            }
-        }
-    }
+
     //Convert the FriendsList ArrayList into an Array
     public Object[] exportFriendsList() {
         return this.friends.toArray();

@@ -2,12 +2,12 @@ package interface_adapter.controller;
 
 
 
-import use_case.AddFriendUseCase.AddFriendInputBoundary;
-import use_case.AddFriendUseCase.AddFriendInputData;
-import use_case.RefreshFriendsUseCase.RefreshFriendInputData;
-import use_case.RefreshFriendsUseCase.RefreshFriendsInputBoundary;
-import use_case.RemoveFriendUseCase.RemoveFriendInputBoundary;
-import use_case.RemoveFriendUseCase.RemoveFriendInputData;
+import use_case.FriendsListUseCases.AddFriendUseCase.AddFriendInputBoundary;
+import use_case.FriendsListUseCases.AddFriendUseCase.AddFriendInputData;
+import use_case.FriendsListUseCases.RefreshFriendsUseCase.RefreshFriendInputData;
+import use_case.FriendsListUseCases.RefreshFriendsUseCase.RefreshFriendsInputBoundary;
+import use_case.FriendsListUseCases.RemoveFriendUseCase.RemoveFriendInputBoundary;
+import use_case.FriendsListUseCases.RemoveFriendUseCase.RemoveFriendInputData;
 
 import java.io.IOException;
 
@@ -17,7 +17,7 @@ public class FriendsListController {
     private final RemoveFriendInputBoundary removeFriendUseCase;
 
 
-    public FriendsListController(AddFriendInputBoundary addFriendUseCase, RefreshFriendsInputBoundary refreshFriendsUseCase, RemoveFriendInputBoundary refreshFriendUseCase, RemoveFriendInputBoundary removeFriendUseCase) throws IOException, ClassNotFoundException {
+    public FriendsListController(AddFriendInputBoundary addFriendUseCase, RefreshFriendsInputBoundary refreshFriendsUseCase, RemoveFriendInputBoundary removeFriendUseCase) throws IOException, ClassNotFoundException {
         this.addFriendUseCase = addFriendUseCase;
         this.refreshFriendsUseCase = refreshFriendsUseCase;
         this.removeFriendUseCase = removeFriendUseCase;

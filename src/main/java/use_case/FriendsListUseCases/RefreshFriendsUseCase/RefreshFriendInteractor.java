@@ -1,19 +1,21 @@
-package use_case.RefreshFriendsUseCase;
+package use_case.FriendsListUseCases.RefreshFriendsUseCase;
 
+import data_access.FriendsListDataAccessObject;
 import entity.FriendsList;
 import entity.User;
 import data_access.FileCacheUserDataAccessObject;
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class RefreshFriendInteractor implements RefreshFriendsInputBoundary{
     private final User user;
-    private final FileCacheUserDataAccessObject dao;
-    public RefreshFriendInteractor(RefreshFriendsOutputBoundary outputBoundary) throws IOException, ClassNotFoundException {
-        this.dao = new FileCacheUserDataAccessObject();
-        this.user = dao.ReadFromCache();
+    private final RefreshFriendsOutputBoundary presenter;
+    private final RefreshFriendsDataAccessInterface dao;
+    public RefreshFriendInteractor(RefreshFriendsOutputBoundary outputBoundary, RefreshFriendsDataAccessInterface dao, String username) throws IOException, ClassNotFoundException {
+        this.dao = dao;
+        this.presenter = outputBoundary;
+        this.user = dao.loadUser(username);
     };
     @Override
     public void execute(RefreshFriendInputData inputData) {
@@ -26,5 +28,6 @@ public class RefreshFriendInteractor implements RefreshFriendsInputBoundary{
         for (int i = 0; i < friendsUsernames.size(); i++){
             model.addElement(friendsUsernames.get(i));
         }
+        RefreshFriendOutputData outputData = new RefreshFriendOutputData(model);
     }
 }

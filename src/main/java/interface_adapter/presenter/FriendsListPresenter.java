@@ -1,11 +1,11 @@
 package interface_adapter.presenter;
-import interface_adapter.FriendsListViewModel;
-import use_case.AddFriendUseCase.AddFriendOutputBoundary;
-import use_case.AddFriendUseCase.AddFriendOutputData;
-import use_case.RefreshFriendsUseCase.RefreshFriendOutputData;
-import use_case.RefreshFriendsUseCase.RefreshFriendsOutputBoundary;
-import use_case.RemoveFriendUseCase.RemoveFriendOutputBoundary;
-import use_case.RemoveFriendUseCase.RemoveFriendOutputData;
+import interface_adapter.viewmodel.FriendsListViewModel;
+import use_case.FriendsListUseCases.AddFriendUseCase.AddFriendOutputBoundary;
+import use_case.FriendsListUseCases.AddFriendUseCase.AddFriendOutputData;
+import use_case.FriendsListUseCases.RefreshFriendsUseCase.RefreshFriendOutputData;
+import use_case.FriendsListUseCases.RefreshFriendsUseCase.RefreshFriendsOutputBoundary;
+import use_case.FriendsListUseCases.RemoveFriendUseCase.RemoveFriendOutputBoundary;
+import use_case.FriendsListUseCases.RemoveFriendUseCase.RemoveFriendOutputData;
 
 public class FriendsListPresenter implements AddFriendOutputBoundary, RefreshFriendsOutputBoundary, RemoveFriendOutputBoundary {
     private final FriendsListViewModel viewModel;

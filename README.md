@@ -26,10 +26,10 @@ Welcome to the Time Management Project by Team Lebron James. This project is des
    - Navigate to src/main/java/app/gui/Main.java in the Project Explorer.
    - Right-click on Main.java and select "Run 'Main.main()'".
 3. Using the Application
-  - The application will start with the WelcomeView, where you can choose to log in or sign up.
-  - Sign Up: Create a new account with a username (3-15 alphanumeric characters) and a password (at least 6 characters, including one letter and one number).
-  - Log In: Use the username and password you created to log in.
-  - After logging in, you will be brought to the MainPage, which provides navigation to various features like Calendar, Leaderboard, To-do List, Courses, Friends list and Timer.
+     - The application will start with the WelcomeView, where you can choose to log in or sign up.
+     - Sign Up: Create a new account with a username (3-15 alphanumeric characters) and a password (at least 6 characters, including one letter and one number).
+     - Log In: Use the username and password you created to log in. (You can log in to username: "TestUser" and password: "TestPassword1" to view a User with a moderately filled todo list.)
+     - After logging in, you will be brought to the MainPage, which provides navigation to various features like Calendar, Leaderboard, To-do List, Courses, Friends list and Timer.
 
 ## To-do List Feature. 
 The To-do List feature allows users to manage their tasks efficiently. Below are the functionalities provided by the To-do List:

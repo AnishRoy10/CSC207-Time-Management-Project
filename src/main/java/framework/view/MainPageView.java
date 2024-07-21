@@ -96,6 +96,8 @@ public class MainPageView extends JFrame {
         TimerExecutable.main(null);
     }
 
+
+
 //    /**
 //     * The main method serves as the entry point for the application.
 //     * It creates and displays the MainPageView window, which is the central navigation interface for the user.

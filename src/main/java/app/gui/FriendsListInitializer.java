@@ -13,9 +13,9 @@ import use_case.FriendsListUseCases.RefreshFriendsUseCase.RefreshFriendsInputBou
 import use_case.FriendsListUseCases.RemoveFriendUseCase.RemoveFriendInputBoundary;
 import use_case.FriendsListUseCases.RemoveFriendUseCase.RemoveFriendInteractor;
 
-import javax.swing.*;
-import java.io.IOException;
-
+/**
+ *Class to initialize the FriendsList view
+ */
 public class FriendsListInitializer {
     public static void InitializeFriendsList(String username) {
         try {
@@ -38,7 +38,6 @@ public class FriendsListInitializer {
 
             FriendsListView view = new FriendsListView(controller, viewModel, username);
 
-            view.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error initializing FriendsList");

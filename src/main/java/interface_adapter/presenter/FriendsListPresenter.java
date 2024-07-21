@@ -7,6 +7,9 @@ import use_case.FriendsListUseCases.RefreshFriendsUseCase.RefreshFriendsOutputBo
 import use_case.FriendsListUseCases.RemoveFriendUseCase.RemoveFriendOutputBoundary;
 import use_case.FriendsListUseCases.RemoveFriendUseCase.RemoveFriendOutputData;
 
+/**
+ * Presenter class for the friends list system, used to update the viewmodel.
+ */
 public class FriendsListPresenter implements AddFriendOutputBoundary, RefreshFriendsOutputBoundary, RemoveFriendOutputBoundary {
     private final FriendsListViewModel viewModel;
 
@@ -21,6 +24,7 @@ public class FriendsListPresenter implements AddFriendOutputBoundary, RefreshFri
 
     @Override
     public void present(RefreshFriendOutputData outputData) {
+        viewModel.setFriendsList(outputData.getFriendsList());
         viewModel.setDisplayedListModel(outputData.getModel());
     }
 

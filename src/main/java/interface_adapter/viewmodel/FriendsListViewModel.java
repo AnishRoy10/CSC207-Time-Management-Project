@@ -3,13 +3,16 @@ import entity.FriendsList;
 
 import javax.swing.*;
 
+/**
+ * Viewmodel for the friends list system, used to send data to the view.
+ */
 public class FriendsListViewModel{
     private FriendsList friendsList;
     private DefaultListModel<String> displayedListModel;
 
     public FriendsListViewModel() {
-        friendsList = new FriendsList(null);
-        displayedListModel = new DefaultListModel<>();
+        this.friendsList = new FriendsList(null);
+        this.displayedListModel = new DefaultListModel<>();
     }
 
     public FriendsList getFriendsList() {
@@ -20,11 +23,11 @@ public class FriendsListViewModel{
         return displayedListModel;
     }
 
-    public void setFriendsList(FriendsList friendsList) {
-        this.friendsList = friendsList;
+    public void setFriendsList(FriendsList newFriendsList) {
+        friendsList = newFriendsList;
     }
 
-    public void setDisplayedListModel(DefaultListModel<String> displayedListModel) {
-        this.displayedListModel = displayedListModel;
+    public void setDisplayedListModel(DefaultListModel<String> newDisplayedListModel) {
+        displayedListModel = newDisplayedListModel;
     }
 }

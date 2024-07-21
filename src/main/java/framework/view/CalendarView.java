@@ -122,18 +122,6 @@ public class CalendarView {
         frame.setVisible(true);
     }
 
-    // Technical method from the LGoodDatePicker library
-    private static GridBagConstraints getConstraints(int gridx, int gridy, int gridwidth, int anchor) {
-        GridBagConstraints gc = new GridBagConstraints();
-        gc.fill = 0;
-        gc.anchor = anchor;
-        gc.gridx = gridx;
-        gc.gridy = gridy;
-        gc.gridwidth = gridwidth;
-        return gc;
-    }
-
-
     // Makes sure that days with events on them are highlighted in the calendar representation
     private static class EventHighlightPolicy implements DateHighlightPolicy {
         private EventHighlightPolicy() {

@@ -2,7 +2,7 @@ package data_access;
 
 import entity.Timer;
 import entity.User;
-import use_case.SetTimerUseCase.SetTimerDataAccessInterface;
+import use_case.TimerUseCases.SetTimerUseCase.SetTimerDataAccessInterface;
 
 public class TimerDataAccessObject implements SetTimerDataAccessInterface {
     FileCacheUserDataAccessObject userDataAccessObject;

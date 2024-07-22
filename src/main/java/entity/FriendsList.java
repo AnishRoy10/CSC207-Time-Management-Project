@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class FriendsList implements Serializable {
     /**
@@ -38,12 +39,6 @@ public class FriendsList implements Serializable {
         this.friends.remove(user);
     }
 
-    //Convert the FriendsList ArrayList into an Array
-    public Object[] exportFriendsList() {
-        return this.friends.toArray();
-
-    //Return an arraylist of the usernames of a users friends
-    }
     public ArrayList<String> exportFriendsNames() {
         ArrayList<String> friendsnames = new ArrayList<String>();
         for (int i = 0; i < this.friends.size(); i++) {

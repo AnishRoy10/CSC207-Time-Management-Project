@@ -1,5 +1,7 @@
 package framework.view;
 
+import app.gui.FriendsListInitializer;
+import app.gui.CalendarInitializer;
 import app.gui.LeaderboardInitializer;
 import app.gui.TimerExecutable;
 import app.gui.TodoListInitializer;
@@ -36,6 +38,7 @@ public class MainPageView extends JFrame {
         addNavigationButton(navigationPanel, "Leaderboard", e -> openLeaderboard());
         addNavigationButton(navigationPanel, "To-do List", e -> openTodoList());
         addNavigationButton(navigationPanel, "Timer", e -> openTimer());
+        addNavigationButton(navigationPanel, "Friends", e -> openFriendsList());
         // Additional feature buttons can be added here as needed
 
         add(navigationPanel, BorderLayout.CENTER);
@@ -71,10 +74,7 @@ public class MainPageView extends JFrame {
      * Placeholder method to open the Calendar feature.
      * This method should be implemented to open the Calendar view of the application.
      */
-    private void openCalendar() {
-        // Placeholder implementation
-        JOptionPane.showMessageDialog(this, "Calendar feature to be implemented");
-    }
+    private void openCalendar() {CalendarInitializer.initializeCalendar(username);}
 
     /**
      * Placeholder method to open the Leaderboard feature.
@@ -98,7 +98,12 @@ public class MainPageView extends JFrame {
         TimerExecutable.main(null);
     }
 
-
+    /**
+     * Opens the friends list feature of the application
+     */
+    private void openFriendsList() {
+        FriendsListInitializer.InitializeFriendsList(username);
+    }
 
 //    /**
 //     * The main method serves as the entry point for the application.

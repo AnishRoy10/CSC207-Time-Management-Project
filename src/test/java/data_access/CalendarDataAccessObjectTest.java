@@ -2,38 +2,24 @@ package data_access;
 
 import entity.*;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.Month;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import entity.Course;
-import entity.Task;
-import entity.User;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CalendarDataAccessObjectTest {
     private FileCacheUserDataAccessObject fileCacheUserDAO;
-    private final String testFilePath = "src/main/java/data_access/userCache.json";
+    private String testFilePath;
     private Gson gson;
 
     @BeforeEach
     void setUp() throws IOException {
+        testFilePath = "src/test/userCacheTest.json";
         fileCacheUserDAO = new FileCacheUserDataAccessObject(testFilePath);
         gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer())
@@ -61,10 +47,10 @@ public class CalendarDataAccessObjectTest {
             fileCacheUserDAO.WriteToCache(user);
             System.out.println("User exists: " + fileCacheUserDAO.UserExists("user1"));
 
-           CalendarDataAccessObject obj = new CalendarDataAccessObject("user1");
-           Calendar calendar = obj.getCalendar();
-           assertTrue(calendar != null);
-           assertTrue(calendar.getAllEvents().isEmpty());
+            CalendarDataAccessObject obj = new CalendarDataAccessObject("user1", testFilePath);
+            Calendar calendar = obj.getCalendar();
+            assertNotNull(calendar);
+            assertTrue(calendar.getAllEvents().isEmpty());
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             fail("Exception should not have been thrown");
@@ -82,23 +68,24 @@ public class CalendarDataAccessObjectTest {
             fileCacheUserDAO.WriteToCache(user);
             System.out.println("User exists: " + fileCacheUserDAO.UserExists("user1"));
 
-            CalendarDataAccessObject obj = new CalendarDataAccessObject("user1");
+            CalendarDataAccessObject obj = new CalendarDataAccessObject("user1", testFilePath);
 
             String name = "name";
             String description = "description";
             String priorityLevel = "High";
             LocalDateTime startDate = LocalDateTime.of(2024, Month.JULY, 22, 14, 0);
             LocalDateTime endDate = LocalDateTime.of(2024, Month.JULY, 22, 15, 0);
-            CalendarEvent event = new CalendarEvent(name,description, priorityLevel, startDate, endDate);
+            CalendarEvent event = new CalendarEvent(name, description, priorityLevel, startDate, endDate);
             obj.addEvent(event);
             Calendar calendar = obj.getCalendar();
-            assertTrue(calendar.getAllEvents().size() == 1);
+            assertEquals(1, calendar.getAllEvents().size());
             assertTrue(calendar.getAllEvents().contains(event));
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             fail("Exception should not have been thrown");
         }
     }
+
     @Test
     void AddMultipleEventsToUserAndRetrieveThem() {
         User[] friends = {};
@@ -110,14 +97,14 @@ public class CalendarDataAccessObjectTest {
             fileCacheUserDAO.WriteToCache(user);
             System.out.println("User exists: " + fileCacheUserDAO.UserExists("user1"));
 
-            CalendarDataAccessObject obj = new CalendarDataAccessObject("user1");
+            CalendarDataAccessObject obj = new CalendarDataAccessObject("user1", testFilePath);
 
             String name = "name";
             String description = "description";
             String priorityLevel = "High";
             LocalDateTime startDate = LocalDateTime.of(2024, Month.JULY, 22, 14, 0);
             LocalDateTime endDate = LocalDateTime.of(2024, Month.JULY, 22, 15, 0);
-            CalendarEvent event = new CalendarEvent(name,description, priorityLevel, startDate, endDate);
+            CalendarEvent event = new CalendarEvent(name, description, priorityLevel, startDate, endDate);
             obj.addEvent(event);
 
             String nameTwo = "nameTwo";
@@ -125,7 +112,7 @@ public class CalendarDataAccessObjectTest {
             String priorityLevelTwo = "Normal";
             LocalDateTime startDateTwo = LocalDateTime.of(2024, Month.JULY, 22, 15, 0);
             LocalDateTime endDateTwo = LocalDateTime.of(2024, Month.JULY, 22, 16, 0);
-            CalendarEvent eventTwo = new CalendarEvent(nameTwo,descriptionTwo, priorityLevelTwo, startDateTwo, endDateTwo);
+            CalendarEvent eventTwo = new CalendarEvent(nameTwo, descriptionTwo, priorityLevelTwo, startDateTwo, endDateTwo);
             obj.addEvent(eventTwo);
 
             String nameThree = "nameThree";
@@ -133,11 +120,11 @@ public class CalendarDataAccessObjectTest {
             String priorityLevelThree = "Low";
             LocalDateTime startDateThree = LocalDateTime.of(2024, Month.JULY, 23, 15, 0);
             LocalDateTime endDateThree = LocalDateTime.of(2024, Month.JULY, 23, 16, 0);
-            CalendarEvent eventThree = new CalendarEvent(nameThree,descriptionThree, priorityLevelThree, startDateThree, endDateThree);
+            CalendarEvent eventThree = new CalendarEvent(nameThree, descriptionThree, priorityLevelThree, startDateThree, endDateThree);
             obj.addEvent(eventThree);
 
             Calendar calendar = obj.getCalendar();
-            assertTrue(calendar.getAllEvents().size() == 3);
+            assertEquals(3, calendar.getAllEvents().size());
             assertTrue(calendar.getAllEvents().contains(event));
             assertTrue(calendar.getAllEvents().contains(eventTwo));
             assertTrue(calendar.getAllEvents().contains(eventThree));

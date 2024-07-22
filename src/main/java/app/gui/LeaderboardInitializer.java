@@ -21,7 +21,7 @@ import java.time.LocalDate;
  * Initializer class for the leaderboard system.
  */
 public class LeaderboardInitializer {
-    public static void main(String[] args) {
+    public static void LeaderboardInitializer() {
         LocalDate today = LocalDate.now();
         LocalDate thisMonth = LocalDate.now().withDayOfMonth(1);
 

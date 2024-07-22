@@ -64,7 +64,9 @@ public class User implements Serializable {
     * @param user the new friend for this user
     */
     public void addFriend(User user) {
-        this.friends.addFriend(user);
+        if(!(user.getUsername().equals(username))) {
+            this.friends.addFriend(user);
+        }
     }
 
     // Getter for the password

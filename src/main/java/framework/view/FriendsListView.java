@@ -1,63 +1,81 @@
 package framework.view;
-//TODO add documentation and CA classes/interfaces
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.io.IOException;
 
-import entity.Course;
-import entity.FriendsList;
-import entity.User;
+import interface_adapter.viewmodel.FriendsListViewModel;
+import interface_adapter.controller.FriendsListController;
 
-public class FriendsListView {
-    private JFrame mainFrame;
-    private JPanel friendsPanel;
-    private JPanel inputPanel;
-    private JList<String>friendsListDisplay;
-    private JButton refreshButton;
-    private JButton addButton;
-    private FriendsList friendsList; //Temporary data structure
 
-    public FriendsListView() {
-        mainFrame = new JFrame("Friends");
-        friendsList = new FriendsList(null);
+/**
+ * User interface for the active users friends list
+ */
+public class FriendsListView extends JFrame {
+    private final FriendsListViewModel viewModel;
+    private final FriendsListController friendsListController;
+    private final JList<String>friendsListDisplay;
+    private final JTextField usernameField;
+    //constructor
+    public FriendsListView(FriendsListController controller, FriendsListViewModel viewModel, String username) throws IOException, ClassNotFoundException {
+        this.viewModel = viewModel;
+        this.friendsListController = controller;
+        JFrame mainFrame = new JFrame("Friends");
         mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         mainFrame.setLayout(new BorderLayout());
         mainFrame.pack();
-        mainFrame.setSize(1280, 720);
-        friendsPanel = new JPanel(new BorderLayout());
-        inputPanel = new JPanel(new GridLayout(1, 4));
+        mainFrame.setSize(450, 500);
+        JPanel friendsPanel = new JPanel(new BorderLayout());
+        JPanel inputPanel = new JPanel(new GridLayout(1, 3));
         friendsListDisplay = new JList<String>();
         friendsPanel.add(new JScrollPane(friendsListDisplay));
-        refreshButton = new JButton("Refresh");
-        addButton = new JButton("Add");
-        refreshButton.addActionListener(e -> refreshFriendsList());
-        addButton.addActionListener(e -> AddFriend());
+        JButton refreshButton = new JButton("Refresh");
+        usernameField = new JTextField("add or remove a friend");
+        JButton addButton = new JButton("Add");
+        JButton removeButton = new JButton("Remove");
+        refreshButton.addActionListener(e -> {
+            try {
+                refreshFriendsList();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        addButton.addActionListener(e -> {
+            try {
+                addFriend();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        removeButton.addActionListener(e -> {
+            try {
+                removeFriend();
+            } catch (IOException | ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         inputPanel.add(refreshButton);
         inputPanel.add(addButton);
+        inputPanel.add(removeButton);
+        inputPanel.add(usernameField);
         mainFrame.add(friendsPanel, BorderLayout.CENTER);
         mainFrame.add(inputPanel, BorderLayout.SOUTH);
         mainFrame.setVisible(true);
     }
-
-    public void refreshFriendsList(){
-        DefaultListModel<String> model = new DefaultListModel<>();
-        ArrayList<String> friendsUsernames = friendsList.exportFriendsNames();
-        for (int i = 0; i < friendsUsernames.size(); i++){
-            model.addElement(friendsUsernames.get(i));
-        }
-        friendsListDisplay.setModel(model);
+    //refreshes the friends list
+    public void refreshFriendsList() throws IOException {
+        friendsListController.refreshFriend();
+        friendsListDisplay.setModel(viewModel.getDisplayedListModel());
     }
-
-    public void AddFriend(){
-        User[] empty = new User[1];
-        Course[] empty2 = new Course[1];
-        for (int i = 0; i < 100; i++) {
-            User dummy = new User("User", "Password", empty, empty2);
-            friendsList.addFriend(dummy);
-        }
+    //adds a friend to the active users friends list given a username
+    public void addFriend() throws IOException {
+        String name = usernameField.getText();
+        usernameField.setText("");
+        friendsListController.addFriend(name);
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(FriendsListView::new);
+    //removes a friends from the active users friends list given a username
+    public void removeFriend() throws IOException, ClassNotFoundException {
+        String name = usernameField.getText();
+        usernameField.setText("");
+        friendsListController.removeFriend(name);
     }
 }

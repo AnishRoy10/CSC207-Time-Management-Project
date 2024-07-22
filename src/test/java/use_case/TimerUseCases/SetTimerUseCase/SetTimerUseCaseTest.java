@@ -1,15 +1,7 @@
-package use_case;
+package use_case.TimerUseCases.SetTimerUseCase;
 
-import entity.TodoList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import use_case.SetTimerUseCase.SetTimerDataAccessInterface;
-import use_case.SetTimerUseCase.SetTimerInteractor;
-import use_case.SetTimerUseCase.SetTimerOutputBoundary;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;

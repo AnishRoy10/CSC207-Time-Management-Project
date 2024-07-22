@@ -2,9 +2,8 @@ package use_case.TimerUseCases.SetTimerUseCase;
 
 import entity.Timer;
 
-/*
-The SetTimeUseCase class handles the use case of setting the time for
-the use_case.timer and creating a Timer class to represent the Timer.
+/**
+Use case interactor for the set timer use case.
  */
 public class SetTimerInteractor implements SetTimerInputBoundary {
     final SetTimerDataAccessInterface userDataAccessObject;
@@ -18,17 +17,25 @@ public class SetTimerInteractor implements SetTimerInputBoundary {
 
 
     public void execute(SetTimerInputData setTimerInputData) {
-        Timer timer = new Timer(setTimerInputData.getHours(),
-                setTimerInputData.getMinutes(),
-                setTimerInputData.getSeconds());
+        if (setTimerInputData.getHours() == 0 &&
+                setTimerInputData.getMinutes() == 0 &&
+                setTimerInputData.getSeconds() == 0) {
+            userPresenter.prepareFailView("Invalid Input");
+        }
+        else {
+            Timer timer = new Timer(setTimerInputData.getHours(),
+                    setTimerInputData.getMinutes(),
+                    setTimerInputData.getSeconds());
 
-        userDataAccessObject.save(timer);
+            userDataAccessObject.save(timer);
 
-        long timerLength = timer.timerLength();
-        int hours = (int) (timerLength / 36000000);
-        int minutes = (int) ((timerLength - hours*36000000) / 60000);
-        int seconds = (int) ((timerLength - hours*36000000 - minutes*60000) / 1000);
-        SetTimerOutputData setTimerOutputData = new SetTimerOutputData(hours, minutes, seconds);
-        userPresenter.prepareSuccessView(setTimerOutputData);
+            long timerLength = timer.timerLength();
+            int hours = (int) (timerLength / 3600000);
+            int minutes = (int) ((timerLength - hours * 3600000) / 60000);
+            int seconds = (int) ((timerLength - hours * 3600000 - minutes * 60000) / 1000);
+
+            SetTimerOutputData setTimerOutputData = new SetTimerOutputData(hours, minutes, seconds);
+            userPresenter.prepareSuccessView(setTimerOutputData);
+        }
     }
 }

@@ -1,5 +1,8 @@
 package use_case.TimerUseCases.SetTimerUseCase;
 
+/**
+ * Input data for the Set Timer Use Case.
+ */
 public class SetTimerInputData {
     final private int hours;
     final private int minutes;
@@ -10,6 +13,8 @@ public class SetTimerInputData {
         this.minutes = minutes;
         this.seconds = seconds;
     }
+
+    //Getters
 
     public int getHours() {
         return hours;

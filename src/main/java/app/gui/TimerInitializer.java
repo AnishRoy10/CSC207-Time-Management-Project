@@ -1,23 +1,26 @@
 package app.gui;
 
 import data_access.InMemoryTimerDataAccessObject;
-import interface_adapter.setTimer.SetTimerPresenter;
-import interface_adapter.setTimer.SetTimerViewModel;
-import interface_adapter.setTimer.SetTimerController;
+import interface_adapter.presenter.TimerPresenter;
+import interface_adapter.viewmodel.SetTimerViewModel;
+import interface_adapter.controller.TimerController;
 import framework.view.SetTimerView;
 import interface_adapter.viewmodel.RunningTimerViewModel;
 import use_case.TimerUseCases.SetTimerUseCase.SetTimerInteractor;
+import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerInteractor;
 
-public class TimerExecutable {
+public class TimerInitializer {
+
     public static void main(String[] args) {
         SetTimerViewModel setTimerViewModel = new SetTimerViewModel("set timer");
         RunningTimerViewModel runningTimerViewModel = new RunningTimerViewModel("running timer");
 
         InMemoryTimerDataAccessObject dataAccessObject = new InMemoryTimerDataAccessObject();
 
-        SetTimerPresenter presenter = new SetTimerPresenter(setTimerViewModel, runningTimerViewModel);
-        SetTimerInteractor interactor = new SetTimerInteractor(dataAccessObject, presenter);
-        SetTimerController controller = new SetTimerController(interactor);
+        TimerPresenter presenter = new TimerPresenter(setTimerViewModel, runningTimerViewModel);
+        SetTimerInteractor setTimerInteractor = new SetTimerInteractor(dataAccessObject, presenter);
+        UpdateTimerInteractor updateTimerInteractor = new UpdateTimerInteractor(dataAccessObject, presenter);
+        TimerController controller = new TimerController(setTimerInteractor, updateTimerInteractor);
 
         SetTimerView view = new SetTimerView(controller, setTimerViewModel, runningTimerViewModel);
         view.setVisible(true);

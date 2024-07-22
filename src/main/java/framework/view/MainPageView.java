@@ -3,7 +3,7 @@ package framework.view;
 import app.gui.FriendsListInitializer;
 import app.gui.CalendarInitializer;
 import app.gui.LeaderboardInitializer;
-import app.gui.TimerExecutable;
+import app.gui.TimerInitializer;
 import app.gui.TodoListInitializer;
 
 import javax.swing.*;
@@ -95,7 +95,7 @@ public class MainPageView extends JFrame {
      * This method should be implemented to open the Timer view of the application.
      */
     private void openTimer() {
-        TimerExecutable.main(null);
+        TimerInitializer.main(null);
     }
 
     /**

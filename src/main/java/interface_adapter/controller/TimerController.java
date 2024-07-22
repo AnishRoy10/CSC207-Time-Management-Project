@@ -1,20 +1,25 @@
-package interface_adapter.setTimer;
+package interface_adapter.controller;
 
 import use_case.TimerUseCases.SetTimerUseCase.SetTimerInputBoundary;
 import use_case.TimerUseCases.SetTimerUseCase.SetTimerInputData;
+import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerInputBoundary;
+import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerInputData;
 
 /**
  * Controller for the timer which handles the set timer use case.
  */
-public class SetTimerController {
+public class TimerController {
     final SetTimerInputBoundary userSetTimerUseCaseInteractor;
+    final UpdateTimerInputBoundary userUpdateTimerUseCaseInteractor;
 
     /**
      * Constructs the controller with the Set Timer use case
      * @param userSetTimerUseCaseInteractor use case for setting the timer
      */
-    public SetTimerController(SetTimerInputBoundary userSetTimerUseCaseInteractor) {
+    public TimerController(SetTimerInputBoundary userSetTimerUseCaseInteractor,
+                           UpdateTimerInputBoundary userUpdateTimerUseCaseInteractor) {
         this.userSetTimerUseCaseInteractor = userSetTimerUseCaseInteractor;
+        this.userUpdateTimerUseCaseInteractor = userUpdateTimerUseCaseInteractor;
     }
 
     /**
@@ -23,10 +28,11 @@ public class SetTimerController {
      * @param minutes minutes the timer lasts for
      * @param seconds seconds the timer lasts for
      */
-    public void execute(String hours, String minutes, String seconds) {
+    public void execute_set_timer(String hours, String minutes, String seconds) {
         int int_hours;
         int int_minutes;
         int int_seconds;
+        // TODO make a bool var for if input is valid or not
 
         try {
             int_hours = Integer.parseInt(hours);
@@ -43,5 +49,10 @@ public class SetTimerController {
                 int_minutes, int_seconds);
 
         userSetTimerUseCaseInteractor.execute(setTimerInputData);
+    }
+
+    public void execute_update_timer() {
+        UpdateTimerInputData updateTimerInputData = new UpdateTimerInputData();
+        userUpdateTimerUseCaseInteractor.execute(updateTimerInputData);
     }
 }

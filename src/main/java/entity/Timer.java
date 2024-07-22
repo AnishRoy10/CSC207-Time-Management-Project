@@ -59,7 +59,7 @@ public class Timer implements Serializable {
      * @return A Boolean representing whether the specified timer length has passed.
      */
     public boolean checkTimer() {
-        return elapsed_time + start_time > end_time;
+        return elapsed_time + start_time >= end_time;
     }
 
     /**

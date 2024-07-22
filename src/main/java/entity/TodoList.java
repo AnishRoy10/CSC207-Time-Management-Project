@@ -37,7 +37,7 @@ public class TodoList implements Serializable {
      * @param task The task to be removed.
      */
     public void removeTask(Task task) {
-        tasks.removeIf(existingTask -> existingTask.equals(task));
+        tasks.removeIf(t -> t.getId().equals(task.getId()));
     }
 
     /**

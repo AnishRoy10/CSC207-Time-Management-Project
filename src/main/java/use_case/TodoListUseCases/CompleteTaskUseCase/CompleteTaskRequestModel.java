@@ -1,24 +1,26 @@
 package use_case.TodoListUseCases.CompleteTaskUseCase;
 
+import java.util.UUID;
+
 /**
  * Request model for completing a task.
  */
 public class CompleteTaskRequestModel {
-    private int taskId;
+    private UUID taskId;
     private String username;
 
-    public CompleteTaskRequestModel(int taskId, String username) {
+    public CompleteTaskRequestModel(UUID taskId, String username) {
         this.taskId = taskId;
         this.username = username;
     }
 
     // Getters and setters
 
-    public int getTaskId() {
+    public UUID getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(int taskId) {
+    public void setTaskId(UUID taskId) {
         this.taskId = taskId;
     }
 

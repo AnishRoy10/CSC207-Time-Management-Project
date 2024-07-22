@@ -59,7 +59,6 @@ public class AddTaskUseCase implements AddTaskInputBoundary {
             addTaskOutputBoundary.present(responseModel);
         } catch (IOException e) {
             e.printStackTrace();
-            // Handle the error appropriately
         }
     }
 }

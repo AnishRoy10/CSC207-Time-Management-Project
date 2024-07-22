@@ -12,6 +12,7 @@ import use_case.TodoListUseCases.SortTasksUseCase.SortTasksResponseModel;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -28,8 +29,11 @@ public class TodoListPresenterTest {
     @Test
     public void testPresentAddTask() {
         // Create TaskData
-        TaskData task1 = new TaskData(1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course1", null);
-        TaskData task2 = new TaskData(2, "Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), false, "Course2", null);
+        UUID uuid1 = UUID.randomUUID();
+        UUID uuid2 = UUID.randomUUID();
+
+        TaskData task1 = new TaskData(uuid1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course1", null);
+        TaskData task2 = new TaskData(uuid2, "Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), false, "Course2", null);
 
         // Create AddTaskResponseModel
         AddTaskResponseModel responseModel = new AddTaskResponseModel(Arrays.asList(task1, task2));
@@ -46,8 +50,11 @@ public class TodoListPresenterTest {
     @Test
     public void testPresentRemoveTask() {
         // Create TaskData
-        TaskData task1 = new TaskData(1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course1", null);
-        TaskData task2 = new TaskData(2, "Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), false, "Course2", null);
+        UUID uuid1 = UUID.randomUUID();
+        UUID uuid2 = UUID.randomUUID();
+
+        TaskData task1 = new TaskData(uuid1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course1", null);
+        TaskData task2 = new TaskData(uuid2, "Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), false, "Course2", null);
 
         // Create RemoveTaskResponseModel
         RemoveTaskResponseModel responseModel = new RemoveTaskResponseModel(Arrays.asList(task1, task2));
@@ -64,8 +71,11 @@ public class TodoListPresenterTest {
     @Test
     public void testPresentCompleteTask() {
         // Create TaskData
-        TaskData task1 = new TaskData(1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course1", null);
-        TaskData task2 = new TaskData(2, "Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), true, "Course2", LocalDateTime.now());
+        UUID uuid1 = UUID.randomUUID();
+        UUID uuid2 = UUID.randomUUID();
+
+        TaskData task1 = new TaskData(uuid1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course1", null);
+        TaskData task2 = new TaskData(uuid2, "Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), true, "Course2", LocalDateTime.now());
 
         // Initialize ViewModel with tasks
         viewModel.setTasks(Arrays.asList(task1, task2));
@@ -86,8 +96,11 @@ public class TodoListPresenterTest {
     @Test
     public void testPresentSortTasks() {
         // Create TaskData
-        TaskData task1 = new TaskData(1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course1", null);
-        TaskData task2 = new TaskData(2, "Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), false, "Course2", null);
+        UUID uuid1 = UUID.randomUUID();
+        UUID uuid2 = UUID.randomUUID();
+
+        TaskData task1 = new TaskData(uuid1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course1", null);
+        TaskData task2 = new TaskData(uuid2, "Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), false, "Course2", null);
 
         // Create SortTasksResponseModel
         SortTasksResponseModel responseModel = new SortTasksResponseModel(Arrays.asList(task1, task2));
@@ -104,8 +117,11 @@ public class TodoListPresenterTest {
     @Test
     public void testPresentLoadTodoList() {
         // Create TaskData
-        TaskData task1 = new TaskData(1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course1", null);
-        TaskData task2 = new TaskData(2, "Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), false, "Course2", null);
+        UUID uuid1 = UUID.randomUUID();
+        UUID uuid2 = UUID.randomUUID();
+
+        TaskData task1 = new TaskData(uuid1, "Title1", "Description1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course1", null);
+        TaskData task2 = new TaskData(uuid2, "Title2", "Description2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), false, "Course2", null);
 
         // Create LoadTodoListResponseModel
         LoadTodoListResponseModel responseModel = new LoadTodoListResponseModel(Arrays.asList(task1, task2));

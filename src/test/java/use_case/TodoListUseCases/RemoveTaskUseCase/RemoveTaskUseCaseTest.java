@@ -17,6 +17,7 @@ import use_case.TodoListUseCases.AddTaskUseCase.AddTaskUseCase;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -58,7 +59,7 @@ class RemoveTaskUseCaseTest {
 
             assertEquals(1, viewModel.getTasks().size());
 
-            int taskId = viewModel.getTasks().get(0).getId();
+            UUID taskId = viewModel.getTasks().get(0).getId();
             RemoveTaskRequestModel removeRequestModel = new RemoveTaskRequestModel(taskId, "removeUser");
             removeTaskUseCase.execute(removeRequestModel);
 
@@ -75,7 +76,7 @@ class RemoveTaskUseCaseTest {
             TodoListPresenter presenter = new TodoListPresenter(viewModel);
             RemoveTaskUseCase removeTaskUseCase = new RemoveTaskUseCase(userRepository, presenter);
 
-            RemoveTaskRequestModel removeRequestModel = new RemoveTaskRequestModel(999, "removeUser2");
+            RemoveTaskRequestModel removeRequestModel = new RemoveTaskRequestModel(UUID.randomUUID(), "removeUser2");
             Exception exception = assertThrows(RuntimeException.class, () -> {
                 removeTaskUseCase.execute(removeRequestModel);
             });
@@ -113,7 +114,7 @@ class RemoveTaskUseCaseTest {
             assertEquals(1, viewModel1.getTasks().size());
             assertEquals(1, viewModel2.getTasks().size());
 
-            int taskIdUser1 = viewModel1.getTasks().get(0).getId();
+            UUID taskIdUser1 = viewModel1.getTasks().get(0).getId();
             RemoveTaskRequestModel removeRequestModelUser1 = new RemoveTaskRequestModel(taskIdUser1, "user1");
             removeTaskUseCase1.execute(removeRequestModelUser1);
 
@@ -144,7 +145,7 @@ class RemoveTaskUseCaseTest {
 
             assertEquals(2, viewModel.getTasks().size());
 
-            int taskIdToRemove = viewModel.getTasks().get(0).getId();
+            UUID taskIdToRemove = viewModel.getTasks().get(0).getId();
             RemoveTaskRequestModel removeRequestModel = new RemoveTaskRequestModel(taskIdToRemove, "removeUser3");
             removeTaskUseCase.execute(removeRequestModel);
 
@@ -162,7 +163,7 @@ class RemoveTaskUseCaseTest {
             TodoListPresenter presenter = new TodoListPresenter(viewModel);
             RemoveTaskUseCase removeTaskUseCase = new RemoveTaskUseCase(userRepository, presenter);
 
-            RemoveTaskRequestModel removeRequestModel = new RemoveTaskRequestModel(1, "removeUser4");
+            RemoveTaskRequestModel removeRequestModel = new RemoveTaskRequestModel(UUID.randomUUID(), "removeUser4");
             Exception exception = assertThrows(RuntimeException.class, () -> {
                 removeTaskUseCase.execute(removeRequestModel);
             });

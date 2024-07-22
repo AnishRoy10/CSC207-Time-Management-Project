@@ -86,4 +86,61 @@ class UserLoginIntegrationTest {
         // Verify login message
         assertEquals("Invalid username or password.", userLoginViewModel.getMessage());
     }
+
+    @Test
+    void loginUserAfterChangingPassword() throws IOException, ClassNotFoundException {
+        // Mock behavior for user repository
+        User user = new User("username", "NewPassword1", new User[0], new Course[0]);
+        when(userRepository.findByUsername("username")).thenReturn(user);
+
+        // Log in user with new password
+        userLoginController.login("username", "NewPassword1");
+
+        // Verify login message
+        assertEquals("Login successful.", userLoginViewModel.getMessage());
+    }
+
+    @Test
+    void testConcurrentLogins() throws IOException, ClassNotFoundException {
+        // Mock behavior for user repository
+        User user = new User("username", "Password1", new User[0], new Course[0]);
+        when(userRepository.findByUsername("username")).thenReturn(user);
+
+        // Simulate concurrent logins
+        Runnable loginTask = () -> userLoginController.login("username", "Password1");
+
+        Thread thread1 = new Thread(loginTask);
+        Thread thread2 = new Thread(loginTask);
+
+        thread1.start();
+        thread2.start();
+
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // Verify login message
+        assertEquals("Login successful.", userLoginViewModel.getMessage());
+    }
+
+    @Test
+    void loginUserWithEmptyUsername() {
+        // Log in user with empty username
+        userLoginController.login("", "Password1");
+
+        // Verify login message
+        assertEquals("Invalid username or password.", userLoginViewModel.getMessage());
+    }
+
+    @Test
+    void loginUserWithEmptyPassword() {
+        // Log in user with empty password
+        userLoginController.login("username", "");
+
+        // Verify login message
+        assertEquals("Invalid username or password.", userLoginViewModel.getMessage());
+    }
 }

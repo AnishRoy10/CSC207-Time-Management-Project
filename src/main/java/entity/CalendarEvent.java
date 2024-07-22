@@ -2,6 +2,7 @@ package entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * The CalendarEvent class represents an event in the calendar of the user.
@@ -10,8 +11,9 @@ import java.io.Serializable;
  * day of the week, and priority level.
  */
 
-public class CalendarEvent implements Serializable {
-    private static final long serialVersionUID = 5L; // Add serial version UID for serialization compatibility
+public class CalendarEvent implements Serializable{
+    private static final long serialVersionUID = 9L; // Add a serial version UID
+
     private String name;
 
     private String description;
@@ -33,13 +35,13 @@ public class CalendarEvent implements Serializable {
      *
      * @param name           The name of the event (required)
      * @param description    The description of the event (nullable)
-     * @param status         The status of the event: must be either "Upcoming", "In Progress", or "Finished"
+     * @var status         The status of the event: must be either "Upcoming", "In Progress", or "Finished"
      * @param priorityLevel  The priority level of the event: must be either "Low", "Normal", or "High"
      * @param startDate      The start date and time of the event (required)
      * @param endDate        The end date and time for the event (nullable and must be on the same day as startDate)
      */
 
-    public CalendarEvent(String name, String description, String status, String priorityLevel,
+    public CalendarEvent(String name, String description, String priorityLevel,
                   LocalDateTime startDate, LocalDateTime endDate) {
         this.name = name;
 
@@ -51,8 +53,7 @@ public class CalendarEvent implements Serializable {
             this.hasDescription = false;
         }
 
-        this.status = status;
-        this.priorityLevel = priorityLevel != null ? priorityLevel : "normal";
+        this.priorityLevel = (priorityLevel != null ? priorityLevel : "Normal");
 
         this.startDate = startDate;
         //Finds the difference in minutes between the dates before converting it into hours and minutes for the duration
@@ -73,6 +74,10 @@ public class CalendarEvent implements Serializable {
             this.hasEndDate = false;
             this.duration = null;
         }
+
+        if (LocalDateTime.now().isBefore(this.startDate)) {this.status = "Upcoming";}
+        else if (LocalDateTime.now().isBefore(this.endDate)) {this.status = "In Progress";}
+        else {this.status = "Finished";}
     }
     // Getter method for the event name
     public String getName() {
@@ -110,6 +115,10 @@ public class CalendarEvent implements Serializable {
     public boolean getHasPriorityLevel() {
         return this.hasPriorityLevel;
     }
+    // Getter method for the event bool of having an end date
+    public boolean getHasEndDate() {
+        return this.hasEndDate;
+    }
 
     // Setter method for the name of an event
     public void setName(String name) {
@@ -121,7 +130,7 @@ public class CalendarEvent implements Serializable {
         this.description = description;
     }
 
-    // Setter method for the
+    // Setter methods
 
     // Setter method for the status of the event
     public void setStatus(String stat) {
@@ -141,6 +150,27 @@ public class CalendarEvent implements Serializable {
     // Setter method for the end date and time of the event
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+    // Updates the status of the event
+    public void updateStatus() {
+        if (LocalDateTime.now().isBefore(this.startDate)) {this.status = "Upcoming";}
+        else if (LocalDateTime.now().isBefore(this.endDate)) {this.status = "In Progress";}
+        else {this.status = "Finished";}
+    }
+
+    /**
+     * returns events in eventList that start after dateOne and before dateTwo
+     */
+
+    public static List<CalendarEvent> eventsBetweenDates(LocalDateTime dateOne, LocalDateTime dateTwo, List<CalendarEvent> eventList) {
+        List<CalendarEvent> includedEventList = new ArrayList<CalendarEvent>();
+        for (CalendarEvent event : eventList) {
+            boolean conditionOne = dateOne.isBefore(event.getStartDate());
+            boolean conditionTwo =
+                    (event.getHasEndDate() ? dateTwo.isAfter(event.getEndDate()) : dateTwo.isAfter(event.getStartDate()));
+            if (conditionOne && conditionTwo){includedEventList.add(event);}
+        }
+        return includedEventList;
     }
 
     /**

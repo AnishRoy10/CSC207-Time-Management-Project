@@ -144,9 +144,7 @@ public class User implements Serializable {
     }
 
     // Getter for timer
-    public Timer getTimer() {
-        return timer;
-    }
+    public Timer getTimer() { return this.timer; }
 
     // Setter for timer
     public void addTimer(Timer timer) {

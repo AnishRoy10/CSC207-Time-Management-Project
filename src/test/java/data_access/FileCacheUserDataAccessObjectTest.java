@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.Writer;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -188,6 +189,70 @@ class FileCacheUserDataAccessObjectTest {
             System.out.println("User read from cache after final update: " + gson.toJson(finalUser));
             assertEquals(15, finalUser.getANumber());
 
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail("Exception should not have been thrown");
+        }
+    }
+
+    @Test
+    void testWriteAndReadMultipleUsers() {
+        User user1 = new User("user1", "password1", new User[]{}, new Course[]{new Course("CSC207", "Software Design")});
+        User user2 = new User("user2", "password2", new User[]{}, new Course[]{new Course("CSC236", "Algorithms")});
+        try {
+            fileCacheUserDAO.WriteToCache(user1);
+            fileCacheUserDAO.WriteToCache(user2);
+
+            User readUser1 = fileCacheUserDAO.findByUsername("user1");
+            User readUser2 = fileCacheUserDAO.findByUsername("user2");
+
+            assertNotNull(readUser1);
+            assertNotNull(readUser2);
+            assertEquals("user1", readUser1.getUsername());
+            assertEquals("user2", readUser2.getUsername());
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail("Exception should not have been thrown");
+        }
+    }
+
+    @Test
+    void testUpdateUserData() {
+        User user = new User("userToUpdate", "password", new User[]{}, new Course[]{new Course("CSC207", "Software Design")});
+        try {
+            fileCacheUserDAO.WriteToCache(user);
+
+            // Update user data
+            user.setPassword("newPassword");
+            fileCacheUserDAO.WriteToCache(user);
+
+            User updatedUser = fileCacheUserDAO.findByUsername("userToUpdate");
+            assertNotNull(updatedUser);
+            assertEquals("newPassword", updatedUser.getPassword());
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail("Exception should not have been thrown");
+        }
+    }
+
+    @Test
+    void testAddAndRemoveTask() {
+        User user = new User("userWithTasks", "password", new User[]{}, new Course[]{new Course("CSC207", "Software Design")});
+        Task task = new Task("Task", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "CSC207");
+        user.addTask(task);
+        try {
+            fileCacheUserDAO.WriteToCache(user);
+
+            User readUser = fileCacheUserDAO.findByUsername("userWithTasks");
+            assertNotNull(readUser);
+            assertEquals(1, readUser.getTodoList().getTasks().size());
+
+            readUser.removeTask(task);
+            fileCacheUserDAO.WriteToCache(readUser);
+
+            User updatedUser = fileCacheUserDAO.findByUsername("userWithTasks");
+            assertNotNull(updatedUser);
+            assertEquals(0, updatedUser.getTodoList().getTasks().size());
         } catch (IOException e) {
             e.printStackTrace();
             fail("Exception should not have been thrown");

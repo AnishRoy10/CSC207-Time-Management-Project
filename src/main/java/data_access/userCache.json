@@ -1,0 +1,74 @@
+{
+  "TestUser": {
+    "username": "TestUser",
+    "password": "TestPassword1",
+    "friends": {
+      "friends": []
+    },
+    "courses": [],
+    "todo": {
+      "tasks": [
+        {
+          "id": "5bd2101d-16bc-4e26-9368-d794b70bfbde",
+          "title": "Task 1",
+          "description": "This is a sample description. They can be as long as you want, but should ideally be short.",
+          "completed": false,
+          "startDate": "2024-07-17T03:30:00",
+          "deadline": "2024-07-24T04:00:00",
+          "course": "CSC1000"
+        },
+        {
+          "id": "5bd2101d-16bc-4e26-9368-d794b70bfbdf",
+          "title": "Task 2",
+          "description": "This is a sample description.",
+          "completed": false,
+          "startDate": "2024-07-12T03:30:00",
+          "deadline": "2024-07-24T04:00:00",
+          "course": "MAT457"
+        },
+        {
+          "id": "5bd2101d-16bc-4e26-9368-d794b70bfbdc",
+          "title": "Task 3",
+          "description": "This is a sample description",
+          "completed": true,
+          "startDate": "2024-07-01T03:30:00",
+          "deadline": "2024-07-29T04:00:00",
+          "course": "CHM200",
+          "completionDate": "2024-07-21T22:22:47.8447811"
+        },
+        {
+          "id": "5bd2101d-16bc-4e26-9368-d794b70bfadd",
+          "title": "Assignment 1",
+          "description": "This is a sample description",
+          "completed": false,
+          "startDate": "2024-07-30T03:30:00",
+          "deadline": "2024-07-30T04:00:00",
+          "course": "CSC207"
+        },
+        {
+          "id": "ead8b13c-b2ff-4b6d-9ae4-d1d51f332715",
+          "title": "Project Phase 1",
+          "description": "meta",
+          "completed": false,
+          "startDate": "2024-07-17T03:30:00",
+          "deadline": "2024-07-21T23:30:00",
+          "course": "CSC207"
+        },
+        {
+          "id": "85de2534-ea3b-4f5c-b954-d6eaeae24636",
+          "title": "Project Phase 2",
+          "description": "super meta",
+          "completed": false,
+          "startDate": "2024-07-30T03:30:00",
+          "deadline": "2024-08-08T23:30:00",
+          "course": "CSC207"
+        }
+      ]
+    },
+    "score": 0,
+    "aNumber": 5,
+    "calendar": {
+      "events": {}
+    }
+  }
+}

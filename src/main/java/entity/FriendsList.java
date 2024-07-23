@@ -39,6 +39,15 @@ public class FriendsList implements Serializable {
         this.friends.remove(user);
     }
 
+    public void removeFriend(String name){
+        for (int i = 0; i < this.friends.size(); i++) {
+            if(Objects.equals(this.friends.get(i).getUsername(), name)){
+                this.friends.remove(i);
+                i--;
+            }
+        }
+    }
+
     public ArrayList<String> exportFriendsNames() {
         ArrayList<String> friendsnames = new ArrayList<String>();
         for (int i = 0; i < this.friends.size(); i++) {

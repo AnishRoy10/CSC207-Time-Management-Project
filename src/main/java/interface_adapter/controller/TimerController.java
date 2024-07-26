@@ -32,7 +32,6 @@ public class TimerController {
         int int_hours;
         int int_minutes;
         int int_seconds;
-        // TODO make a bool var for if input is valid or not
 
         try {
             int_hours = Integer.parseInt(hours);

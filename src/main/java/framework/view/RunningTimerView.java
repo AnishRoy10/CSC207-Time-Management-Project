@@ -64,7 +64,7 @@ public class RunningTimerView extends JFrame {
         };
         actionTimer = new Timer(100, updateTimer);
         actionTimer.setRepeats(true);
-        actionTimer.setInitialDelay(1000);
+        actionTimer.setInitialDelay(100);
         actionTimer.start();
 
         this.addWindowListener(new WindowAdapter() {

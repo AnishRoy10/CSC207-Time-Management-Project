@@ -2,6 +2,7 @@ package interface_adapter.presenter;
 
 import interface_adapter.viewmodel.SetTimerViewModel;
 import interface_adapter.viewmodel.RunningTimerViewModel;
+import use_case.TimerUseCases.PauseTimerUseCase.PauseTimerOutputBoundary;
 import use_case.TimerUseCases.SetTimerUseCase.SetTimerOutputBoundary;
 import use_case.TimerUseCases.SetTimerUseCase.SetTimerOutputData;
 import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerOutputBoundary;
@@ -10,7 +11,8 @@ import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerOutputData;
 /**
  * Presenter for the timer, implementing the output boundaries for setting the timer.
  */
-public class TimerPresenter implements SetTimerOutputBoundary, UpdateTimerOutputBoundary {
+public class TimerPresenter implements SetTimerOutputBoundary, UpdateTimerOutputBoundary,
+        PauseTimerOutputBoundary {
 
     private final SetTimerViewModel setTimerViewModel;
     private final RunningTimerViewModel runningTimerViewModel;

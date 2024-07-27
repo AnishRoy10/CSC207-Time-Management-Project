@@ -94,7 +94,7 @@ public class RunningTimerView extends JFrame {
     }
 
     private void pauseTimer() {
-
+        timerController.execute_update_timer();
     }
 
     public void returnPrevious() {

@@ -1,5 +1,7 @@
 package interface_adapter.controller;
 
+import use_case.TimerUseCases.PauseTimerUseCase.PauseTimerInputBoundary;
+import use_case.TimerUseCases.PauseTimerUseCase.PauseTimerInputData;
 import use_case.TimerUseCases.SetTimerUseCase.SetTimerInputBoundary;
 import use_case.TimerUseCases.SetTimerUseCase.SetTimerInputData;
 import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerInputBoundary;
@@ -11,15 +13,18 @@ import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerInputData;
 public class TimerController {
     final SetTimerInputBoundary userSetTimerUseCaseInteractor;
     final UpdateTimerInputBoundary userUpdateTimerUseCaseInteractor;
+    final PauseTimerInputBoundary userPauseTimerUseCaseInteractor;
 
     /**
      * Constructs the controller with the Set Timer use case
      * @param userSetTimerUseCaseInteractor use case for setting the timer
      */
     public TimerController(SetTimerInputBoundary userSetTimerUseCaseInteractor,
-                           UpdateTimerInputBoundary userUpdateTimerUseCaseInteractor) {
+                           UpdateTimerInputBoundary userUpdateTimerUseCaseInteractor,
+                           PauseTimerInputBoundary userPauseTimerUseCaseInteractor) {
         this.userSetTimerUseCaseInteractor = userSetTimerUseCaseInteractor;
         this.userUpdateTimerUseCaseInteractor = userUpdateTimerUseCaseInteractor;
+        this.userPauseTimerUseCaseInteractor = userPauseTimerUseCaseInteractor;
     }
 
     /**
@@ -53,5 +58,11 @@ public class TimerController {
     public void execute_update_timer() {
         UpdateTimerInputData updateTimerInputData = new UpdateTimerInputData();
         userUpdateTimerUseCaseInteractor.execute(updateTimerInputData);
+    }
+
+    public void execute_pause_timer() {
+        PauseTimerInputData pauseTimerInputData = new PauseTimerInputData();
+        userPauseTimerUseCaseInteractor.execute(pauseTimerInputData);
+
     }
 }

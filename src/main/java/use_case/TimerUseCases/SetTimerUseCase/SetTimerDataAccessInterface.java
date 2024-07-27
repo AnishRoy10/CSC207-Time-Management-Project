@@ -1,7 +1,8 @@
 package use_case.TimerUseCases.SetTimerUseCase;
 
-import entity.Timer;
+import entity.User;
 
 public interface SetTimerDataAccessInterface {
-    void save(Timer timer);
+    void save(User user);
+    User load();
 }

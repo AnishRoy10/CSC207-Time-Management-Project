@@ -1,6 +1,7 @@
 package use_case.TimerUseCases.SetTimerUseCase;
 
 import entity.Timer;
+import entity.User;
 
 /**
 Use case interactor for the set timer use case.
@@ -27,7 +28,9 @@ public class SetTimerInteractor implements SetTimerInputBoundary {
                     setTimerInputData.getMinutes(),
                     setTimerInputData.getSeconds());
 
-            userDataAccessObject.save(timer);
+            User user = userDataAccessObject.load();
+            user.addTimer(timer);
+            userDataAccessObject.save(user);
 
             long timerLength = timer.timerLength();
             int hours = (int) (timerLength / 3600000);

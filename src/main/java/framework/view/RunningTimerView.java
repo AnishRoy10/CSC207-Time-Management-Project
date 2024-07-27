@@ -89,6 +89,7 @@ public class RunningTimerView extends JFrame {
 
     private void endTimer() {
         actionTimer.stop();
+        Toolkit.getDefaultToolkit().beep();
         returnButton.setVisible(true);
     }
 

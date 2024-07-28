@@ -165,6 +165,9 @@ public class User implements Serializable {
     // Add an event to the User's calendar
     public void addEvent(CalendarEvent event) {this.calendar.addEvent(event);}
 
+    // Remove an event from the User's calendar
+    public void removeEvent(CalendarEvent event) {this.calendar.removeEvent(event);}
+
     // Hash the password (to be properly done later. SHA-256 perhaps?)
     private String hashPassword(String password) {
         return password; // Placeholder for hashing

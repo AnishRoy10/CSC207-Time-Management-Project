@@ -6,6 +6,7 @@ import entity.Calendar;
 import entity.CalendarEvent;
 import interface_adapter.AddEvent.AddEventController;
 import interface_adapter.AddEvent.AddEventViewModel;
+import interface_adapter.RemoveEvent.RemoveEventController;
 import interface_adapter.ViewEvents.ViewEventsController;
 import interface_adapter.ViewEvents.ViewEventsViewModel;
 import javax.swing.*;
@@ -24,6 +25,7 @@ public class CalendarView {
     private static ViewEventsController viewEventsController;
     private static AddEventController addEventController;
     private static AddEventViewModel addEventViewModel;
+    private static RemoveEventController removeEventController;
     private final JFrame frame = new JFrame();
     private final JPanel panel;
     private final JPanel eventListPanel;
@@ -38,11 +40,12 @@ public class CalendarView {
 
     // Initializing controllers, view models, and setting up jpanels.
     public CalendarView(ViewEventsViewModel viewEventsViewModel, ViewEventsController viewEventsController,
-                        AddEventController addEventController, AddEventViewModel addEventViewModel) {
+                        AddEventController addEventController, AddEventViewModel addEventViewModel, RemoveEventController removeEventController) {
         this.viewEventsViewModel = viewEventsViewModel;
         this.viewEventsController = viewEventsController;
         this.addEventController = addEventController;
         this.addEventViewModel = addEventViewModel;
+        this.removeEventController = removeEventController;
 
         frame.revalidate();
         frame.repaint();
@@ -150,6 +153,7 @@ public class CalendarView {
     private void showEventsOnDay(){
         try {
             eventListPanel.removeAll();
+
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
             gbc.gridy = GridBagConstraints.RELATIVE;
@@ -158,20 +162,31 @@ public class CalendarView {
 
             LocalDate date = calendarPanel.getSelectedDate();
             viewEventsController.execute(date);
+
+            if (viewEventsViewModel.getEventListToBeShown().isEmpty()) {
+                eventListPanel.add(new JLabel("No Events to be Shown"));
+                eventListPanel.revalidate();
+                eventListPanel.repaint();
+                frame.setVisible(true);
+                panel.setVisible(true);
+                eventListPanel.setVisible(true);
+            }
+
             for (CalendarEvent calEvent : viewEventsViewModel.getEventListToBeShown()) {
-                JPanel eventPanel = new EventCard(calEvent);
+                EventCard eventPanel = new EventCard(calEvent);
                 eventListPanel.add(eventPanel, gbc);
                 eventListPanel.revalidate();
                 eventListPanel.repaint();
                 frame.setVisible(true);
                 panel.setVisible(true);
                 eventListPanel.setVisible(true);
-
+                eventPanel.getRemoveEventButton().addActionListener(e -> removeEvent(eventPanel.getEvent()));
             }
         }
-        catch (IOException | ClassNotFoundException ignored) {System.out.println("IOException Found");}
+        catch (IOException | ClassNotFoundException ignored)
+        {System.out.println("IOException or ClassNotFoundException Found");}
     }
-    // Method for creating a labelled comonent on the eventadding panel
+    // Method for creating a labelled component on the event adding panel
     private Component createLabeledComponent(String label, Component component) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JLabel(label), BorderLayout.NORTH);
@@ -205,8 +220,21 @@ public class CalendarView {
                     "Start time must be before End time",
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-        else {this.showEventsOnDay();}
+        else {
+            calendarPanel.setSelectedDate(
+                    LocalDate.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth()));
+            this.showEventsOnDay();}
         }
-        catch (IOException | ClassNotFoundException e) {}
+        catch (IOException | ClassNotFoundException e)
+        {System.out.println("IOException or ClassNotFoundException; Thrown");}
+    }
+
+    private void removeEvent(CalendarEvent event) {
+        try {
+        removeEventController.execute(event);
+        LocalDateTime start = event.getStartDate();
+        calendarPanel.setSelectedDate(LocalDate.of(start.getYear(), start.getMonth(), start.getDayOfMonth()));
+        showEventsOnDay();}
+        catch (IOException e) {System.out.println("IOException thrown");}
     }
 }

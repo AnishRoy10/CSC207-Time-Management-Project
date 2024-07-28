@@ -11,8 +11,9 @@ public class Timer implements Serializable {
     private static final long serialVersionUID = 9L;
 
     private final long start_time;
-    private final long end_time;
+    private long end_time;
     private long elapsed_time;
+    private long pause_time;
 
     /**
      * Creates a timer with a specified length.
@@ -68,5 +69,19 @@ public class Timer implements Serializable {
      */
     public long timerLength() {
         return end_time-start_time;
+    }
+
+    /**
+     * Records when the timer was paused.
+     */
+    public void pause() {
+        pause_time = System.currentTimeMillis();
+    }
+
+    /**
+     * The amount of time paused is added to the end time.
+     */
+    public void resume() {
+        end_time += System.currentTimeMillis() - pause_time;
     }
 }

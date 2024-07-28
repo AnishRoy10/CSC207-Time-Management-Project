@@ -1,5 +1,6 @@
 package interface_adapter.viewmodel;
 
+import framework.view.RunningTimerView;
 import interface_adapter.ViewModel;
 
 /**
@@ -9,7 +10,7 @@ import interface_adapter.ViewModel;
 public class RunningTimerViewModel extends ViewModel {
 
     public static final String TITLE_LABEL = "Timer View";
-    public static final String PAUSE_LABEL = "Pause";
+    public static String PAUSE_LABEL = "Pause";
     public static final String RETURN_LABEL = "Return";
     public static String HOURS;
     public static String MINUTES;
@@ -31,6 +32,10 @@ public class RunningTimerViewModel extends ViewModel {
 
     public static void setSECONDS(String SECONDS) {
         RunningTimerViewModel.SECONDS = SECONDS;
+    }
+
+    public static void setPauseLabel(String pauseLabel) {
+        RunningTimerViewModel.PAUSE_LABEL = pauseLabel;
     }
 
     public String getMessage() { return message; }

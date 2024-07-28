@@ -60,8 +60,8 @@ public class TimerController {
         userUpdateTimerUseCaseInteractor.execute(updateTimerInputData);
     }
 
-    public void execute_pause_timer() {
-        PauseTimerInputData pauseTimerInputData = new PauseTimerInputData();
+    public void execute_pause_timer(boolean paused) {
+        PauseTimerInputData pauseTimerInputData = new PauseTimerInputData(paused);
         userPauseTimerUseCaseInteractor.execute(pauseTimerInputData);
 
     }

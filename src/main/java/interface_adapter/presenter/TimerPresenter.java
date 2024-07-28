@@ -3,6 +3,7 @@ package interface_adapter.presenter;
 import interface_adapter.viewmodel.SetTimerViewModel;
 import interface_adapter.viewmodel.RunningTimerViewModel;
 import use_case.TimerUseCases.PauseTimerUseCase.PauseTimerOutputBoundary;
+import use_case.TimerUseCases.PauseTimerUseCase.PauseTimerOutputData;
 import use_case.TimerUseCases.SetTimerUseCase.SetTimerOutputBoundary;
 import use_case.TimerUseCases.SetTimerUseCase.SetTimerOutputData;
 import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerOutputBoundary;
@@ -44,6 +45,17 @@ public class TimerPresenter implements SetTimerOutputBoundary, UpdateTimerOutput
         RunningTimerViewModel.setHOURS(Integer.toString(response.getHours()));
         RunningTimerViewModel.setMINUTES(Integer.toString(response.getMinutes()));
         RunningTimerViewModel.setSECONDS(Integer.toString(response.getSeconds()));
+        runningTimerViewModel.setMessage("Success");
+    }
+
+    @Override
+    public void prepareSuccessView(PauseTimerOutputData response) {
+        if (response.isPaused()) {
+            RunningTimerViewModel.setPauseLabel("Resume");
+        }
+        else {
+            RunningTimerViewModel.setPauseLabel("Pause");
+        }
         runningTimerViewModel.setMessage("Success");
     }
 }

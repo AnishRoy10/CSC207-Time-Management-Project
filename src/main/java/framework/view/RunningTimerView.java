@@ -22,6 +22,8 @@ public class RunningTimerView extends JFrame {
     private final JButton pauseButton;
     private final JButton returnButton;
 
+    private boolean paused = false;
+
     private final Timer actionTimer;
 
     public RunningTimerView(TimerController timerController,
@@ -77,24 +79,31 @@ public class RunningTimerView extends JFrame {
     }
 
     private void updateTimer() {
-        timerController.execute_update_timer();
-        timerLabel.setText(RunningTimerViewModel.HOURS +
-                ":" + RunningTimerViewModel.MINUTES + ":" + RunningTimerViewModel.SECONDS);
-        if (RunningTimerViewModel.HOURS.equals("0") &&
-        RunningTimerViewModel.MINUTES.equals("0") &&
-                RunningTimerViewModel.SECONDS.equals("0")) {
-            endTimer();
+        if (!paused) {
+            timerController.execute_update_timer();
+            timerLabel.setText(RunningTimerViewModel.HOURS +
+                    ":" + RunningTimerViewModel.MINUTES + ":" + RunningTimerViewModel.SECONDS);
+            if (RunningTimerViewModel.HOURS.equals("0") &&
+                    RunningTimerViewModel.MINUTES.equals("0") &&
+                    RunningTimerViewModel.SECONDS.equals("0")) {
+                endTimer();
+            }
         }
     }
 
     private void endTimer() {
         actionTimer.stop();
         Toolkit.getDefaultToolkit().beep();
+        pauseButton.setVisible(false);
         returnButton.setVisible(true);
     }
 
     private void pauseTimer() {
-        timerController.execute_update_timer();
+        timerController.execute_pause_timer(paused);
+        if (runningTimerViewModel.getMessage().equals("Success")) {
+            pauseButton.setText(RunningTimerViewModel.PAUSE_LABEL);
+            paused = !paused;
+        }
     }
 
     public void returnPrevious() {

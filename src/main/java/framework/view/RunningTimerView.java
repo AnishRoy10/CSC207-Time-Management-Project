@@ -107,6 +107,7 @@ public class RunningTimerView extends JFrame {
     }
 
     public void returnPrevious() {
-
+        actionTimer.stop();
+        dispose();
     }
 }

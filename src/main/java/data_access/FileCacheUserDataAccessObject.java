@@ -3,12 +3,14 @@ package data_access;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import entity.FriendsList;
 import entity.User;
 import repositories.UserRepository;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,6 +96,34 @@ public class FileCacheUserDataAccessObject implements UserRepository {
     }
 
     /**
+     * TEMPORARY METHOD Updates the specified users information in the cache and returns the user
+     * @param username
+     * @return
+     * @throws IOException
+     */
+    public User UpdateAndReadFromCache(String username) throws IOException {
+        if (fileCache.length() == 0) {
+            return null;
+        }
+        try (Reader reader = new FileReader(fileCache)) {
+            Type userType = new TypeToken<Map<String, User>>() {}.getType();
+            Map<String, User> userMap = gson.fromJson(reader, userType);
+            User user = userMap.get(username);
+            if (user != null) {
+                FriendsList friendsList = user.getFriends();
+                ArrayList<String> entriesToUpdate = user.getFriends().exportFriendsNames();
+                for(int i = 0; i < entriesToUpdate.size(); i++) {
+                    String entry = entriesToUpdate.get(i);
+                    friendsList.removeFriend(entry);
+                    friendsList.addFriend(userMap.get(entry));
+                }
+            }
+            WriteToCache(user);
+            return user;
+        }
+    }
+
+    /**
      * Checks if a user exists in the cache.
      *
      * @param username The username to check.
@@ -116,6 +146,17 @@ public class FileCacheUserDataAccessObject implements UserRepository {
     @Override
     public User findByUsername(String username) throws IOException {
         return ReadFromCache(username);
+    }
+
+    /**
+     * TEMPORARY METHOD Updates and finds a user by username in the cache.
+     *
+     * @param username The username to find.
+     * @return The User object with the specified username, or null if not found.
+     * @throws IOException If an I/O error occurs.
+     */
+    public User updateAndFindByUsername(String username) throws IOException {
+        return UpdateAndReadFromCache(username);
     }
 
     private Map<String, User> readAllUsers() throws IOException {

@@ -21,6 +21,6 @@ public class FriendsListDataAccessObject implements AddFriendDataAccessInterface
 
     @Override
     public User loadUser(String username) throws IOException {
-        return dao.findByUsername(username);
+        return dao.updateAndFindByUsername(username);
     }
 }

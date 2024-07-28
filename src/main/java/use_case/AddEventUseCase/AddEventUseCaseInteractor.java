@@ -23,7 +23,6 @@ public class AddEventUseCaseInteractor implements AddEventInputBoundary{
     public void execute(AddEventInputData addEventInputData) throws IOException, ClassNotFoundException {
         boolean startEndError = !addEventInputData.getEventToBeAdded().startEndOnSameDay();
         boolean priorityLevelError = !addEventInputData.getEventToBeAdded().priorityLevelIsValid();
-        System.out.println(startEndError);
         boolean startAfterEndError = !addEventInputData.getEventToBeAdded().startBeforeEnd();
 
         if (!startEndError && !priorityLevelError && !startAfterEndError)

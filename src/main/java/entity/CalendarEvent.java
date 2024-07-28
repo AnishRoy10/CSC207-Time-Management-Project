@@ -206,12 +206,4 @@ public class CalendarEvent implements Serializable{
                 ", Start Date: " + startDate.toString() +
                 ", End Date: " + (endDate != null ? endDate.toString() : "N/A");
     }
-
-    public static void main(String[] args) {
-        CalendarEvent event = new CalendarEvent("name", "descr", "High",
-                LocalDateTime.of(2024, Month.JULY, 12, 1, 1),
-                LocalDateTime.of(2024, Month.JULY, 12, 1, 1));
-        System.out.println(event.startEndOnSameDay());
-        System.out.println(event.priorityLevelIsValid());
-    }
 }

@@ -5,9 +5,9 @@ import com.github.lgooddatepicker.zinternaltools.HighlightInformation;
 import entity.Calendar;
 import entity.CalendarEvent;
 import interface_adapter.AddEvent.AddEventController;
+import interface_adapter.AddEvent.AddEventViewModel;
 import interface_adapter.ViewEvents.ViewEventsController;
 import interface_adapter.ViewEvents.ViewEventsViewModel;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -23,6 +23,7 @@ public class CalendarView {
     private static ViewEventsViewModel viewEventsViewModel;
     private static ViewEventsController viewEventsController;
     private static AddEventController addEventController;
+    private static AddEventViewModel addEventViewModel;
     private final JFrame frame = new JFrame();
     private final JPanel panel;
     private final JPanel eventListPanel;
@@ -37,10 +38,12 @@ public class CalendarView {
 
     // Initializing controllers, view models, and setting up jpanels.
     public CalendarView(ViewEventsViewModel viewEventsViewModel, ViewEventsController viewEventsController,
-                        AddEventController addEventController) {
+                        AddEventController addEventController, AddEventViewModel addEventViewModel) {
         this.viewEventsViewModel = viewEventsViewModel;
         this.viewEventsController = viewEventsController;
         this.addEventController = addEventController;
+        this.addEventViewModel = addEventViewModel;
+
         frame.revalidate();
         frame.repaint();
         frame.setTitle("Calendar Screen");
@@ -183,14 +186,27 @@ public class CalendarView {
      * add event use case to be executed.
      */
     private void addEvent(){
-        String name = nameField.getText();
-        String description = descriptionArea.getText();
+        String name = nameField.getText().toString();
+        String description = descriptionArea.getText().toString();
         LocalDateTime startDate = startDatePicker.getDateTimeStrict();
         LocalDateTime endDate = endDatePicker.getDateTimeStrict();
-        String priorityLevel = priorityLevelField.getText();
+        String priorityLevel = priorityLevelField.getText().toString().trim();
         try{
-        addEventController.execute(name, description, startDate, endDate, priorityLevel);}
+        addEventController.execute(name, description, startDate, endDate, priorityLevel);
+        if (addEventViewModel.getStartEndError()) {
+            JOptionPane.showMessageDialog(frame,
+                    "Event must start and end on the same day", "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (addEventViewModel.getPriorityLevelError()) {
+            JOptionPane.showMessageDialog(frame,
+                    "Priority Level must be either 'High', 'Normal', or 'Low'",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (addEventViewModel.getStartAfterEndError()) {
+            JOptionPane.showMessageDialog(frame,
+                    "Start time must be before End time",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        else {this.showEventsOnDay();}
+        }
         catch (IOException | ClassNotFoundException e) {}
-        this.showEventsOnDay();
     }
 }

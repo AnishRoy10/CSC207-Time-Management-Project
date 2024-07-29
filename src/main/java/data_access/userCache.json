@@ -70,5 +70,21 @@
     "calendar": {
       "events": {}
     }
+  },
+  "bruhh": {
+    "username": "bruhh",
+    "password": "Bruh123",
+    "friends": {
+      "friends": []
+    },
+    "courses": [],
+    "todo": {
+      "tasks": []
+    },
+    "score": 0,
+    "aNumber": 5,
+    "calendar": {
+      "events": {}
+    }
   }
 }

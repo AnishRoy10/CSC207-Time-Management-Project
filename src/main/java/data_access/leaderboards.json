@@ -1,0 +1,23 @@
+{
+  "daily": {
+    "currentDate": "2024-07-29",
+    "name": "Daily Leaderboard",
+    "scores": {},
+    "type": "DailyLeaderboard"
+  },
+  "monthly": {
+    "month": "2024-07-01",
+    "name": "Monthly Leaderboard",
+    "scores": {},
+    "type": "MonthlyLeaderboard"
+  },
+  "allTime": {
+    "name": "All-Time Leaderboard",
+    "scores": {
+      "user2": 100,
+      "user": 200
+      },
+    "type": "AllTimeLeaderboard"
+  }
+}
+

@@ -8,7 +8,7 @@ import java.awt.*;
 /**
  * User interface for managing and displaying leaderboards.
  */
-public class LeaderboardView {
+public class LeaderboardView extends JPanel {
     private JPanel leaderboardPanel;
     private final LeaderboardController monthlyController;
     private final LeaderboardController allTimeController;
@@ -23,9 +23,7 @@ public class LeaderboardView {
     }
 
     private void initializeUI() {
-        JFrame frame = new JFrame("Leaderboard");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout());
 
         JPanel buttonPanel = new JPanel();
         leaderboardPanel = new JPanel();
@@ -42,11 +40,11 @@ public class LeaderboardView {
         buttonPanel.add(allTimeButton);
         buttonPanel.add(dailyButton);
 
-        frame.add(buttonPanel, BorderLayout.NORTH);
-        frame.add(new JScrollPane(leaderboardPanel), BorderLayout.CENTER);
+        this.add(buttonPanel, BorderLayout.NORTH);
+        this.add(new JScrollPane(leaderboardPanel), BorderLayout.CENTER);
 
-        frame.setSize(600, 400);
-        frame.setVisible(true);
+        this.setSize(600, 400);
+        this.setVisible(true);
     }
 
     private void displayLeaderboard(String type) {

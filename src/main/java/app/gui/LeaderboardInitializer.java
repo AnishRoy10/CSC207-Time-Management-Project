@@ -1,6 +1,6 @@
 package app.gui;
 
-import data_access.LeaderboardDataAccessObject;
+import data_access.FileCacheLeaderboardDataAccessObject;
 import entity.AllTimeLeaderboard;
 import entity.DailyLeaderboard;
 import entity.Leaderboard;
@@ -15,7 +15,9 @@ import use_case.LeaderboardUseCases.remove_score.*;
 import use_case.LeaderboardUseCases.update_score.*;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Map;
 
 /**
  * Initializer class for the leaderboard system.
@@ -25,56 +27,49 @@ public class LeaderboardInitializer {
         LocalDate today = LocalDate.now();
         LocalDate thisMonth = LocalDate.now().withDayOfMonth(1);
 
-        Leaderboard monthlyLeaderboard = new MonthlyLeaderboard("Monthly Leaderboard", thisMonth);
-        Leaderboard allTimeLeaderboard = new AllTimeLeaderboard("All-Time Leaderboard");
-        Leaderboard dailyLeaderboard = new DailyLeaderboard("Daily Leaderboard", today);
+        try {
+            FileCacheLeaderboardDataAccessObject leaderboardDAO = new FileCacheLeaderboardDataAccessObject("src/main/java/data_access/leaderboards.json");
 
-        LeaderboardDataAccessObject leaderboardDAO = new LeaderboardDataAccessObject();
+            Map<String, Leaderboard> leaderboards = leaderboardDAO.readFromCache();
 
-        LeaderboardPresenter monthlyPresenter = new LeaderboardPresenter(monthlyLeaderboard);
-        LeaderboardPresenter allTimePresenter = new LeaderboardPresenter(allTimeLeaderboard);
-        LeaderboardPresenter dailyPresenter = new LeaderboardPresenter(dailyLeaderboard);
+            Leaderboard monthlyLeaderboard = leaderboards.getOrDefault("monthly", new MonthlyLeaderboard("Monthly Leaderboard", thisMonth));
+            Leaderboard allTimeLeaderboard = leaderboards.getOrDefault("allTime", new AllTimeLeaderboard("All-Time Leaderboard"));
+            Leaderboard dailyLeaderboard = leaderboards.getOrDefault("daily", new DailyLeaderboard("Daily Leaderboard", today));
 
-        AddScoreInputBoundary monthlyAddScoreUseCase = new AddScoreUseCase(monthlyLeaderboard, monthlyPresenter, leaderboardDAO);
-        AddScoreInputBoundary allTimeAddScoreUseCase = new AddScoreUseCase(allTimeLeaderboard, allTimePresenter, leaderboardDAO);
-        AddScoreInputBoundary dailyAddScoreUseCase = new AddScoreUseCase(dailyLeaderboard, dailyPresenter, leaderboardDAO);
+            LeaderboardPresenter monthlyPresenter = new LeaderboardPresenter(monthlyLeaderboard);
+            LeaderboardPresenter allTimePresenter = new LeaderboardPresenter(allTimeLeaderboard);
+            LeaderboardPresenter dailyPresenter = new LeaderboardPresenter(dailyLeaderboard);
 
-        RemoveScoreInputBoundary monthlyRemoveScoreUseCase = new RemoveScoreUseCase(monthlyLeaderboard, monthlyPresenter, leaderboardDAO);
-        RemoveScoreInputBoundary allTimeRemoveScoreUseCase = new RemoveScoreUseCase(allTimeLeaderboard, allTimePresenter, leaderboardDAO);
-        RemoveScoreInputBoundary dailyRemoveScoreUseCase = new RemoveScoreUseCase(dailyLeaderboard, dailyPresenter, leaderboardDAO);
+            AddScoreInputBoundary monthlyAddScoreUseCase = new AddScoreUseCase(monthlyLeaderboard, monthlyPresenter, leaderboardDAO);
+            AddScoreInputBoundary allTimeAddScoreUseCase = new AddScoreUseCase(allTimeLeaderboard, allTimePresenter, leaderboardDAO);
+            AddScoreInputBoundary dailyAddScoreUseCase = new AddScoreUseCase(dailyLeaderboard, dailyPresenter, leaderboardDAO);
 
-        UpdateScoreInputBoundary monthlyUpdateScoreUseCase = new UpdateScoreUseCase(monthlyLeaderboard, monthlyPresenter, leaderboardDAO);
-        UpdateScoreInputBoundary allTimeUpdateScoreUseCase = new UpdateScoreUseCase(allTimeLeaderboard, allTimePresenter, leaderboardDAO);
-        UpdateScoreInputBoundary dailyUpdateScoreUseCase = new UpdateScoreUseCase(dailyLeaderboard, dailyPresenter, leaderboardDAO);
+            RemoveScoreInputBoundary monthlyRemoveScoreUseCase = new RemoveScoreUseCase(monthlyLeaderboard, monthlyPresenter, leaderboardDAO);
+            RemoveScoreInputBoundary allTimeRemoveScoreUseCase = new RemoveScoreUseCase(allTimeLeaderboard, allTimePresenter, leaderboardDAO);
+            RemoveScoreInputBoundary dailyRemoveScoreUseCase = new RemoveScoreUseCase(dailyLeaderboard, dailyPresenter, leaderboardDAO);
 
-        ClearScoresInputBoundary monthlyClearScoresUseCase = new ClearScoresUseCase(monthlyLeaderboard, monthlyPresenter, leaderboardDAO);
-        ClearScoresInputBoundary allTimeClearScoresUseCase = new ClearScoresUseCase(allTimeLeaderboard, allTimePresenter, leaderboardDAO);
-        ClearScoresInputBoundary dailyClearScoresUseCase = new ClearScoresUseCase(dailyLeaderboard, dailyPresenter, leaderboardDAO);
+            UpdateScoreInputBoundary monthlyUpdateScoreUseCase = new UpdateScoreUseCase(monthlyLeaderboard, monthlyPresenter, leaderboardDAO);
+            UpdateScoreInputBoundary allTimeUpdateScoreUseCase = new UpdateScoreUseCase(allTimeLeaderboard, allTimePresenter, leaderboardDAO);
+            UpdateScoreInputBoundary dailyUpdateScoreUseCase = new UpdateScoreUseCase(dailyLeaderboard, dailyPresenter, leaderboardDAO);
 
-        LeaderboardController monthlyController = new LeaderboardController(
-                monthlyAddScoreUseCase,
-                monthlyRemoveScoreUseCase,
-                monthlyUpdateScoreUseCase,
-                monthlyClearScoresUseCase,
-                monthlyPresenter
-        );
+            ClearScoresInputBoundary monthlyClearScoresUseCase = new ClearScoresUseCase(monthlyLeaderboard, monthlyPresenter, leaderboardDAO);
+            ClearScoresInputBoundary allTimeClearScoresUseCase = new ClearScoresUseCase(allTimeLeaderboard, allTimePresenter, leaderboardDAO);
+            ClearScoresInputBoundary dailyClearScoresUseCase = new ClearScoresUseCase(dailyLeaderboard, dailyPresenter, leaderboardDAO);
 
-        LeaderboardController allTimeController = new LeaderboardController(
-                allTimeAddScoreUseCase,
-                allTimeRemoveScoreUseCase,
-                allTimeUpdateScoreUseCase,
-                allTimeClearScoresUseCase,
-                allTimePresenter
-        );
+            LeaderboardController monthlyController = new LeaderboardController(monthlyAddScoreUseCase, monthlyRemoveScoreUseCase, monthlyUpdateScoreUseCase, monthlyClearScoresUseCase, monthlyPresenter);
+            LeaderboardController allTimeController = new LeaderboardController(allTimeAddScoreUseCase, allTimeRemoveScoreUseCase, allTimeUpdateScoreUseCase, allTimeClearScoresUseCase, allTimePresenter);
+            LeaderboardController dailyController = new LeaderboardController(dailyAddScoreUseCase, dailyRemoveScoreUseCase, dailyUpdateScoreUseCase, dailyClearScoresUseCase, dailyPresenter);
 
-        LeaderboardController dailyController = new LeaderboardController(
-                dailyAddScoreUseCase,
-                dailyRemoveScoreUseCase,
-                dailyUpdateScoreUseCase,
-                dailyClearScoresUseCase,
-                dailyPresenter
-        );
+            LeaderboardView leaderboardView = new LeaderboardView(monthlyController, allTimeController, dailyController);
 
-        SwingUtilities.invokeLater(() -> new LeaderboardView(monthlyController, allTimeController, dailyController));
+            JFrame frame = new JFrame("Leaderboards");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(800, 600);
+            frame.add(leaderboardView);
+            frame.setVisible(true);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

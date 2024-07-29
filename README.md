@@ -5,6 +5,7 @@
 - [To-do List Feature](#To-do-List-Feature)
 - [Leaderboard Feature](#Leaderboard-Feature)
 - [Timer Feature](#Timer-Feature)
+- [Calendar Feature](#Calendar-Feature)
 - [Clean Architecture](#Clean-Architecture)
 
 Welcome to the Time Management Project by Team Lebron James. This project is designed to help users manage their time effectively by providing various features such as task management, scheduling, and timers. The project also includes social features such as a friend system and leaderboards that allow you to compete with others. 
@@ -42,6 +43,9 @@ The Leaderboard feature allows users to see a leaderboard for time studied and t
 
 ## Timer Feature. 
 The Timer feature allows users to manage their task completion time efficiently. Users can set a timer for a specific duration to complete their tasks. When the timer finishes, a sound chosen by the user plays. This feature helps users stay focused and complete their tasks within the set time, enhancing productivity.
+
+## Calendar Feature
+The Calendar feature currenty allows users to add and view events in the calendar, the days of the calendar which have events being shown in green. One can only add events which start and end on the same day. The events support an optional priority level, contian a status (whether the event has passed or not, or is curently active), start date, end date, and optional description. The calendar provides an organized system for keeping track of a user's events and schedule.
 
 ## Clean Architecture.
 As a team, we have tried our very best to make sure that Clean Architecture is followed and enforced by all group members. 

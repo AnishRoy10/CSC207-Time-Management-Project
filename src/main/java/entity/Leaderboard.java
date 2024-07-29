@@ -21,6 +21,9 @@ public abstract class Leaderboard {
         this.scores = new HashMap<>() ;
     }
 
+    public abstract String getType();
+
+
     /**
      * Adds a user score to the leaderboard.
      * @param username The username of the user.

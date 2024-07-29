@@ -27,7 +27,8 @@ public abstract class Leaderboard {
      * @param score The score to add.
      */
     public void addScore(String username, int score) {
-        scores.put(username, score);
+        int currentScore = scores.getOrDefault(username, 0);
+        scores.put(username, currentScore + score);
     }
 
     /**
@@ -76,14 +77,14 @@ public abstract class Leaderboard {
 
     /**
      * Checks if the tasks is completed to add scores. If completed, adds a certain score.
-     * @param username The username of the user.
+     * @param user The username of the user.
      * @param task The task to check.
+     * @param points The amount of points to change.
      */
-    public void taskCompleted(String username, Task task) {
-        if (task.isCompleted()) {
-            int score = scores.get(username);
-            updateScore(username, 500 + score);
-        }
+    public void taskCompleted(User user, Task task, int points) {
+        String username = user.getUsername();
+        int currentScore = scores.getOrDefault(username, 0);
+        scores.put(username, currentScore + points);
     }
 
     //TODO: automatically arranges in ascending order.

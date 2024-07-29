@@ -1,5 +1,6 @@
 package use_case.UserUseCases.UserSignupUseCase;
 
+import repositories.LeaderboardRepository;
 import entity.User;
 import entity.Course;
 import repositories.UserRepository;
@@ -14,6 +15,7 @@ import java.util.logging.Logger;
 public class UserSignupUseCase implements UserSignupInputBoundary {
     private static final Logger LOGGER = Logger.getLogger(UserSignupUseCase.class.getName());
     private final UserRepository userRepository;
+    private final LeaderboardRepository leaderboardRepository;
     private final UserSignupOutputBoundary userSignupOutputBoundary;
 
     /**
@@ -21,10 +23,12 @@ public class UserSignupUseCase implements UserSignupInputBoundary {
      *
      * @param userRepository           The repository for user data access.
      * @param userSignupOutputBoundary The output boundary for user signup response.
+     * @param leaderboardRepository    The repository for leaderboard data access.
      */
-    public UserSignupUseCase(UserRepository userRepository, UserSignupOutputBoundary userSignupOutputBoundary) {
+    public UserSignupUseCase(UserRepository userRepository, UserSignupOutputBoundary userSignupOutputBoundary, LeaderboardRepository leaderboardRepository) {
         this.userRepository = userRepository;
         this.userSignupOutputBoundary = userSignupOutputBoundary;
+        this.leaderboardRepository = leaderboardRepository;
     }
 
     /**
@@ -60,6 +64,7 @@ public class UserSignupUseCase implements UserSignupInputBoundary {
 
             User newUser = new User(username, password, new User[0], new Course[0]);
             userRepository.WriteToCache(newUser);
+            leaderboardRepository.addNewUser(username);
 
             UserSignupResponseModel responseModel = new UserSignupResponseModel(true, "User signed up successfully.");
             userSignupOutputBoundary.present(responseModel);

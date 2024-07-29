@@ -6,6 +6,7 @@ import entity.Leaderboard;
 import entity.AllTimeLeaderboard;
 import entity.DailyLeaderboard;
 import entity.MonthlyLeaderboard;
+import repositories.LeaderboardRepository;
 import use_case.LeaderboardUseCases.add_score.AddScoreDataAccessInterface;
 import use_case.LeaderboardUseCases.remove_score.RemoveScoreDataAccessInterface;
 import use_case.LeaderboardUseCases.update_score.UpdateScoreDataAccessInterface;
@@ -22,7 +23,7 @@ import java.util.Map;
  * using a JSON file. This class provides methods to write a Leaderboard object to the cache, read a Leaderboard
  * object from the cache, and check if a Leaderboard exists in the cache.
  */
-public class FileCacheLeaderboardDataAccessObject implements AddScoreDataAccessInterface, RemoveScoreDataAccessInterface, UpdateScoreDataAccessInterface, ClearScoresDataAccessInterface, CacheDataAccessInterface {
+public class FileCacheLeaderboardDataAccessObject implements LeaderboardRepository, AddScoreDataAccessInterface, RemoveScoreDataAccessInterface, UpdateScoreDataAccessInterface, ClearScoresDataAccessInterface, CacheDataAccessInterface {
     private final File fileCache;
     private final Gson gson;
 
@@ -37,7 +38,6 @@ public class FileCacheLeaderboardDataAccessObject implements AddScoreDataAccessI
                 .registerTypeAdapter(AllTimeLeaderboard.class, new AllTimeLeaderboardDeserializer())
                 .registerTypeAdapter(DailyLeaderboard.class, new DailyLeaderboardDeserializer())
                 .registerTypeAdapter(MonthlyLeaderboard.class, new MonthlyLeaderboardDeserializer())
-
                 .setPrettyPrinting()
                 .create();
     }
@@ -158,5 +158,14 @@ public class FileCacheLeaderboardDataAccessObject implements AddScoreDataAccessI
     public Leaderboard findByName(String name) throws IOException {
         Map<String, Leaderboard> leaderboards = readFromCache();
         return leaderboards.get(name);
+    }
+
+    @Override
+    public void addNewUser(String username) throws IOException {
+        Map<String, Leaderboard> leaderboards = readFromCache();
+        for (Leaderboard leaderboard : leaderboards.values()) {
+            leaderboard.addScore(username, 0);
+        }
+        writeToCache(leaderboards);
     }
 }

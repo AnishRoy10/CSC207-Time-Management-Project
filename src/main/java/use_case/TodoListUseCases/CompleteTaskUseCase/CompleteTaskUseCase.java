@@ -2,11 +2,14 @@ package use_case.TodoListUseCases.CompleteTaskUseCase;
 
 import entity.Task;
 import entity.TodoList;
+import entity.Leaderboard;
 import entity.User;
+import repositories.LeaderboardRepository;
 import repositories.UserRepository;
 import use_case.TaskData;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -15,10 +18,12 @@ import java.util.Optional;
 public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
     private final UserRepository userRepository;
     private final CompleteTaskOutputBoundary completeTaskOutputBoundary;
+    private final LeaderboardRepository leaderboardRepository;
 
-    public CompleteTaskUseCase(UserRepository userRepository, CompleteTaskOutputBoundary completeTaskOutputBoundary) {
+    public CompleteTaskUseCase(UserRepository userRepository, CompleteTaskOutputBoundary completeTaskOutputBoundary, LeaderboardRepository leaderboardRepository) {
         this.userRepository = userRepository;
         this.completeTaskOutputBoundary = completeTaskOutputBoundary;
+        this.leaderboardRepository = leaderboardRepository;
     }
 
     @Override
@@ -40,6 +45,15 @@ public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
                 Task task = taskOptional.get();
                 task.toggleTaskCompletion();
                 userRepository.WriteToCache(user);
+
+                if (task.isCompleted()) {
+                    // Update all relevant leaderboards
+                    Map<String, Leaderboard> leaderboards = leaderboardRepository.readFromCache();
+                    for (Leaderboard leaderboard : leaderboards.values()) {
+                        leaderboard.taskCompleted(user.getUsername(), 500);
+                    }
+                    leaderboardRepository.writeToCache(leaderboards);
+                }
 
                 TaskData taskData = new TaskData(
                         task.getId(),

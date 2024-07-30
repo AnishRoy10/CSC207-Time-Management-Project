@@ -82,12 +82,10 @@ public abstract class Leaderboard {
 
     /**
      * Checks if the tasks is completed to add scores. If completed, adds a certain score.
-     * @param user The username of the user.
-     * @param task The task to check.
+     * @param username The username of the user.
      * @param points The amount of points to change.
      */
-    public void taskCompleted(User user, Task task, int points) {
-        String username = user.getUsername();
+    public void taskCompleted(String username, int points) {
         int currentScore = scores.getOrDefault(username, 0);
         scores.put(username, currentScore + points);
     }

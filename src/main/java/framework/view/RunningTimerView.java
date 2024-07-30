@@ -1,7 +1,6 @@
 package framework.view;
 
 
-import data_access.InMemoryTimerDataAccessObject;
 import interface_adapter.controller.TimerController;
 import interface_adapter.viewmodel.RunningTimerViewModel;
 
@@ -13,6 +12,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ * This class represents the page for the timer when it is running.
+ * This is displayed after the timer has been set by the user and includes
+ * the ability for the user to pause the timer.
+ */
 public class RunningTimerView extends JFrame {
 
     private final TimerController timerController;
@@ -26,6 +30,11 @@ public class RunningTimerView extends JFrame {
 
     private final Timer actionTimer;
 
+    /**
+     * Constructor for RunningTimerView. Sets up the UI components for this page.
+     * @param timerController controller for timer use cases
+     * @param runningTimerViewModel view model for RunningTimerView
+     */
     public RunningTimerView(TimerController timerController,
                             RunningTimerViewModel runningTimerViewModel) {
         this.timerController = timerController;
@@ -78,6 +87,10 @@ public class RunningTimerView extends JFrame {
 
     }
 
+    /**
+     * Executes the update timer use case. If the timer has ended, this method
+     * will call the endTimer() method.
+     */
     private void updateTimer() {
         if (!paused) {
             timerController.execute_update_timer();
@@ -91,6 +104,10 @@ public class RunningTimerView extends JFrame {
         }
     }
 
+    /**
+     * Ends the timer by playing a sound to notify the user and allowing
+     * the user to return to the main page.
+     */
     private void endTimer() {
         actionTimer.stop();
         Toolkit.getDefaultToolkit().beep();
@@ -98,6 +115,9 @@ public class RunningTimerView extends JFrame {
         returnButton.setVisible(true);
     }
 
+    /**
+     * Executes the pause timer use case when the user presses the pause button.
+     */
     private void pauseTimer() {
         timerController.execute_pause_timer(paused);
         if (runningTimerViewModel.getMessage().equals("Success")) {
@@ -106,6 +126,9 @@ public class RunningTimerView extends JFrame {
         }
     }
 
+    /**
+     * Lets the user return to the main page.
+     */
     public void returnPrevious() {
         actionTimer.stop();
         dispose();

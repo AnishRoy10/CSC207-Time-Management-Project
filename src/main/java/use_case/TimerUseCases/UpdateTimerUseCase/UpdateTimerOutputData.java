@@ -1,6 +1,7 @@
 package use_case.TimerUseCases.UpdateTimerUseCase;
+
 /**
- * Output data for the update timer use case.
+ * Class representing the output data for the pause timer use case.
  */
 public class UpdateTimerOutputData {
     private final int hours;

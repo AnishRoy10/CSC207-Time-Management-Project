@@ -10,7 +10,8 @@ import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerOutputBoundary;
 import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerOutputData;
 
 /**
- * Presenter for the timer, implementing the output boundaries for setting the timer.
+ * Presenter for the timer, implementing the output boundaries for setting the timer,
+ * updating the timer, and pausing the timer.
  */
 public class TimerPresenter implements SetTimerOutputBoundary, UpdateTimerOutputBoundary,
         PauseTimerOutputBoundary {
@@ -18,6 +19,11 @@ public class TimerPresenter implements SetTimerOutputBoundary, UpdateTimerOutput
     private final SetTimerViewModel setTimerViewModel;
     private final RunningTimerViewModel runningTimerViewModel;
 
+    /**
+     * Constructor for TimerPresenter.
+     * @param setTimerViewModel view model for SetTimerView
+     * @param runningTimerViewModel view model for RunningTimerView
+     */
     public TimerPresenter(SetTimerViewModel setTimerViewModel,
                           RunningTimerViewModel runningTimerViewModel) {
         this.setTimerViewModel = setTimerViewModel;
@@ -25,6 +31,10 @@ public class TimerPresenter implements SetTimerOutputBoundary, UpdateTimerOutput
 
     }
 
+    /**
+     * Prepares the view upon successful completion of the set timer use case.
+     * @param response output data from the set timer use case
+     */
     @Override
     public void prepareSuccessView(SetTimerOutputData response) {
         RunningTimerViewModel.setHOURS(Integer.toString(response.getHours()));
@@ -34,12 +44,20 @@ public class TimerPresenter implements SetTimerOutputBoundary, UpdateTimerOutput
 
     }
 
+    /**
+     * Prepares the view upon failure to execute the set timer use case.
+     * @param errorMessage string with reason for failure
+     */
     @Override
     public void prepareFailView(String errorMessage) {
         runningTimerViewModel.setMessage(errorMessage);
 
     }
 
+    /**
+     * Prepares the view upon successful completion of the update timer use case.
+     * @param response output data from the update timer use case
+     */
     @Override
     public void prepareSuccessView(UpdateTimerOutputData response) {
         RunningTimerViewModel.setHOURS(Integer.toString(response.getHours()));
@@ -48,6 +66,10 @@ public class TimerPresenter implements SetTimerOutputBoundary, UpdateTimerOutput
         runningTimerViewModel.setMessage("Success");
     }
 
+    /**
+     * Prepares the view upon successful completion of the pause timer use case.
+     * @param response output data from the pause timer use case
+     */
     @Override
     public void prepareSuccessView(PauseTimerOutputData response) {
         if (response.isPaused()) {

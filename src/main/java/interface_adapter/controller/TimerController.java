@@ -28,7 +28,7 @@ public class TimerController {
     }
 
     /**
-     * Sets the timer for the user.
+     * Converts each string to integers to be given as inputs for the set timer interactor.
      * @param hours hours the timer lasts for
      * @param minutes minutes the timer lasts for
      * @param seconds seconds the timer lasts for
@@ -55,11 +55,18 @@ public class TimerController {
         userSetTimerUseCaseInteractor.execute(setTimerInputData);
     }
 
+    /**
+     * Executes the update timer use case.
+     */
     public void execute_update_timer() {
         UpdateTimerInputData updateTimerInputData = new UpdateTimerInputData();
         userUpdateTimerUseCaseInteractor.execute(updateTimerInputData);
     }
 
+    /**
+     * Executes the pause timer use case.
+     * @param paused boolean which represents whether the timer is currently paused
+     */
     public void execute_pause_timer(boolean paused) {
         PauseTimerInputData pauseTimerInputData = new PauseTimerInputData(paused);
         userPauseTimerUseCaseInteractor.execute(pauseTimerInputData);

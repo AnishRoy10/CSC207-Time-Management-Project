@@ -7,6 +7,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+import java.util.UUID;
+
 /**
  * TaskCard represents the UI component for displaying a task's details.
  */
@@ -132,8 +134,14 @@ public class TaskCard extends JPanel {
     private void updateCompletionDateLabel() {
         if (task.isCompleted()) {
             completionDateLabel.setText("Completion Date: " + task.getCompletionDate().toString());
+            completedCheckBox.setSelected(true);
         } else {
             completionDateLabel.setText("Completion Date: Not completed");
+            completedCheckBox.setSelected(false);
         }
+    }
+
+    public void setCompleted(boolean isCompleted) {
+        completedCheckBox.setSelected(isCompleted);
     }
 }

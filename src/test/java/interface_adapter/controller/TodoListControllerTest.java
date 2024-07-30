@@ -16,6 +16,7 @@ import use_case.TodoListUseCases.SortTasksUseCase.SortTasksInputBoundary;
 import use_case.TodoListUseCases.SortTasksUseCase.SortTasksRequestModel;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -74,7 +75,7 @@ public class TodoListControllerTest {
     @Test
     public void testRemoveTask() {
         // Arrange
-        int taskId = 1;
+        UUID taskId = UUID.randomUUID();
         String username = "user1";
         RemoveTaskRequestModel expectedRequest = new RemoveTaskRequestModel(taskId, username);
 
@@ -91,7 +92,7 @@ public class TodoListControllerTest {
     @Test
     public void testCompleteTask() {
         // Arrange
-        int taskId = 1;
+        UUID taskId = UUID.randomUUID();
         String username = "user1";
         CompleteTaskRequestModel expectedRequest = new CompleteTaskRequestModel(taskId, username);
 
@@ -175,7 +176,7 @@ public class TodoListControllerTest {
         AddTaskRequestModel requestModel1 = new AddTaskRequestModel(title1, description1, startDate1, deadline1, course1, username);
         AddTaskRequestModel requestModel2 = new AddTaskRequestModel(title2, description2, startDate2, deadline2, course2, username);
 
-        int taskIdToRemove = 1;
+        UUID taskIdToRemove = UUID.randomUUID();
         RemoveTaskRequestModel removeRequestModel = new RemoveTaskRequestModel(taskIdToRemove, username);
 
         // Act
@@ -201,7 +202,7 @@ public class TodoListControllerTest {
                         request.getUsername().equals(requestModel2.getUsername())
         ));
         verify(removeTaskUseCase, times(1)).execute(argThat(request ->
-                request.getTaskId() == removeRequestModel.getTaskId() &&
+                request.getTaskId().equals(removeRequestModel.getTaskId()) &&
                         request.getUsername().equals(removeRequestModel.getUsername())
         ));
     }
@@ -261,14 +262,18 @@ public class TodoListControllerTest {
         AddTaskRequestModel addRequestModel = new AddTaskRequestModel(title, description, startDate, deadline, course, username);
         controller.addTask(title, description, startDate, deadline, course, username);
 
+        // Generate UUIDs for the tasks
+        UUID taskId1 = UUID.randomUUID();
+        UUID taskId2 = UUID.randomUUID();
+
         // Act
-        controller.toggleTaskCompletion(1, username);
-        controller.toggleTaskCompletion(2, username);
+        controller.toggleTaskCompletion(taskId1, username);
+        controller.toggleTaskCompletion(taskId2, username);
 
         // Assert
         verify(completeTaskUseCase, times(2)).execute(argThat(request ->
-                request.getTaskId() == 1 && request.getUsername().equals(username) ||
-                        request.getTaskId() == 2 && request.getUsername().equals(username)
+                request.getTaskId().equals(taskId1) || request.getTaskId().equals(taskId2) &&
+                        request.getUsername().equals(username)
         ));
     }
 

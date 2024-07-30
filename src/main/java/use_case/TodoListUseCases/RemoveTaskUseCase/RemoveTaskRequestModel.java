@@ -1,24 +1,25 @@
 package use_case.TodoListUseCases.RemoveTaskUseCase;
 
+import java.util.UUID;
 /**
  * Request model for removing a task.
  */
 public class RemoveTaskRequestModel {
-    private int taskId;
+    private UUID taskId;
     private String username;
 
-    public RemoveTaskRequestModel(int taskId, String username) {
+    public RemoveTaskRequestModel(UUID taskId, String username) {
         this.taskId = taskId;
         this.username = username;
     }
 
     // Getters and setters
 
-    public int getTaskId() {
+    public UUID getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(int taskId) {
+    public void setTaskId(UUID taskId) {
         this.taskId = taskId;
     }
 

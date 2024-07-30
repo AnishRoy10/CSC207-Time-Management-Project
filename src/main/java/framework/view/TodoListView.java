@@ -12,6 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * View for the to-do list, implementing the main user interface.
@@ -172,17 +173,33 @@ public class TodoListView extends JFrame {
      *
      * @param taskId the ID of the task to complete
      */
-    private void completeTask(int taskId) {
+    private void completeTask(UUID taskId) {
         controller.toggleTaskCompletion(taskId, username); // Updated to pass username
-        loadTasks();
+        updateTaskCardCompletion(taskId, true); // Update the task card's checkbox
+        taskListPanel.revalidate(); // Refresh the task list panel
+        taskListPanel.repaint(); // Refresh the task list panel
+        filterTasks();
+        filterTasks();
     }
+
+    private void updateTaskCardCompletion(UUID taskId, boolean isCompleted) {
+        for (Component component : taskListPanel.getComponents()) {
+            if (component instanceof TaskCard) {
+                TaskCard taskCard = (TaskCard) component;
+                if (taskCard.getTask().getId().equals(taskId)) {
+                    taskCard.setCompleted(isCompleted);
+                }
+            }
+        }
+    }
+
 
     /**
      * Removes a task by its ID.
      *
      * @param taskId the ID of the task to remove
      */
-    private void removeTask(int taskId) {
+    private void removeTask(UUID taskId) {
         controller.removeTask(taskId, username); // Updated to pass username
         loadTasks();
     }
@@ -250,7 +267,10 @@ public class TodoListView extends JFrame {
         // Add each task to the task list panel
         tasks.forEach(task -> {
             TaskCard taskCard = new TaskCard(task);
-            taskCard.addCompletionActionListener(e -> completeTask(task.getId()));
+            taskCard.addCompletionActionListener(e -> {
+                completeTask(task.getId());
+                loadTasks();
+            });
             taskCard.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {

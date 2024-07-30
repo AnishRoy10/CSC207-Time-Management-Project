@@ -14,6 +14,7 @@ import use_case.TodoListUseCases.SortTasksUseCase.SortTasksInputBoundary;
 import use_case.TodoListUseCases.SortTasksUseCase.SortTasksRequestModel;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Controller for the to-do list, coordinating the use cases and handling user interactions.
@@ -68,7 +69,7 @@ public class TodoListController {
      * @param taskId the ID of the task to be removed
      * @param username the username of the user
      */
-    public void removeTask(int taskId, String username) {
+    public void removeTask(UUID taskId, String username) {
         RemoveTaskRequestModel requestModel = new RemoveTaskRequestModel(taskId, username);
         removeTaskUseCase.execute(requestModel);
     }
@@ -79,7 +80,7 @@ public class TodoListController {
      * @param taskId the ID of the task to be toggled
      * @param username the username of the user
      */
-    public void toggleTaskCompletion(int taskId, String username) {
+    public void toggleTaskCompletion(UUID taskId, String username) {
         CompleteTaskRequestModel requestModel = new CompleteTaskRequestModel(taskId, username);
         completeTaskUseCase.execute(requestModel);
     }

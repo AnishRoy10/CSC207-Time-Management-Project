@@ -25,6 +25,7 @@ import use_case.TodoListUseCases.CompleteTaskUseCase.CompleteTaskUseCase;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -125,14 +126,25 @@ class TodoListUseCasesTest {
             addTaskUseCase.execute(requestModel1);
             addTaskUseCase.execute(requestModel2);
 
+            // Print task IDs to verify
+            System.out.println("Tasks in ViewModel after adding:");
+            for (TaskData task : viewModel.getTasks()) {
+                System.out.println("Task ID: " + task.getId() + ", Title: " + task.getTitle());
+            }
+
+            // Ensure tasks are correctly added and IDs are available
+            assertEquals(2, viewModel.getTasks().size());
+
             TaskData taskData1 = viewModel.getTasks().get(0);
 
             CompleteTaskRequestModel completeRequestModel = new CompleteTaskRequestModel(taskData1.getId(), "complexUser");
             completeTaskUseCase.execute(completeRequestModel);
 
+            // Filter tasks
             FilterTasksRequestModel filterRequestModel = new FilterTasksRequestModel(true, "complexUser");
             filterTasksUseCase.execute(filterRequestModel);
 
+            // Sort tasks
             SortTasksRequestModel sortRequestModel = new SortTasksRequestModel("deadline", true, "complexUser");
             sortTasksUseCase.execute(sortRequestModel);
 

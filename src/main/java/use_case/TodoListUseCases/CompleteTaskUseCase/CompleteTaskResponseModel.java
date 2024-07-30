@@ -1,19 +1,20 @@
 package use_case.TodoListUseCases.CompleteTaskUseCase;
 
 import use_case.TaskData;
+import java.util.UUID;
 
 /**
  * Response model for completing a task.
  */
 public class CompleteTaskResponseModel {
     private final TaskData taskData;
-    private int taskId;
+    private UUID taskId;
 
     public CompleteTaskResponseModel(TaskData taskData) {
         this.taskData = taskData;
     }
 
-    public CompleteTaskResponseModel(TaskData taskData, int taskId) {
+    public CompleteTaskResponseModel(TaskData taskData, UUID taskId) {
         this.taskData = taskData;
         this.taskId = taskId;
     }
@@ -22,11 +23,11 @@ public class CompleteTaskResponseModel {
         return taskData;
     }
 
-    public int getTaskId() {
+    public UUID getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(int taskId) {
+    public void setTaskId(UUID taskId) {
         this.taskId = taskId;
     }
 }

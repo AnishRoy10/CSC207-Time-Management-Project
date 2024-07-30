@@ -1,12 +1,13 @@
 package use_case;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Data model for task information.
  */
 public class TaskData {
-    private int id;
+    private UUID id;
     private String title;
     private String description;
     private LocalDateTime startDate;
@@ -15,7 +16,7 @@ public class TaskData {
     private String course;
     private LocalDateTime completionDate;
 
-    public TaskData(int id, String title, String description, LocalDateTime startDate, LocalDateTime deadline, boolean completed, String course, LocalDateTime completionDate) {
+    public TaskData(UUID id, String title, String description, LocalDateTime startDate, LocalDateTime deadline, boolean completed, String course, LocalDateTime completionDate) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -28,11 +29,11 @@ public class TaskData {
 
     // Getters and setters
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

@@ -16,12 +16,20 @@ public class CalendarDataAccessObject implements ViewEventsDataAccessInterface, 
     private FileCacheUserDataAccessObject fileCacheUserDataAccessObject;
     private String username;
     private User user;
+
+
+    // Original constructor
     public CalendarDataAccessObject(String username) throws IOException {
-        this.username = username;
-        this.fileCacheUserDataAccessObject =
-                new FileCacheUserDataAccessObject("src/main/java/data_access/userCache.json");
-        user = fileCacheUserDataAccessObject.findByUsername(username);
+        this(username, "src/main/java/data_access/userCache.json");
     }
+
+    // Overloaded constructor for testing
+    public CalendarDataAccessObject(String username, String filePath) throws IOException {
+        this.username = username;
+        this.fileCacheUserDataAccessObject = new FileCacheUserDataAccessObject(filePath);
+        this.user = fileCacheUserDataAccessObject.findByUsername(username);
+    }
+
     // Method for getting the logged in user's calendar
     public Calendar getCalendar() throws IOException, ClassNotFoundException {
         return this.user.getCalendar();

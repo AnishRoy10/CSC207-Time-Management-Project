@@ -33,7 +33,7 @@ public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
             // Get the user's to-do list
             TodoList todoList = user.getTodoList();
             Optional<Task> taskOptional = todoList.getTasks().stream()
-                    .filter(task -> task.getId() == requestModel.getTaskId())
+                    .filter(task -> task.getId().equals(requestModel.getTaskId()))
                     .findFirst();
 
             if (taskOptional.isPresent()) {

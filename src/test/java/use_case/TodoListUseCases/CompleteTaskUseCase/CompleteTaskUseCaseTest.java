@@ -19,6 +19,7 @@ import use_case.TaskData;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -129,7 +130,7 @@ class CompleteTaskUseCaseTest {
             TodoListPresenter presenter = new TodoListPresenter(viewModel);
             CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase(userRepository, presenter);
 
-            CompleteTaskRequestModel completeRequestModel = new CompleteTaskRequestModel(-1, "invalidIDUser");
+            CompleteTaskRequestModel completeRequestModel = new CompleteTaskRequestModel(UUID.randomUUID(), "invalidIDUser");
 
             assertThrows(RuntimeException.class, () -> completeTaskUseCase.execute(completeRequestModel));
         });

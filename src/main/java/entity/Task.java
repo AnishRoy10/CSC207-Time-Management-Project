@@ -3,6 +3,7 @@ package entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * The Task class represents a task in the to-do list.
@@ -10,9 +11,8 @@ import java.util.Objects;
  */
 public class Task implements Serializable {
     private static final long serialVersionUID = 3L; // Add a serial version UID
-    private static int idCounter = 0; // Static counter to generate unique IDs
 
-    private int id; // Unique identifier for the task
+    private UUID id; // Unique identifier for the task
     private String title; // Title of the task (required)
     private String description; // Description of the task (optional)
     private boolean completed; // Indicates whether the task is completed or not
@@ -31,7 +31,7 @@ public class Task implements Serializable {
      * @param course      The course associated with the task (nullable)
      */
     public Task(String title, String description, LocalDateTime startDate, LocalDateTime deadline, String course) {
-        this.id = ++idCounter; // Increment the counter and assign it as the ID
+        this.id = UUID.randomUUID(); // Increment the counter and assign it as the ID
         this.title = title;
         this.description = description != null ? description : "";
         this.completed = false; // By default, a new task is not completed
@@ -42,7 +42,7 @@ public class Task implements Serializable {
     }
 
     // Getter for the ID
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -170,7 +170,7 @@ public class Task implements Serializable {
         return Objects.hash(id, title, description, startDate, deadline, course);
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 }

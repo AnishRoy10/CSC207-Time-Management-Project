@@ -33,7 +33,7 @@ public class RemoveTaskUseCase implements RemoveTaskInputBoundary {
 
             // Get the user's to-do list
             Optional<Task> taskOptional = user.getTodoList().getTasks().stream()
-                    .filter(task -> task.getId() == requestModel.getTaskId())
+                    .filter(task -> task.getId().equals(requestModel.getTaskId()))
                     .findFirst();
 
             if (taskOptional.isPresent()) {

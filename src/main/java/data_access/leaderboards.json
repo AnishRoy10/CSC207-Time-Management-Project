@@ -2,22 +2,33 @@
   "daily": {
     "currentDate": "2024-07-29",
     "name": "Daily Leaderboard",
-    "scores": {},
+    "scores": {
+      "user1": 200
+    },
+    "sortedScores": [
+      {}
+    ],
     "type": "DailyLeaderboard"
   },
   "monthly": {
     "month": "2024-07-01",
     "name": "Monthly Leaderboard",
-    "scores": {},
+    "scores": {
+      "user1": 200
+    },
+    "sortedScores": [
+      {}
+    ],
     "type": "MonthlyLeaderboard"
   },
   "allTime": {
     "name": "All-Time Leaderboard",
     "scores": {
-      "user2": 100,
-      "user": 200
-      },
+      "user1": 200
+    },
+    "sortedScores": [
+      {}
+    ],
     "type": "AllTimeLeaderboard"
   }
 }
-

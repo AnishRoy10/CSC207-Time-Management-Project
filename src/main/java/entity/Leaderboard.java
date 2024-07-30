@@ -113,5 +113,4 @@ public abstract class Leaderboard {
         return sortedScores;
     }
 
-
 }

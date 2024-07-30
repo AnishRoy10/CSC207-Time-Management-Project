@@ -63,7 +63,7 @@ public class LeaderboardInitializer {
             LeaderboardView leaderboardView = new LeaderboardView(monthlyController, allTimeController, dailyController);
 
             JFrame frame = new JFrame("Leaderboards");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setSize(800, 600);
             frame.add(leaderboardView);
             frame.setVisible(true);

@@ -1,6 +1,5 @@
 package interface_adapter.viewmodel;
 
-import framework.view.RunningTimerView;
 import interface_adapter.ViewModel;
 
 /**

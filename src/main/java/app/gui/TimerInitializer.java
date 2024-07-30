@@ -1,7 +1,7 @@
 package app.gui;
 
 import data_access.FileCacheUserDataAccessObject;
-import data_access.InMemoryTimerDataAccessObject;
+//import data_access.InMemoryTimerDataAccessObject;
 import data_access.TimerDataAccessObject;
 import interface_adapter.presenter.TimerPresenter;
 import interface_adapter.viewmodel.SetTimerViewModel;
@@ -11,8 +11,6 @@ import interface_adapter.viewmodel.RunningTimerViewModel;
 import use_case.TimerUseCases.PauseTimerUseCase.PauseTimerInteractor;
 import use_case.TimerUseCases.SetTimerUseCase.SetTimerInteractor;
 import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerInteractor;
-
-import java.io.IOException;
 
 /**
  * Class to initialize the set timer page and its related components.

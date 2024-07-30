@@ -1,6 +1,5 @@
 package data_access;
 
-import entity.Timer;
 import entity.User;
 import use_case.TimerUseCases.PauseTimerUseCase.PauseTimerDataAccessInterface;
 import use_case.TimerUseCases.SetTimerUseCase.SetTimerDataAccessInterface;

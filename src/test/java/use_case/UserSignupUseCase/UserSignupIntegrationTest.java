@@ -8,6 +8,7 @@ import interface_adapter.viewmodel.UserSignupViewModel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import repositories.LeaderboardRepository;
 import use_case.UserUseCases.UserSignupUseCase.UserSignupUseCase;
 
 import java.io.File;
@@ -21,6 +22,7 @@ class UserSignupIntegrationTest {
     private UserSignupPresenter userSignupPresenter;
     private UserSignupViewModel userSignupViewModel;
     private UserSignupController userSignupController;
+    private LeaderboardRepository leaderboardRepository;
     private File testFile;
 
     @BeforeEach
@@ -32,7 +34,7 @@ class UserSignupIntegrationTest {
         userRepository = new FileCacheUserDataAccessObject(testFile.getAbsolutePath());
         userSignupViewModel = new UserSignupViewModel();
         userSignupPresenter = new UserSignupPresenter(userSignupViewModel);
-        UserSignupUseCase userSignupUseCase = new UserSignupUseCase(userRepository, userSignupPresenter);
+        UserSignupUseCase userSignupUseCase = new UserSignupUseCase(userRepository, userSignupPresenter, leaderboardRepository);
         userSignupController = new UserSignupController(userSignupUseCase);
     }
 
@@ -80,7 +82,7 @@ class UserSignupIntegrationTest {
             }
         };
 
-        UserSignupUseCase userSignupUseCase = new UserSignupUseCase(userRepository, userSignupPresenter);
+        UserSignupUseCase userSignupUseCase = new UserSignupUseCase(userRepository, userSignupPresenter, leaderboardRepository);
         userSignupController = new UserSignupController(userSignupUseCase);
         userSignupController.signup("username", "Password1", "Password1");
         assertEquals("An error occurred during sign up.", userSignupViewModel.getMessage());

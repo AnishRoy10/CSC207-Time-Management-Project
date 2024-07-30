@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import repositories.LeaderboardRepository;
 import repositories.UserRepository;
 import use_case.UserUseCases.UserSignupUseCase.UserSignupOutputBoundary;
 import use_case.UserUseCases.UserSignupUseCase.UserSignupRequestModel;
@@ -21,12 +22,13 @@ class UserSignupUseCaseTest {
     private UserRepository userRepository;
     private UserSignupOutputBoundary userSignupOutputBoundary;
     private UserSignupUseCase userSignupUseCase;
+    private LeaderboardRepository leaderboardRepository;
 
     @BeforeEach
     void setUp() {
         userRepository = Mockito.mock(UserRepository.class);
         userSignupOutputBoundary = Mockito.mock(UserSignupOutputBoundary.class);
-        userSignupUseCase = new UserSignupUseCase(userRepository, userSignupOutputBoundary);
+        userSignupUseCase = new UserSignupUseCase(userRepository, userSignupOutputBoundary, leaderboardRepository);
     }
 
     @Test

@@ -2,10 +2,12 @@ package use_case.TodoListUseCases;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import data_access.FileCacheLeaderboardDataAccessObject;
 import entity.Course;
 import entity.Task;
 import entity.User;
 import data_access.FileCacheUserDataAccessObject;
+import repositories.LeaderboardRepository;
 import interface_adapter.presenter.TodoListPresenter;
 import interface_adapter.viewmodel.TodoListViewModel;
 import org.junit.jupiter.api.AfterEach;
@@ -33,6 +35,7 @@ class TodoListUseCasesTest {
     private FileCacheUserDataAccessObject fileCacheUserDAO;
     private final String testFilePath = "test_userCache.json";
     private UserRepository userRepository;
+    private LeaderboardRepository leaderboardRepository;
 
     @BeforeEach
     void setUp() throws IOException {
@@ -113,7 +116,7 @@ class TodoListUseCasesTest {
             TodoListViewModel viewModel = new TodoListViewModel();
             TodoListPresenter presenter = new TodoListPresenter(viewModel);
             AddTaskUseCase addTaskUseCase = new AddTaskUseCase(userRepository, presenter);
-            CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase(userRepository, presenter);
+            CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase(userRepository, presenter, leaderboardRepository);
             FilterTasksUseCase filterTasksUseCase = new FilterTasksUseCase(userRepository, presenter);
             SortTasksUseCase sortTasksUseCase = new SortTasksUseCase(userRepository, presenter);
 

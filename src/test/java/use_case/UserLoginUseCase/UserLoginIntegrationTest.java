@@ -8,6 +8,7 @@ import interface_adapter.viewmodel.UserLoginViewModel;
 import interface_adapter.viewmodel.UserSignupViewModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import repositories.LeaderboardRepository;
 import repositories.UserRepository;
 import use_case.UserUseCases.UserLoginUseCase.UserLoginUseCase;
 import use_case.UserUseCases.UserSignupUseCase.UserSignupOutputBoundary;
@@ -26,6 +27,7 @@ class UserLoginIntegrationTest {
     private UserSignupUseCase userSignupUseCase;
     private UserLoginViewModel userLoginViewModel;
     private UserSignupViewModel userSignupViewModel;
+    private LeaderboardRepository leaderboardRepository;
 
     @BeforeEach
     void setUp() {
@@ -42,7 +44,7 @@ class UserLoginIntegrationTest {
                 userSignupViewModel.setMessage(responseModel.getMessage());
             }
         };
-        userSignupUseCase = new UserSignupUseCase(userRepository, userSignupOutputBoundary);
+        userSignupUseCase = new UserSignupUseCase(userRepository, userSignupOutputBoundary, leaderboardRepository);
     }
 
     @Test

@@ -1,12 +1,13 @@
 package use_case.LeaderboardUseCases.add_score;
 
-import data_access.LeaderboardDataAccessObject;
+import data_access.FileCacheLeaderboardDataAccessObject;
 import entity.Leaderboard;
 import entity.MonthlyLeaderboard;
 import interface_adapter.presenter.LeaderboardPresenter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -14,13 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AddScoreUseCaseTest {
     private AddScoreInputBoundary addScoreUseCase;
-    private LeaderboardDataAccessObject leaderboardDAO;
+    private FileCacheLeaderboardDataAccessObject leaderboardDAO;
     private Leaderboard leaderboard;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws IOException {
         leaderboard = new MonthlyLeaderboard("Monthly Leaderboard", LocalDate.now());
-        leaderboardDAO = new LeaderboardDataAccessObject();
+        leaderboardDAO = new FileCacheLeaderboardDataAccessObject("src/main/java/data_access/leaderboards.json");
         LeaderboardPresenter presenter = new LeaderboardPresenter(leaderboard);
         addScoreUseCase = new AddScoreUseCase(leaderboard, presenter, leaderboardDAO);
     }

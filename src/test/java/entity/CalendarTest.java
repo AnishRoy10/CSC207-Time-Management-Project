@@ -1,16 +1,9 @@
-package Entity;
+package entity;
 
-import entity.Calendar;
-import entity.CalendarEvent;
-import org.junit.Before;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 public class CalendarTest {

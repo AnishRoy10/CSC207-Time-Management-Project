@@ -1,6 +1,5 @@
-package Entity;
+package entity;
 
-import entity.CalendarEvent;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

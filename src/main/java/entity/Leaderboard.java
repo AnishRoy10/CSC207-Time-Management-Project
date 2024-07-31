@@ -88,6 +88,8 @@ public abstract class Leaderboard {
     public void taskCompleted(String username, int points) {
         int currentScore = scores.getOrDefault(username, 0);
         scores.put(username, currentScore + points);
+        sortScores(); // Sort the scores after adding a new score
+        System.out.println("Scores after task completed: " + scores);
     }
 
 

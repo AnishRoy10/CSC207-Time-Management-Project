@@ -12,10 +12,11 @@
           "id": "5bd2101d-16bc-4e26-9368-d794b70bfbde",
           "title": "Task 1",
           "description": "This is a sample description. They can be as long as you want, but should ideally be short.",
-          "completed": false,
+          "completed": true,
           "startDate": "2024-07-17T03:30:00",
           "deadline": "2024-07-24T04:00:00",
-          "course": "CSC1000"
+          "course": "CSC1000",
+          "completionDate": "2024-07-30T19:13:47.7786618"
         },
         {
           "id": "5bd2101d-16bc-4e26-9368-d794b70bfbdf",

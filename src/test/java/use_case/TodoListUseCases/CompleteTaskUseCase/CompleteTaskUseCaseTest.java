@@ -169,4 +169,5 @@ class CompleteTaskUseCaseTest {
             System.out.println("Task completion status after second completion: " + taskData.isCompleted());
         });
     }
+
 }

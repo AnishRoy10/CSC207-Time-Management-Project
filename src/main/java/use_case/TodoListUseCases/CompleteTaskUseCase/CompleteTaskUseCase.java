@@ -9,7 +9,6 @@ import repositories.UserRepository;
 import use_case.TaskData;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -49,7 +48,12 @@ public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
 
                 if (task.isCompleted()) {
                     // Update all relevant leaderboards
-                    updateLeaderboardScores(user.getUsername(), task.getCompletionDate());
+                    Map<String, Leaderboard> leaderboards = leaderboardRepository.readFromCache();
+                    for (Leaderboard leaderboard : leaderboards.values()) {
+                        leaderboard.taskCompleted(user.getUsername(), 500);
+                        System.out.println("Updated leaderboard (" + leaderboard.getName() + ") scores: " + leaderboard.getScores());
+                    }
+                    leaderboardRepository.writeToCache(leaderboards);
                 }
 
                 TaskData taskData = new TaskData(
@@ -72,29 +76,5 @@ public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
             e.printStackTrace();
             // Handle the error appropriately
         }
-    }
-
-    private void updateLeaderboardScores(String username, LocalDateTime completionDate) throws IOException {
-        Map<String, Leaderboard> leaderboards = leaderboardRepository.readFromCache();
-
-        // Update Daily Leaderboard
-        Leaderboard dailyLeaderboard = leaderboards.get("Daily");
-        if (dailyLeaderboard != null) {
-            dailyLeaderboard.addScore(username, 1); // Assuming 1 point per task
-        }
-
-        // Update Monthly Leaderboard
-        Leaderboard monthlyLeaderboard = leaderboards.get("Monthly");
-        if (monthlyLeaderboard != null) {
-            monthlyLeaderboard.addScore(username, 1); // Assuming 1 point per task
-        }
-
-        // Update All-Time Leaderboard
-        Leaderboard allTimeLeaderboard = leaderboards.get("AllTime");
-        if (allTimeLeaderboard != null) {
-            allTimeLeaderboard.addScore(username, 1); // Assuming 1 point per task
-        }
-
-        leaderboardRepository.writeToCache(leaderboards);
     }
 }

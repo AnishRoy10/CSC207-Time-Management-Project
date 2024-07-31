@@ -54,6 +54,7 @@ public class FileCacheLeaderboardDataAccessObject implements LeaderboardReposito
             Map<String, Leaderboard> leaderboards = readFromCache();
             for (Leaderboard leaderboard : leaderboards.values()) {
                 leaderboard.addScore(username, score);
+                System.out.println("Updated leaderboard (" + leaderboard.getName() + ") scores: " + leaderboard.getScores());
             }
             writeToCache(leaderboards);
         } catch (IOException e) {

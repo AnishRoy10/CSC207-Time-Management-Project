@@ -32,7 +32,20 @@ class TimerTest {
 
     @Test
     void timerLength() {
-        long expected = timer.timerLength();
-        assertEquals(3600000, expected);
+        long actual = timer.timerLength();
+        assertEquals(3600000, actual);
+    }
+
+    @Test
+    void pause() {
+        long seconds = 2000;
+        long start = System.currentTimeMillis();
+        timer.pause();
+        while (System.currentTimeMillis() < start + seconds) {
+            timer.updateElapsed_time();
+        }
+        timer.resume();
+        long actual = timer.timerLength();
+        assertEquals(3602000, actual);
     }
 }

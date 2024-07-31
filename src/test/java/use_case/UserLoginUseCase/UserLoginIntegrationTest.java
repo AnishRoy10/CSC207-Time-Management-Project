@@ -18,7 +18,8 @@ import use_case.UserUseCases.UserSignupUseCase.UserSignupUseCase;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class UserLoginIntegrationTest {
@@ -30,20 +31,18 @@ class UserLoginIntegrationTest {
     private LeaderboardRepository leaderboardRepository;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         userRepository = mock(UserRepository.class);
+        leaderboardRepository = mock(LeaderboardRepository.class);
+
         userLoginViewModel = new UserLoginViewModel();
         userSignupViewModel = new UserSignupViewModel();
+
         UserLoginPresenter userLoginPresenter = new UserLoginPresenter(userLoginViewModel);
         UserLoginUseCase userLoginUseCase = new UserLoginUseCase(userRepository, userLoginPresenter);
         userLoginController = new UserLoginController(userLoginUseCase);
 
-        UserSignupOutputBoundary userSignupOutputBoundary = new UserSignupOutputBoundary() {
-            @Override
-            public void present(UserSignupResponseModel responseModel) {
-                userSignupViewModel.setMessage(responseModel.getMessage());
-            }
-        };
+        UserSignupOutputBoundary userSignupOutputBoundary = responseModel -> userSignupViewModel.setMessage(responseModel.getMessage());
         userSignupUseCase = new UserSignupUseCase(userRepository, userSignupOutputBoundary, leaderboardRepository);
     }
 

@@ -44,16 +44,17 @@ public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
             if (taskOptional.isPresent()) {
                 Task task = taskOptional.get();
                 task.toggleTaskCompletion();
-                userRepository.WriteToCache(user);
 
-                if (task.isCompleted()) {
+                if (task.isCompleted() && !task.isPointsAwarded()) {
                     // Update all relevant leaderboards
                     Map<String, Leaderboard> leaderboards = leaderboardRepository.readFromCache();
                     for (Leaderboard leaderboard : leaderboards.values()) {
                         leaderboard.taskCompleted(user.getUsername(), 500);
-                        System.out.println("Updated leaderboard (" + leaderboard.getName() + ") scores: " + leaderboard.getScores());
                     }
                     leaderboardRepository.writeToCache(leaderboards);
+
+                    // Set pointsAwarded to true
+                    task.setPointsAwarded(true);
                 }
 
                 TaskData taskData = new TaskData(
@@ -69,6 +70,7 @@ public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
 
                 CompleteTaskResponseModel responseModel = new CompleteTaskResponseModel(taskData, task.getId());
                 completeTaskOutputBoundary.present(responseModel);
+                userRepository.WriteToCache(user);
             } else {
                 throw new RuntimeException("Task not found");
             }

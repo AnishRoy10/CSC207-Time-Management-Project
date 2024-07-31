@@ -28,6 +28,7 @@ class UserSignupUseCaseTest {
     void setUp() {
         userRepository = Mockito.mock(UserRepository.class);
         userSignupOutputBoundary = Mockito.mock(UserSignupOutputBoundary.class);
+        leaderboardRepository = Mockito.mock(LeaderboardRepository.class);
         userSignupUseCase = new UserSignupUseCase(userRepository, userSignupOutputBoundary, leaderboardRepository);
     }
 

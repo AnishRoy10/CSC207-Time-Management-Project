@@ -1,7 +1,7 @@
 package interface_adapter.JoinCourseUseCase;
 
-import use_case.JoinCourseUseCase.JoinCourseInputBoundary;
-import use_case.JoinCourseUseCase.JoinCourseRequestModel;
+import use_case.CourseUseCases.JoinCourseUseCase.JoinCourseInputBoundary;
+import use_case.CourseUseCases.JoinCourseUseCase.JoinCourseRequestModel;
 
 public class JoinCourseController {
     

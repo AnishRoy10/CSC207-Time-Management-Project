@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import interface_adapter.JoinCourseUseCase.JoinCoursePresenter;
 import interface_adapter.JoinCourseUseCase.JoinCourseViewModel;
 import org.junit.jupiter.api.BeforeEach;
-import use_case.JoinCourseUseCase.JoinCourseResponseModel;
+import use_case.CourseUseCases.JoinCourseUseCase.JoinCourseResponseModel;
 
 public class JoinCoursePresenterTest {
     private JoinCoursePresenter presenter;

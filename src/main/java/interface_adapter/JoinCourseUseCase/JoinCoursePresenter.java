@@ -1,7 +1,7 @@
 package interface_adapter.JoinCourseUseCase;
 
-import use_case.JoinCourseUseCase.JoinCourseOutputBoundary;
-import use_case.JoinCourseUseCase.JoinCourseResponseModel;
+import use_case.CourseUseCases.JoinCourseUseCase.JoinCourseOutputBoundary;
+import use_case.CourseUseCases.JoinCourseUseCase.JoinCourseResponseModel;
 
 public class JoinCoursePresenter implements JoinCourseOutputBoundary {
 	final private JoinCourseViewModel viewModel;

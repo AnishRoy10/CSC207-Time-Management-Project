@@ -1,9 +1,7 @@
-package use_case.JoinCourseUseCase;
+package use_case.CourseUseCases.JoinCourseUseCase;
 
 import java.io.IOException;
 
-import data_access.CourseDataAccessObject;
-import data_access.FileCacheUserDataAccessObject;
 import entity.User;
 import repositories.CourseRepository;
 import repositories.UserRepository;

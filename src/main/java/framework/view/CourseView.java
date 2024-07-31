@@ -1,6 +1,6 @@
 package framework.view;
 
-import entity.Course;
+import interface_adapter.controller.CourseViewController;
 import interface_adapter.viewmodel.CourseListViewModel;
 import interface_adapter.viewmodel.CourseViewModel;
 
@@ -14,6 +14,7 @@ import java.awt.*;
  */
 public class CourseView extends JFrame {
     private final String username;
+    private final CourseViewController controller;
     private final CourseViewModel viewModel;
     private final CourseListViewModel listViewModel;
 
@@ -28,8 +29,10 @@ public class CourseView extends JFrame {
     private JPanel mainPanel;
     private JLabel descriptionLabel;
 
-    public CourseView(String username, CourseViewModel viewModel, CourseListViewModel listViewModel) {
+    public CourseView(String username, CourseViewController controller,
+                      CourseViewModel viewModel, CourseListViewModel listViewModel) {
         this.username = username;
+        this.controller  = controller;
         this.viewModel = viewModel;
         this.listViewModel = listViewModel;
 
@@ -51,11 +54,11 @@ public class CourseView extends JFrame {
      * @param courseName the name of the course to visualize
      */
     private void visualize(String courseName) {
-        // TODO: execute view controller
-        if (!viewModel.wasSuccessful()) {
+        controller.viewCourse(courseName);
+        if (!viewModel.isSuccess()) {
             JOptionPane.showMessageDialog(
                     this,
-                    "Something went wrong loading " + courseName + ".",
+                    viewModel.getMessage(),
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
             return;
@@ -90,7 +93,7 @@ public class CourseView extends JFrame {
         courseListScrollPane.setBorder(BorderFactory.createEmptyBorder());
         courseListScrollPane.setViewportBorder(BorderFactory.createEmptyBorder());
 
-        // TODO: execute list controller
+        controller.loadCourses(username);
         for (String courseName : listViewModel.getCourses()) {
             addCourseButton(courseName);
         }
@@ -197,8 +200,10 @@ public class CourseView extends JFrame {
     }
 
     public static void main(String[] args) {
+        CourseViewController controller = new CourseViewController();
         SwingUtilities.invokeLater(() -> new CourseView(
                 "TestUser",
+                new CourseViewController(),
                 new CourseViewModel(),
                 new CourseListViewModel())
         );

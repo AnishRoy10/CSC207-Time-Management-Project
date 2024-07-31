@@ -1,4 +1,4 @@
-package use_case.JoinCourseUseCase;
+package use_case.CourseUseCases.JoinCourseUseCase;
 
 /**
  * An object to represent input data when joining a course.

@@ -1,8 +1,11 @@
 package use_case.CourseUseCases.LoadCoursesUseCase;
 
+import entity.Course;
+import entity.User;
 import repositories.UserRepository;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Interactor class to load courses.
@@ -19,8 +22,20 @@ public class LoadCoursesUseCase implements LoadCoursesInputBoundary {
     @Override
     public void execute(LoadCoursesInputData inputData) {
         try {
-            /// TODO: with interface, fetch all courses and filter by which the user is in
-            throw new IOException();
+            String username = inputData.getUsername();
+            User user = userDataAccessObject.ReadFromCache(username);
+
+            ArrayList<String> courseNames = new ArrayList<>();
+            for (Course course : user.getCourses()) {
+                courseNames.add(course.getName());
+            }
+
+            LoadCoursesOutputData outputData = new LoadCoursesOutputData(
+                    true,
+                    "",
+                    courseNames
+            );
+            presenter.present(outputData);
         } catch (IOException e) {
             LoadCoursesOutputData outputData = new LoadCoursesOutputData(
                     false,

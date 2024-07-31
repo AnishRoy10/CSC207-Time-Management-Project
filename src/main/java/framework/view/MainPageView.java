@@ -106,7 +106,7 @@ public class MainPageView extends JFrame {
      * Visualize the course view.
      */
     private void openCourseView() {
-        CourseInitializer.run(username);
+        CourseInitializer.initializeView(username);
     }
 
 //    /**

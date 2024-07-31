@@ -12,25 +12,35 @@ import use_case.CourseUseCases.LeaveCourseUseCase.LeaveCourseInputData;
  */
 public class CoursePromptController {
     /// The interactor for the create course use case.
-    private final CreateCourseInputBoundary createCourseInteractor;
+    private CreateCourseInputBoundary createCourseInteractor;
 
     // The interactor for the join course use case.
-    private final JoinCourseInputBoundary joinCourseInteractor;
+    private JoinCourseInputBoundary joinCourseInteractor;
 
     // The interactor for the leave course use case.
-    private final LeaveCourseInputBoundary leaveCourseInteractor;
+    private LeaveCourseInputBoundary leaveCourseInteractor;
 
     /**
-     * Construct a new controller instance.
+     * Construct a controller instance just for the create course use case.
      * @param createCourseInteractor Interactor for the create course use case.
-     * @param joinCourseInteractor   Interactor for the join course use case.
-     * @param leaveCourseInteractor  Interactor for the leave course ues case.
      */
-    public CoursePromptController(CreateCourseInputBoundary createCourseInteractor,
-                                  JoinCourseInputBoundary joinCourseInteractor,
-                                  LeaveCourseInputBoundary leaveCourseInteractor) {
+    public CoursePromptController(CreateCourseInputBoundary createCourseInteractor) {
         this.createCourseInteractor = createCourseInteractor;
+    }
+
+    /**
+     * Construct a controller instance just for the join course use case.
+     * @param joinCourseInteractor Interactor for the join course use case.
+     */
+    public CoursePromptController(JoinCourseInputBoundary joinCourseInteractor) {
         this.joinCourseInteractor = joinCourseInteractor;
+    }
+
+    /**
+     * Construct a controller instance just for the leave course use case.
+     * @param leaveCourseInteractor Interactor for the leave course use case.
+     */
+    public CoursePromptController(LeaveCourseInputBoundary leaveCourseInteractor) {
         this.leaveCourseInteractor = leaveCourseInteractor;
     }
 

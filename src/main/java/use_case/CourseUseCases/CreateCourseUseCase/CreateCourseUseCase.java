@@ -21,7 +21,7 @@ public class CreateCourseUseCase implements CreateCourseInputBoundary {
      * @param presenter              The presenter to use.
      * @param courseDataAccessObject The course data access object to use.
      */
-    public CreateCourseUseCase(CreateCourseOutputBoundary presenter, CourseDataAccessObject courseDataAccessObject) {
+    public CreateCourseUseCase(CreateCourseOutputBoundary presenter, CourseRepository courseDataAccessObject) {
         this.presenter = presenter;
         this.courseDataAccessObject = courseDataAccessObject;
     }

@@ -1,25 +1,13 @@
 package framework.view;
 
-import data_access.CourseDataAccessObject;
-import data_access.FileCacheUserDataAccessObject;
+import app.gui.CourseInitializer;
 import interface_adapter.controller.CourseViewController;
-import interface_adapter.presenter.CourseListPresenter;
-import interface_adapter.presenter.CourseViewPresenter;
 import interface_adapter.viewmodel.CourseListViewModel;
 import interface_adapter.viewmodel.CourseViewModel;
-import repositories.CourseRepository;
-import repositories.UserRepository;
-import use_case.CourseUseCases.LoadCoursesUseCase.LoadCoursesInputBoundary;
-import use_case.CourseUseCases.LoadCoursesUseCase.LoadCoursesOutputBoundary;
-import use_case.CourseUseCases.LoadCoursesUseCase.LoadCoursesUseCase;
-import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseInputBoundary;
-import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseOutputBoundary;
-import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseUseCase;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.io.IOException;
 
 /**
  * The course view page lets users visualize the todolist, leaderboards, and other
@@ -93,9 +81,6 @@ public class CourseView extends JFrame {
      * Displays the courses a user is part of on the course view page.
      */
     private void displayCourseList() {
-        leftPanel = new JPanel();
-        leftPanel.setLayout(new BorderLayout());
-
         courseListPanel = new JPanel();
         courseListPanel.setLayout(new BoxLayout(courseListPanel, BoxLayout.Y_AXIS));
         courseListPanel.setBackground(new Color(220, 220, 220));
@@ -106,6 +91,7 @@ public class CourseView extends JFrame {
         courseListScrollPane.setBorder(BorderFactory.createEmptyBorder());
         courseListScrollPane.setViewportBorder(BorderFactory.createEmptyBorder());
 
+        /// load courses
         controller.loadCourses(username);
         if (!listViewModel.isSuccess()) {
             this.dispose();
@@ -121,29 +107,49 @@ public class CourseView extends JFrame {
             addCourseButton(courseName);
         }
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1, 2, 1, 0));
-        buttonPanel.setBackground(new Color(220, 220, 220));
+        JButton createCourseButton = new JButton("Create Course");
+        createCourseButton.setBackground(Color.GRAY);
+        createCourseButton.setForeground(Color.WHITE);
+        createCourseButton.setBorder(new EmptyBorder(8, 8, 8, 8));
+        createCourseButton.addActionListener(e -> openCreatePrompt());
 
         JButton joinCourseButton = new JButton("Join Course");
-        JButton leaveCourseButton = new JButton("Leave Course");
-
         joinCourseButton.setBackground(Color.GRAY);
-        leaveCourseButton.setBackground(Color.GRAY);
         joinCourseButton.setForeground(Color.WHITE);
+        joinCourseButton.setBorder(new EmptyBorder(8, 8, 8, 8));
+        joinCourseButton.addActionListener(e -> openJoinPrompt());
+
+        JButton leaveCourseButton = new JButton("Leave Course");
+        leaveCourseButton.setBackground(Color.GRAY);
         leaveCourseButton.setForeground(Color.WHITE);
-        joinCourseButton.setBorderPainted(false);
-        leaveCourseButton.setBorderPainted(false);
+        leaveCourseButton.setBorder(new EmptyBorder(8, 8, 8, 8));
+        leaveCourseButton.addActionListener(e -> openLeavePrompt());
 
-        buttonPanel.add(joinCourseButton);
-        buttonPanel.add(leaveCourseButton);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BorderLayout(1, 1));
+        buttonPanel.setBackground(new Color(220, 220, 220));
+        buttonPanel.add(createCourseButton, BorderLayout.SOUTH);
+        buttonPanel.add(joinCourseButton, BorderLayout.WEST);
+        buttonPanel.add(leaveCourseButton, BorderLayout.EAST);
 
-        /// TODO: integrate use case listeners here later to join, leave buttons
-
+        leftPanel = new JPanel();
+        leftPanel.setLayout(new BorderLayout());
         leftPanel.add(courseListScrollPane, BorderLayout.CENTER);
         leftPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         this.add(leftPanel, BorderLayout.WEST);
+    }
+
+    private void openJoinPrompt() {
+        CourseInitializer.initializeJoinPrompt(username);
+    }
+
+    private void openLeavePrompt() {
+        CourseInitializer.initializeLeavePrompt(username);
+    }
+
+    private void openCreatePrompt() {
+        CourseInitializer.initializeCreatePrompt();
     }
 
     /**
@@ -164,20 +170,18 @@ public class CourseView extends JFrame {
      * Displays the main view, including todolist, description, and leaderboards.
      */
     private void displayMainView() {
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-
-        JPanel descriptionPanel = new JPanel();
-        descriptionPanel.setLayout(new BoxLayout(descriptionPanel, BoxLayout.X_AXIS));
-
         descriptionLabel = new JLabel("");
         descriptionLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
         descriptionLabel.setMaximumSize(new Dimension(mainPanel.getMaximumSize().width, 100));
+
+        JPanel descriptionPanel = new JPanel();
         descriptionPanel.setLayout(new GridBagLayout());
         descriptionPanel.setBackground(new Color(200, 200, 200));
-
         descriptionPanel.add(descriptionLabel);
+
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         mainPanel.add(descriptionPanel, BorderLayout.NORTH);
         mainPanel.setVisible(false);
 
@@ -201,58 +205,23 @@ public class CourseView extends JFrame {
         userScrollPane.setBorder(BorderFactory.createEmptyBorder());
         userScrollPane.setViewportBorder(BorderFactory.createEmptyBorder());
 
+        memberCountLabel = new JLabel("");
+        memberCountLabel.setForeground(new Color(90, 90, 90));
+
         JPanel memberCountPanel = new JPanel();
         memberCountPanel.setLayout(new GridBagLayout());
         memberCountPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         memberCountPanel.setBackground(new Color(220, 220, 220));
-        memberCountLabel = new JLabel("");
-        memberCountLabel.setForeground(new Color(90, 90, 90));
+        memberCountPanel.add(memberCountLabel);
+        userListPanel.add(userScrollPane);
 
         rightPanel = new JPanel();
         rightPanel.setLayout(new BorderLayout());
         rightPanel.setBackground(new Color(220, 220, 220));
-
-        memberCountPanel.add(memberCountLabel);
-        userListPanel.add(userScrollPane);
-
         rightPanel.add(memberCountPanel, BorderLayout.NORTH);
         rightPanel.add(userListPanel, BorderLayout.CENTER);
         rightPanel.setVisible(false);
 
         this.add(rightPanel, BorderLayout.EAST);
-    }
-
-    public static void main(String[] args) {
-        try {
-            String usersPath = "src/main/java/data_access/userCache.json";
-            String coursesPath = "src/main/java/data_access/courseCache.json";
-
-            UserRepository userDataAccessObject = new FileCacheUserDataAccessObject(usersPath);
-            CourseRepository courseDataAccessObject = new CourseDataAccessObject(coursesPath);
-
-            CourseViewModel viewModel = new CourseViewModel();
-            CourseListViewModel listViewModel = new CourseListViewModel();
-
-            ViewCourseOutputBoundary courseViewPresenter = new CourseViewPresenter(viewModel);
-            LoadCoursesOutputBoundary courseListPresenter = new CourseListPresenter(listViewModel);
-
-            ViewCourseInputBoundary courseViewInteractor = new ViewCourseUseCase(
-                    courseViewPresenter, courseDataAccessObject
-            );
-
-            LoadCoursesInputBoundary courseListInteractor = new LoadCoursesUseCase(
-                    courseListPresenter, userDataAccessObject
-            );
-
-            CourseViewController courseViewController = new CourseViewController(
-                    courseViewInteractor, courseListInteractor
-            );
-
-            SwingUtilities.invokeLater(() -> new CourseView(
-                    "TestUser", courseViewController, viewModel, listViewModel
-            ));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

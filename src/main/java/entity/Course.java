@@ -91,5 +91,17 @@ public class Course implements Serializable {
         return users.remove(user);
     }
 
+    /**
+     * Get the usernames of all users in this course.
+     * @return an array of strings
+     */
+    public String[] getUserNames() {
+        String[] names = new String[users.size()];
+        for (int i = 0; i < users.size(); i++) {
+            names[i] = users.get(i).getUsername();
+        }
+        return names;
+    }
+
 
 }

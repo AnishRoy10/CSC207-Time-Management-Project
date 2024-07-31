@@ -51,6 +51,7 @@ public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
                     Map<String, Leaderboard> leaderboards = leaderboardRepository.readFromCache();
                     for (Leaderboard leaderboard : leaderboards.values()) {
                         leaderboard.taskCompleted(user.getUsername(), 500);
+                        System.out.println("Updated leaderboard (" + leaderboard.getName() + ") scores: " + leaderboard.getScores());
                     }
                     leaderboardRepository.writeToCache(leaderboards);
                 }

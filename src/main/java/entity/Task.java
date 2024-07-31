@@ -41,10 +41,24 @@ public class Task implements Serializable {
         this.completionDate = null;
     }
 
+    // Overridden constructor for testing.
+    public Task(UUID id, String title, String description, LocalDateTime startDate, LocalDateTime deadline, String course) {
+        this.id = id; // Use the provided UUID
+        this.title = title;
+        this.description = description != null ? description : "";
+        this.completed = false; // By default, a new task is not completed
+        this.startDate = startDate;
+        this.deadline = deadline;
+        this.course = course;
+        this.completionDate = null;
+    }
+
     // Getter for the ID
     public UUID getId() {
         return id;
     }
+
+    public void setId(UUID id) { this.id = id; }
 
     // Getter for the title
     public String getTitle() {
@@ -170,7 +184,5 @@ public class Task implements Serializable {
         return Objects.hash(id, title, description, startDate, deadline, course);
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+
 }

@@ -187,12 +187,15 @@ public class User implements Serializable {
     * Attempts to remove this user from the target course.
     * Returns whether the removal was successful.
     *
-    * @param course the course to remove this user from
-    * @return       success value of the method
+    * @param courseName the name of the course to remove this user from
+    * @return           success value of the method
     */
-    public boolean removeCourse(Course course) {
-        if (this.courses.contains(course)) {
-            return course.removeUser(this);
+    public boolean removeCourse(String courseName) {
+        for (Course course : courses) {
+            if (course.getName().equals(courseName)) {
+                this.courses.remove(course);
+                return true;
+            }
         }
         return false;
     }

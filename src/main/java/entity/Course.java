@@ -103,5 +103,17 @@ public class Course implements Serializable {
         return names;
     }
 
-
+    /**
+     * Find if a user is in this course by their username.
+     * @param username The username of the user to look up.
+     * @return         If the user by the username is in this course.
+     */
+    public boolean containsUser(String username) {
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

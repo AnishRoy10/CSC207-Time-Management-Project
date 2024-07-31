@@ -1,0 +1,63 @@
+package interface_adapter.controller;
+
+import use_case.CourseUseCases.CreateCourseUseCase.CreateCourseInputBoundary;
+import use_case.CourseUseCases.CreateCourseUseCase.CreateCourseInputData;
+import use_case.CourseUseCases.JoinCourseUseCase.JoinCourseInputBoundary;
+import use_case.CourseUseCases.JoinCourseUseCase.JoinCourseInputData;
+import use_case.CourseUseCases.LeaveCourseUseCase.LeaveCourseInputBoundary;
+import use_case.CourseUseCases.LeaveCourseUseCase.LeaveCourseInputData;
+
+/**
+ * Controller for all prompt-based course use cases.
+ */
+public class CoursePromptController {
+    /// The interactor for the create course use case.
+    private final CreateCourseInputBoundary createCourseInteractor;
+
+    // The interactor for the join course use case.
+    private final JoinCourseInputBoundary joinCourseInteractor;
+
+    // The interactor for the leave course use case.
+    private final LeaveCourseInputBoundary leaveCourseInteractor;
+
+    /**
+     * Construct a new controller instance.
+     * @param createCourseInteractor Interactor for the create course use case.
+     * @param joinCourseInteractor   Interactor for the join course use case.
+     * @param leaveCourseInteractor  Interactor for the leave course ues case.
+     */
+    public CoursePromptController(CreateCourseInputBoundary createCourseInteractor,
+                                  JoinCourseInputBoundary joinCourseInteractor,
+                                  LeaveCourseInputBoundary leaveCourseInteractor) {
+        this.createCourseInteractor = createCourseInteractor;
+        this.joinCourseInteractor = joinCourseInteractor;
+        this.leaveCourseInteractor = leaveCourseInteractor;
+    }
+
+    /**
+     * Execute the create course use case.
+     * @param courseName        The name of the course to create.
+     * @param courseDescription The description of the course to create.
+     */
+    public void createCourse(String courseName, String courseDescription) {
+        createCourseInteractor.execute(new CreateCourseInputData(courseName, courseDescription));
+    }
+
+    /**
+     * Execute the join course use case.
+     * @param username   The username of the current user.
+     * @param courseName The name of the course to join.
+     */
+    public void joinCourse(String username, String courseName) {
+        joinCourseInteractor.execute(new JoinCourseInputData(username, courseName));
+    }
+
+    /**
+     * Execute the leave course use case.
+     * @param username   The username of the current user.
+     * @param courseName The name of the course to leave.
+     */
+    public void leaveCourse(String username, String courseName) {
+        leaveCourseInteractor.execute(new LeaveCourseInputData(username, courseName));
+    }
+}

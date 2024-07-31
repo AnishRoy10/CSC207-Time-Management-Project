@@ -1,12 +1,25 @@
 package framework.view;
 
+import data_access.CourseDataAccessObject;
+import data_access.FileCacheUserDataAccessObject;
 import interface_adapter.controller.CourseViewController;
+import interface_adapter.presenter.CourseListPresenter;
+import interface_adapter.presenter.CourseViewPresenter;
 import interface_adapter.viewmodel.CourseListViewModel;
 import interface_adapter.viewmodel.CourseViewModel;
+import repositories.CourseRepository;
+import repositories.UserRepository;
+import use_case.CourseUseCases.LoadCoursesUseCase.LoadCoursesInputBoundary;
+import use_case.CourseUseCases.LoadCoursesUseCase.LoadCoursesOutputBoundary;
+import use_case.CourseUseCases.LoadCoursesUseCase.LoadCoursesUseCase;
+import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseInputBoundary;
+import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseOutputBoundary;
+import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseUseCase;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.IOException;
 
 /**
  * The course view page lets users visualize the todolist, leaderboards, and other
@@ -94,6 +107,16 @@ public class CourseView extends JFrame {
         courseListScrollPane.setViewportBorder(BorderFactory.createEmptyBorder());
 
         controller.loadCourses(username);
+        if (!listViewModel.isSuccess()) {
+            this.dispose();
+            JOptionPane.showMessageDialog(
+                    this,
+                    listViewModel.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
         for (String courseName : listViewModel.getCourses()) {
             addCourseButton(courseName);
         }
@@ -200,12 +223,36 @@ public class CourseView extends JFrame {
     }
 
     public static void main(String[] args) {
-        CourseViewController controller = new CourseViewController();
-        SwingUtilities.invokeLater(() -> new CourseView(
-                "TestUser",
-                new CourseViewController(),
-                new CourseViewModel(),
-                new CourseListViewModel())
-        );
+        try {
+            String usersPath = "src/main/java/data_access/userCache.json";
+            String coursesPath = "src/main/java/data_access/courseCache.json";
+
+            UserRepository userDataAccessObject = new FileCacheUserDataAccessObject(usersPath);
+            CourseRepository courseDataAccessObject = new CourseDataAccessObject(coursesPath);
+
+            CourseViewModel viewModel = new CourseViewModel();
+            CourseListViewModel listViewModel = new CourseListViewModel();
+
+            ViewCourseOutputBoundary courseViewPresenter = new CourseViewPresenter(viewModel);
+            LoadCoursesOutputBoundary courseListPresenter = new CourseListPresenter(listViewModel);
+
+            ViewCourseInputBoundary courseViewInteractor = new ViewCourseUseCase(
+                    courseViewPresenter, courseDataAccessObject
+            );
+
+            LoadCoursesInputBoundary courseListInteractor = new LoadCoursesUseCase(
+                    courseListPresenter, userDataAccessObject
+            );
+
+            CourseViewController courseViewController = new CourseViewController(
+                    courseViewInteractor, courseListInteractor
+            );
+
+            SwingUtilities.invokeLater(() -> new CourseView(
+                    "TestUser", courseViewController, viewModel, listViewModel
+            ));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

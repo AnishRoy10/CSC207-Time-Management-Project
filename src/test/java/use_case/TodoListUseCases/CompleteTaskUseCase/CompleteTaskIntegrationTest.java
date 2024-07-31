@@ -1,5 +1,8 @@
 package use_case.TodoListUseCases.CompleteTaskUseCase;
 
+import entity.DailyLeaderboard;
+import entity.MonthlyLeaderboard;
+import entity.AllTimeLeaderboard;
 import entity.Leaderboard;
 import entity.Task;
 import entity.User;
@@ -16,7 +19,6 @@ import repositories.UserRepository;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -29,9 +31,9 @@ public class CompleteTaskIntegrationTest {
     private UserRepository userRepository;
     @Mock
     private LeaderboardRepository leaderboardRepository;
-    private Leaderboard dailyLeaderboard;
-    private Leaderboard monthlyLeaderboard;
-    private Leaderboard allTimeLeaderboard;
+    private DailyLeaderboard dailyLeaderboard;
+    private MonthlyLeaderboard monthlyLeaderboard;
+    private AllTimeLeaderboard allTimeLeaderboard;
     private CompleteTaskUseCase completeTaskUseCase;
     private TodoListPresenter presenter;
     private TodoListViewModel viewModel;
@@ -43,43 +45,9 @@ public class CompleteTaskIntegrationTest {
         presenter = new TodoListPresenter(viewModel);
         completeTaskUseCase = new CompleteTaskUseCase(userRepository, presenter, leaderboardRepository);
 
-        dailyLeaderboard = new Leaderboard("Daily Leaderboard") {
-            @Override
-            public String getType() {
-                return "DailyLeaderboard";
-            }
-
-            @Override
-            public void displayLeaderboard() {
-                System.out.println("Daily Leaderboard");
-            }
-        };
-        dailyLeaderboard.setCurrentDate(LocalDate.now());
-
-        monthlyLeaderboard = new Leaderboard("Monthly Leaderboard") {
-            @Override
-            public String getType() {
-                return "MonthlyLeaderboard";
-            }
-
-            @Override
-            public void displayLeaderboard() {
-                System.out.println("Monthly Leaderboard");
-            }
-        };
-        monthlyLeaderboard.setCurrentMonth(LocalDate.now().withDayOfMonth(1));
-
-        allTimeLeaderboard = new Leaderboard("All-Time Leaderboard") {
-            @Override
-            public String getType() {
-                return "AllTimeLeaderboard";
-            }
-
-            @Override
-            public void displayLeaderboard() {
-                System.out.println("All-Time Leaderboard");
-            }
-        };
+        dailyLeaderboard = new DailyLeaderboard("Daily Leaderboard", LocalDate.now());
+        monthlyLeaderboard = new MonthlyLeaderboard("Monthly Leaderboard", LocalDate.now().withDayOfMonth(1));
+        allTimeLeaderboard = new AllTimeLeaderboard("All-Time Leaderboard");
     }
 
     @Test
@@ -105,9 +73,7 @@ public class CompleteTaskIntegrationTest {
 
         // Then
         verify(userRepository).WriteToCache(user);
-        verify(dailyLeaderboard, times(1)).taskCompleted("testUser", 500);
-        verify(monthlyLeaderboard, times(1)).taskCompleted("testUser", 500);
-        verify(allTimeLeaderboard, times(1)).taskCompleted("testUser", 500);
+        verify(leaderboardRepository).writeToCache(any());
         assertTrue(user.getTodoList().getTasks().stream().anyMatch(t -> t.getId().equals(taskId) && t.isCompleted()));
 
         Map<String, Leaderboard> updatedLeaderboards = leaderboardRepository.readFromCache();
@@ -118,8 +84,6 @@ public class CompleteTaskIntegrationTest {
         System.out.println("Leaderboard daily scores: " + daily.getScores());
         System.out.println("Leaderboard monthly scores: " + monthly.getScores());
         System.out.println("Leaderboard all-time scores: " + allTime.getScores());
-
-        verify(leaderboardRepository).writeToCache(any());
 
         // Assert leaderboard scores
         assertEquals(500, daily.getScores().get("testUser"));

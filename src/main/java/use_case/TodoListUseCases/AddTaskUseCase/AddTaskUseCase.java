@@ -27,27 +27,11 @@ public class AddTaskUseCase implements AddTaskInputBoundary {
     @Override
     public void execute(AddTaskRequestModel requestModel) {
         try {
-            // Load the user
-            User user = userRepository.findByUsername(requestModel.getUsername());
-            if (user == null) {
-                throw new RuntimeException("User not found");
-            }
+            Task newTask = new Task(requestModel.getUsername(), requestModel.getTitle(), requestModel.getDescription(), requestModel.getStartDate(), requestModel.getDeadline(), requestModel.getCourse());
+            taskRepository.WriteToCache(newTask, requestModel.getUsername());
 
-            // Add the task to the user's to-do list
-            Task newTask = new Task(
-                    requestModel.getUsername(),
-                    requestModel.getTitle(),
-                    requestModel.getDescription(),
-                    requestModel.getStartDate(),
-                    requestModel.getDeadline(),
-                    requestModel.getCourse()
-            );
-
-            user.getTodoList().addTask(newTask);
-            taskRepository.WriteToCache(newTask, user.getUsername());
-            userRepository.WriteToCache(user);
-
-            List<TaskData> tasks = user.getTodoList().getTasks().stream()
+            List<Task> tasks = taskRepository.getAllTasks(requestModel.getUsername());
+            List<TaskData> taskDataList = tasks.stream()
                     .map(task -> new TaskData(
                             task.getId(),
                             task.getUsername(),
@@ -61,10 +45,11 @@ public class AddTaskUseCase implements AddTaskInputBoundary {
                     ))
                     .collect(Collectors.toList());
 
-            AddTaskResponseModel responseModel = new AddTaskResponseModel(tasks, newTask.getTitle());
+            AddTaskResponseModel responseModel = new AddTaskResponseModel(taskDataList, newTask.getTitle());
             addTaskOutputBoundary.present(responseModel);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException("Failed to add task: " + e.getMessage());
         }
     }
 }

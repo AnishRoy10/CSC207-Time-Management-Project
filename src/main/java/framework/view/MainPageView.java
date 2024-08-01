@@ -20,7 +20,7 @@ public class MainPageView extends JFrame {
     public MainPageView(String username) {
         this.username = username;
         setTitle("Time Management Application");
-        setSize(300, 400);
+        setSize(300, 450);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 

@@ -45,6 +45,16 @@ public class JoinCourseUseCase implements JoinCourseInputBoundary {
 			String courseName = inputData.getCourseName();
 			Course course = courseDataAccessObject.findByName(courseName);
 
+			/// if the course does not exist
+			if (course == null) {
+				JoinCourseOutputData outputData = new JoinCourseOutputData(
+						false,
+						courseName + " is not a course. Try creating it!"
+				);
+				presenter.present(outputData);
+				return;
+			}
+
 			/// check if they are already in that course
 			if (course.containsUser(username)) {
 				JoinCourseOutputData outputData = new JoinCourseOutputData(

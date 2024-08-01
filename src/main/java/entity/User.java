@@ -15,7 +15,7 @@ public class User implements Serializable {
     private String username; // The username of this user
     private String password; // Hashed password for the user
     private final FriendsList friends; // Friends list of this user
-    private final List<Course> courses; // Courses this user is in
+    private final List<String> courses; // Courses this user is in
     private final TodoList todo; // To-do list associated with this user
     private int score; // The user's score
     private Timer timer; // A timer set by the user
@@ -33,11 +33,14 @@ public class User implements Serializable {
         this.username = username;
         this.password = hashPassword(password); // Hash the password
         this.friends = new FriendsList(friends);
-        this.courses = new ArrayList<>(Arrays.asList(courses));
+        this.courses = new ArrayList<>();
         this.todo = new TodoList();
         this.score = 0;
         this.calendar = new Calendar();
         this.aNumber = 5;
+        for (Course course : courses) {
+            this.courses.add(course.getName());
+        }
     }
 
     /**
@@ -123,13 +126,13 @@ public class User implements Serializable {
     */
     public void addCourse(Course course) {
         course.addUser(this);
-        if (!this.courses.contains(course)) {
-            this.courses.add(course);
+        if (!this.courses.contains(course.getName())) {
+            this.courses.add(course.getName());
         }
     }
 
     // Getter for the courses
-    public List<Course> getCourses() {
+    public List<String> getCourses() {
         return courses;
     }
 
@@ -191,10 +194,9 @@ public class User implements Serializable {
     * @return           success value of the method
     */
     public boolean removeCourse(String courseName) {
-        for (Course course : courses) {
-            if (course.getName().equals(courseName)) {
-                this.courses.remove(course);
-                return true;
+        for (String course : courses) {
+            if (course.equals(courseName)) {
+                return this.courses.remove(course);
             }
         }
         return false;

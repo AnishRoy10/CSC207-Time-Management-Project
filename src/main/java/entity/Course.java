@@ -1,23 +1,35 @@
 package entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.ArrayList;
 
 /**
  * The Course class represents a course that users can join.
  */
 public class Course implements Serializable {
-    // Name of this course
+    /// Name of this course.
     private String name;
 
-    // Description of this course
+    /// Description of this course.
     private String description;
 
-    // Users in this course
-    private ArrayList<User> users;
+    /// List of users in this course.
+    private final List<String> usernames;
 
-    // Todolist associated with this course
-    private TodoList todo;
+    /// Todolist associated with this course.
+    private final TodoList todoList;
+
+    /// Daily leaderboard associated with this course.
+    private final DailyLeaderboard dailyLeaderboard;
+
+    /// Monthly leaderboard associated with this course.
+    private final MonthlyLeaderboard monthlyLeaderboard;
+
+    /// ALl-time leaderboard associated with this course.
+    private final AllTimeLeaderboard allTimeLeaderboard;
 
     /**
      * Constructs a new Course object.
@@ -28,8 +40,11 @@ public class Course implements Serializable {
     public Course(String name, String description) {
         this.name = name;
         this.description = description;
-        this.users = new ArrayList<>();
-        this.todo = new TodoList();
+        this.usernames = new ArrayList<>();
+        this.todoList = new TodoList();
+        this.dailyLeaderboard = new DailyLeaderboard(name + " Daily", LocalDate.now());
+        this.monthlyLeaderboard = new MonthlyLeaderboard(name + " Monthly", LocalDate.now());
+        this.allTimeLeaderboard = new AllTimeLeaderboard(name + "All-time");
     }
 
     /**
@@ -75,8 +90,8 @@ public class Course implements Serializable {
      */
     public void addUser(User user) {
         // prevent duplicate users in a course
-        if (!users.contains(user)) {
-            users.add(user);
+        if (!usernames.contains(user.getUsername())) {
+            usernames.add(user.getUsername());
         }
     }
 
@@ -88,7 +103,7 @@ public class Course implements Serializable {
      * @return     the success value of the method
      */
     public boolean removeUser(User user) {
-        return users.remove(user);
+        return usernames.remove(user.getUsername());
     }
 
     /**
@@ -96,9 +111,9 @@ public class Course implements Serializable {
      * @return an array of strings
      */
     public String[] getUserNames() {
-        String[] names = new String[users.size()];
-        for (int i = 0; i < users.size(); i++) {
-            names[i] = users.get(i).getUsername();
+        String[] names = new String[usernames.size()];
+        for (int i = 0; i < usernames.size(); i++) {
+            names[i] = usernames.get(i);
         }
         return names;
     }
@@ -109,11 +124,38 @@ public class Course implements Serializable {
      * @return         If the user by the username is in this course.
      */
     public boolean containsUser(String username) {
-        for (User user : users) {
-            if (user.getUsername().equals(username)) {
-                return true;
-            }
-        }
-        return false;
+        return usernames.contains(username);
+    }
+
+    /**
+     * Get this courses todolist.
+     * @return The todolist.
+     */
+    public TodoList getTodoList() {
+        return todoList;
+    }
+
+    /**
+     * Get this courses daily leaderboard.
+     * @return The daily leaderboard.
+     */
+    public Leaderboard getDailyLeaderboard() {
+        return dailyLeaderboard;
+    }
+
+    /**
+     * Get this courses monthly leaderboard.
+     * @return The monthly leaderboard.
+     */
+    public MonthlyLeaderboard getMonthlyLeaderboard() {
+        return monthlyLeaderboard;
+    }
+
+    /**
+     * Get this courses all-time leaderboard.
+     * @return The all-time leaderboard.
+     */
+    public AllTimeLeaderboard getAllTimeLeaderboard() {
+        return allTimeLeaderboard;
     }
 }

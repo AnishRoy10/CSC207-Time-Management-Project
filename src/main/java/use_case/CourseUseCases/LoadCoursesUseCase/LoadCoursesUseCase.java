@@ -25,10 +25,7 @@ public class LoadCoursesUseCase implements LoadCoursesInputBoundary {
             String username = inputData.getUsername();
             User user = userDataAccessObject.ReadFromCache(username);
 
-            ArrayList<String> courseNames = new ArrayList<>();
-            for (Course course : user.getCourses()) {
-                courseNames.add(course.getName());
-            }
+            ArrayList<String> courseNames = new ArrayList<>(user.getCourses());
 
             LoadCoursesOutputData outputData = new LoadCoursesOutputData(
                     true,

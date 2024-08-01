@@ -170,6 +170,11 @@ public class CourseView extends JFrame {
      * Displays the main view, including todolist, description, and leaderboards.
      */
     private void displayMainView() {
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        mainPanel.setVisible(false);
+
         descriptionLabel = new JLabel("");
         descriptionLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
         descriptionLabel.setMaximumSize(new Dimension(mainPanel.getMaximumSize().width, 100));
@@ -179,12 +184,7 @@ public class CourseView extends JFrame {
         descriptionPanel.setBackground(new Color(200, 200, 200));
         descriptionPanel.add(descriptionLabel);
 
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         mainPanel.add(descriptionPanel, BorderLayout.NORTH);
-        mainPanel.setVisible(false);
-
         this.add(mainPanel, BorderLayout.CENTER);
     }
 

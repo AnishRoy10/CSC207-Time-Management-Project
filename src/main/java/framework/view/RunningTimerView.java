@@ -4,6 +4,7 @@ package framework.view;
 import interface_adapter.controller.TimerController;
 import interface_adapter.viewmodel.RunningTimerViewModel;
 
+import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -11,6 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
 /**
  * This class represents the page for the timer when it is running.
@@ -138,6 +142,38 @@ public class RunningTimerView extends JFrame {
      * Plays a sound.
      */
     public void playSound() {
-        Toolkit.getDefaultToolkit().beep();
+//        Toolkit.getDefaultToolkit().beep();
+        Clip clip;
+        String fileName = System.getProperty("user.dir") + "\\src\\main\\java\\data_access\\timer_alarm.wav";
+        try {
+            File file = new File(fileName);
+            if (file.exists()) {
+                AudioInputStream sound = AudioSystem.getAudioInputStream(file);
+                // load the sound into memory (a Clip)
+                clip = AudioSystem.getClip();
+                clip.open(sound);
+            }
+            else {
+                throw new RuntimeException("Sound: file not found: " + fileName);
+            }
+        }
+        catch (MalformedURLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Sound: Malformed URL: " + e);
+        }
+        catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Sound: Unsupported Audio File: " + e);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Sound: Input/Output Error: " + e);
+        }
+        catch (LineUnavailableException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Sound: Line Unavailable Exception Error: " + e);
+        }
+
+        clip.start();
     }
 }

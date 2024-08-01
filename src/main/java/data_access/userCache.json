@@ -66,6 +66,12 @@
       ]
     },
     "score": 0,
+    "timer": {
+      "start_time": 1722556458488,
+      "end_time": 1722556463488,
+      "elapsed_time": 0,
+      "pause_time": 0
+    },
     "aNumber": 5,
     "calendar": {
       "events": {}

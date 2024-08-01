@@ -1,6 +1,7 @@
 package data_access;
 
 import entity.Task;
+import repositories.TaskRepository;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -10,8 +11,10 @@ import java.util.UUID;
 
 /**
  * The TaskDAO class handles CRUD operations for Task objects in an SQLite database.
+ * It implements the TaskRepository interface.
  */
-public class TaskDAO {
+public class TaskDAO implements TaskRepository {
+
     private final SQLDatabaseHelper dbHelper;
 
     /**
@@ -26,29 +29,28 @@ public class TaskDAO {
     /**
      * Writes a Task object to the database. If the task already exists, updates the task's data.
      *
-     * @param task     The Task object to write to the database.
-     * @param username The username of the user to whom the task belongs.
+     * @param task The Task object to write to the database.
+     * @param username The username associated with the task.
      */
-    public void writeTask(Task task, String username) {
-        String sql = "INSERT INTO Tasks(id, username, title, description, completed, startDate, deadline, course, pointsAwarded, completionDate) " +
+    @Override
+    public void WriteToCache(Task task, String username) {
+        String sql = "INSERT INTO Tasks(id, title, description, completed, startDate, deadline, course, completionDate, pointsAwarded, username) " +
                 "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
-                "ON CONFLICT(id) DO UPDATE SET " +
-                "username=excluded.username, title=excluded.title, description=excluded.description, " +
-                "completed=excluded.completed, startDate=excluded.startDate, deadline=excluded.deadline, " +
-                "course=excluded.course, pointsAwarded=excluded.pointsAwarded, completionDate=excluded.completionDate";
+                "ON CONFLICT(id) DO UPDATE SET title=excluded.title, description=excluded.description, completed=excluded.completed, " +
+                "startDate=excluded.startDate, deadline=excluded.deadline, course=excluded.course, completionDate=excluded.completionDate, pointsAwarded=excluded.pointsAwarded";
 
         try (Connection conn = dbHelper.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, task.getId().toString());
-            pstmt.setString(2, username);
-            pstmt.setString(3, task.getTitle());
-            pstmt.setString(4, task.getDescription());
-            pstmt.setBoolean(5, task.isCompleted());
-            pstmt.setString(6, task.getStartDate().toString());
-            pstmt.setString(7, task.getDeadline().toString());
-            pstmt.setString(8, task.getCourse());
+            pstmt.setString(2, task.getTitle());
+            pstmt.setString(3, task.getDescription());
+            pstmt.setBoolean(4, task.isCompleted());
+            pstmt.setString(5, task.getStartDate().toString());
+            pstmt.setString(6, task.getDeadline().toString());
+            pstmt.setString(7, task.getCourse());
+            pstmt.setString(8, task.getCompletionDate() != null ? task.getCompletionDate().toString() : null);
             pstmt.setBoolean(9, task.isPointsAwarded());
-            pstmt.setString(10, task.getCompletionDate() != null ? task.getCompletionDate().toString() : null);
+            pstmt.setString(10, username);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -58,16 +60,17 @@ public class TaskDAO {
     /**
      * Reads a Task object from the database by task ID.
      *
-     * @param taskId The ID of the task to read.
+     * @param id The task ID to read.
      * @return The Task object with the specified ID, or null if not found.
      */
-    public Task readTask(UUID taskId) {
+    @Override
+    public Task ReadFromCache(UUID id) {
         String sql = "SELECT * FROM Tasks WHERE id = ?";
         Task task = null;
 
         try (Connection conn = dbHelper.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, taskId.toString());
+            pstmt.setString(1, id.toString());
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
@@ -80,10 +83,8 @@ public class TaskDAO {
                         rs.getString("course")
                 );
                 task.setCompleted(rs.getBoolean("completed"));
+                task.setCompletionDate(rs.getString("completionDate") != null ? LocalDateTime.parse(rs.getString("completionDate")) : null);
                 task.setPointsAwarded(rs.getBoolean("pointsAwarded"));
-                if (rs.getString("completionDate") != null) {
-                    task.setCompletionDate(LocalDateTime.parse(rs.getString("completionDate")));
-                }
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -92,11 +93,12 @@ public class TaskDAO {
     }
 
     /**
-     * Retrieves all tasks for a specific user from the database.
+     * Retrieves all tasks associated with a specific username from the database.
      *
-     * @param username The username of the user whose tasks are to be retrieved.
-     * @return A list of Task objects associated with the specified user.
+     * @param username The username associated with the tasks.
+     * @return A list of Task objects.
      */
+    @Override
     public List<Task> getAllTasks(String username) {
         String sql = "SELECT * FROM Tasks WHERE username = ?";
         List<Task> tasks = new ArrayList<>();
@@ -116,10 +118,8 @@ public class TaskDAO {
                         rs.getString("course")
                 );
                 task.setCompleted(rs.getBoolean("completed"));
+                task.setCompletionDate(rs.getString("completionDate") != null ? LocalDateTime.parse(rs.getString("completionDate")) : null);
                 task.setPointsAwarded(rs.getBoolean("pointsAwarded"));
-                if (rs.getString("completionDate") != null) {
-                    task.setCompletionDate(LocalDateTime.parse(rs.getString("completionDate")));
-                }
                 tasks.add(task);
             }
         } catch (SQLException e) {
@@ -131,14 +131,15 @@ public class TaskDAO {
     /**
      * Deletes a task by task ID from the database.
      *
-     * @param taskId The ID of the task to delete.
+     * @param id The task ID to delete.
      */
-    public void deleteTask(UUID taskId) {
+    @Override
+    public void deleteTask(UUID id) {
         String sql = "DELETE FROM Tasks WHERE id = ?";
 
         try (Connection conn = dbHelper.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, taskId.toString());
+            pstmt.setString(1, id.toString());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

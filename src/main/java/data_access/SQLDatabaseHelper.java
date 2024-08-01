@@ -35,13 +35,16 @@ public class SQLDatabaseHelper {
 
                 String createTasksTable = "CREATE TABLE IF NOT EXISTS Tasks ("
                         + "id TEXT PRIMARY KEY,"
+                        + "username TEXT NOT NULL,"
                         + "title TEXT NOT NULL,"
                         + "description TEXT,"
                         + "completed BOOLEAN,"
                         + "startDate TEXT,"
                         + "deadline TEXT,"
                         + "course TEXT,"
-                        + "pointsAwarded BOOLEAN"
+                        + "pointsAwarded BOOLEAN,"
+                        + "completionDate TEXT,"
+                        + "FOREIGN KEY(username) REFERENCES Users(username)"
                         + ");";
 
                 stmt.execute(createUserTable);

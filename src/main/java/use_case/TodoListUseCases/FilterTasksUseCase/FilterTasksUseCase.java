@@ -1,12 +1,11 @@
 package use_case.TodoListUseCases.FilterTasksUseCase;
 
 import entity.Task;
-import entity.TodoList;
 import entity.User;
 import repositories.UserRepository;
+import repositories.TaskRepository;
 import use_case.TaskData;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,30 +14,32 @@ import java.util.stream.Collectors;
  */
 public class FilterTasksUseCase implements FilterTasksInputBoundary {
     private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
     private final FilterTasksOutputBoundary filterTasksOutputBoundary;
 
-    public FilterTasksUseCase(UserRepository userRepository, FilterTasksOutputBoundary filterTasksOutputBoundary) {
+    public FilterTasksUseCase(UserRepository userRepository, TaskRepository taskRepository, FilterTasksOutputBoundary filterTasksOutputBoundary) {
         this.userRepository = userRepository;
+        this.taskRepository = taskRepository;
         this.filterTasksOutputBoundary = filterTasksOutputBoundary;
     }
 
     @Override
     public void execute(FilterTasksRequestModel requestModel) {
         try {
-            // Load the user's to-do list
+            // Load the user's tasks
             User user = userRepository.findByUsername(requestModel.getUsername());
             if (user == null) {
                 throw new RuntimeException("User not found");
             }
 
-            TodoList todoList = user.getTodoList();
-            List<Task> filteredTasks = todoList.getTasks().stream()
+            List<Task> filteredTasks = taskRepository.getAllTasks(user.getUsername()).stream()
                     .filter(task -> !(requestModel.isHideCompleted() && task.isCompleted()))
                     .collect(Collectors.toList());
 
             List<TaskData> tasks = filteredTasks.stream()
                     .map(task -> new TaskData(
                             task.getId(),
+                            task.getUsername(),
                             task.getTitle(),
                             task.getDescription(),
                             task.getStartDate(),
@@ -51,7 +52,7 @@ public class FilterTasksUseCase implements FilterTasksInputBoundary {
 
             FilterTasksResponseModel responseModel = new FilterTasksResponseModel(tasks);
             filterTasksOutputBoundary.present(responseModel);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             // Handle the error appropriately
         }

@@ -3,6 +3,7 @@ package use_case.TodoListUseCases.RemoveTaskUseCase;
 import entity.Task;
 import entity.User;
 import repositories.UserRepository;
+import repositories.TaskRepository;
 import use_case.TaskData;
 
 import java.io.IOException;
@@ -15,10 +16,12 @@ import java.util.stream.Collectors;
  */
 public class RemoveTaskUseCase implements RemoveTaskInputBoundary {
     private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
     private final RemoveTaskOutputBoundary removeTaskOutputBoundary;
 
-    public RemoveTaskUseCase(UserRepository userRepository, RemoveTaskOutputBoundary removeTaskOutputBoundary) {
+    public RemoveTaskUseCase(UserRepository userRepository, TaskRepository taskRepository, RemoveTaskOutputBoundary removeTaskOutputBoundary) {
         this.userRepository = userRepository;
+        this.taskRepository = taskRepository;
         this.removeTaskOutputBoundary = removeTaskOutputBoundary;
     }
 
@@ -31,34 +34,33 @@ public class RemoveTaskUseCase implements RemoveTaskInputBoundary {
                 throw new RuntimeException("User not found");
             }
 
-            // Get the user's to-do list
-            Optional<Task> taskOptional = user.getTodoList().getTasks().stream()
-                    .filter(task -> task.getId().equals(requestModel.getTaskId()))
-                    .findFirst();
-
-            if (taskOptional.isPresent()) {
-                Task task = taskOptional.get();
-                user.getTodoList().removeTask(task);
-                userRepository.WriteToCache(user);
-
-                List<TaskData> tasks = user.getTodoList().getTasks().stream()
-                        .map(t -> new TaskData(
-                                t.getId(),
-                                t.getTitle(),
-                                t.getDescription(),
-                                t.getStartDate(),
-                                t.getDeadline(),
-                                t.isCompleted(),
-                                t.getCourse(),
-                                t.getCompletionDate()
-                        ))
-                        .collect(Collectors.toList());
-
-                RemoveTaskResponseModel responseModel = new RemoveTaskResponseModel(tasks, task.getId());
-                removeTaskOutputBoundary.present(responseModel);
-            } else {
+            // Get the user's task
+            Task task = taskRepository.ReadFromCache(requestModel.getTaskId());
+            if (task == null) {
                 throw new RuntimeException("Task not found");
             }
+
+            // Remove the task from the repository
+            taskRepository.deleteTask(task.getId());
+
+            // Fetch updated tasks list for the user
+            List<Task> tasks = taskRepository.getAllTasks(user.getUsername());
+            List<TaskData> taskDataList = tasks.stream()
+                    .map(t -> new TaskData(
+                            t.getId(),
+                            t.getUsername(),
+                            t.getTitle(),
+                            t.getDescription(),
+                            t.getStartDate(),
+                            t.getDeadline(),
+                            t.isCompleted(),
+                            t.getCourse(),
+                            t.getCompletionDate()
+                    ))
+                    .collect(Collectors.toList());
+
+            RemoveTaskResponseModel responseModel = new RemoveTaskResponseModel(taskDataList, task.getId());
+            removeTaskOutputBoundary.present(responseModel);
         } catch (IOException e) {
             e.printStackTrace();
             // Handle the error appropriately

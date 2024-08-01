@@ -2,6 +2,7 @@ package use_case.TodoListUseCases.SortTasksUseCase;
 
 import entity.Task;
 import entity.User;
+import repositories.TaskRepository;
 import repositories.UserRepository;
 import use_case.TaskData;
 
@@ -15,10 +16,12 @@ import java.util.stream.Collectors;
  */
 public class SortTasksUseCase implements SortTasksInputBoundary {
     private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
     private final SortTasksOutputBoundary sortTasksOutputBoundary;
 
-    public SortTasksUseCase(UserRepository userRepository, SortTasksOutputBoundary sortTasksOutputBoundary) {
+    public SortTasksUseCase(UserRepository userRepository, TaskRepository taskRepository, SortTasksOutputBoundary sortTasksOutputBoundary) {
         this.userRepository = userRepository;
+        this.taskRepository = taskRepository;
         this.sortTasksOutputBoundary = sortTasksOutputBoundary;
     }
 
@@ -31,7 +34,9 @@ public class SortTasksUseCase implements SortTasksInputBoundary {
                 throw new RuntimeException("User not found");
             }
 
-            // Get the user's to-do list
+            // Get the user's tasks from the repository
+            List<Task> tasks = taskRepository.getAllTasks(user.getUsername());
+
             Comparator<Task> comparator;
 
             switch (requestModel.getCriteria().toLowerCase()) {
@@ -55,10 +60,11 @@ public class SortTasksUseCase implements SortTasksInputBoundary {
                 comparator = comparator.reversed();
             }
 
-            List<TaskData> sortedTasks = user.getTodoList().getTasks().stream()
+            List<TaskData> sortedTasks = tasks.stream()
                     .sorted(comparator)
                     .map(task -> new TaskData(
                             task.getId(),
+                            task.getUsername(),
                             task.getTitle(),
                             task.getDescription(),
                             task.getStartDate(),

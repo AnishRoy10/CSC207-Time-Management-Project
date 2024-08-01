@@ -3,7 +3,24 @@
     "username": "TestUser",
     "password": "TestPassword1",
     "friends": {
-      "friends": []
+      "friends": [
+        {
+          "username": "newUser1",
+          "password": "Password1",
+          "friends": {
+            "friends": []
+          },
+          "courses": [],
+          "todo": {
+            "tasks": []
+          },
+          "score": 0,
+          "aNumber": 5,
+          "calendar": {
+            "events": {}
+          }
+        }
+      ]
     },
     "courses": [],
     "todo": {
@@ -64,6 +81,22 @@
           "course": "CSC207"
         }
       ]
+    },
+    "score": 0,
+    "aNumber": 5,
+    "calendar": {
+      "events": {}
+    }
+  },
+  "newUser1": {
+    "username": "newUser1",
+    "password": "Password1",
+    "friends": {
+      "friends": []
+    },
+    "courses": [],
+    "todo": {
+      "tasks": []
     },
     "score": 0,
     "aNumber": 5,

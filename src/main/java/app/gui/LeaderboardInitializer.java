@@ -1,6 +1,7 @@
 package app.gui;
 
 import data_access.FileCacheLeaderboardDataAccessObject;
+import data_access.LeaderboardResetScheduler;
 import entity.AllTimeLeaderboard;
 import entity.DailyLeaderboard;
 import entity.Leaderboard;
@@ -29,6 +30,9 @@ public class LeaderboardInitializer {
 
         try {
             FileCacheLeaderboardDataAccessObject leaderboardDAO = new FileCacheLeaderboardDataAccessObject("src/main/java/data_access/leaderboards.json");
+
+            // Initialize the scheduler to auto-reset leaderboards
+            new LeaderboardResetScheduler(leaderboardDAO);
 
             Map<String, Leaderboard> leaderboards = leaderboardDAO.readFromCache();
 

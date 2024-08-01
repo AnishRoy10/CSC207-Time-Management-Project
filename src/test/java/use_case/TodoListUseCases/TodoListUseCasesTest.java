@@ -33,14 +33,21 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TodoListUseCasesTest {
     private FileCacheUserDataAccessObject fileCacheUserDAO;
+    private FileCacheLeaderboardDataAccessObject fileCacheLeaderboardDAO;
     private final String testFilePath = "test_userCache.json";
+    private final String testLeaderboardFilePath = "test_leaderboardCache.json";
     private UserRepository userRepository;
     private LeaderboardRepository leaderboardRepository;
 
     @BeforeEach
     void setUp() throws IOException {
         fileCacheUserDAO = new FileCacheUserDataAccessObject(testFilePath);
-        userRepository = new FileCacheUserDataAccessObject(testFilePath);
+        fileCacheLeaderboardDAO = new FileCacheLeaderboardDataAccessObject(testLeaderboardFilePath);
+        userRepository = fileCacheUserDAO;
+        leaderboardRepository = fileCacheLeaderboardDAO;
+
+        // Initialize leaderboard data in the file
+        fileCacheLeaderboardDAO.writeToCache(fileCacheLeaderboardDAO.readFromCache());
     }
 
     @AfterEach
@@ -49,6 +56,10 @@ class TodoListUseCasesTest {
         File testFile = new File(testFilePath);
         if (testFile.exists()) {
             testFile.delete();
+        }
+        File testLeaderboardFile = new File(testLeaderboardFilePath);
+        if (testLeaderboardFile.exists()) {
+            testLeaderboardFile.delete();
         }
     }
 

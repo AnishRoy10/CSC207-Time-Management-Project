@@ -20,6 +20,7 @@ public class Task implements Serializable {
     private LocalDateTime deadline; // The deadline date and time for the task
     private String course; // The course associated with the task (nullable)
     private LocalDateTime completionDate; // The completion date of the task
+    private boolean pointsAwarded; // Indicates whether points have been awarded for the task
 
     /**
      * Constructs a new Task with the specified details.
@@ -39,6 +40,7 @@ public class Task implements Serializable {
         this.deadline = deadline;
         this.course = course;
         this.completionDate = null;
+        this.pointsAwarded = false; // By default, points are not awarded for a new task
     }
 
     // Overridden constructor for testing.
@@ -51,6 +53,7 @@ public class Task implements Serializable {
         this.deadline = deadline;
         this.course = course;
         this.completionDate = null;
+        this.pointsAwarded = false; // By default, points are not awarded for a new task
     }
 
     // Getter for the ID
@@ -149,6 +152,16 @@ public class Task implements Serializable {
     public void completeTask() {
         this.completed = true;
         this.completionDate = LocalDateTime.now();
+    }
+
+    // Getter for pointsAwarded
+    public boolean isPointsAwarded() {
+        return pointsAwarded;
+    }
+
+    // Setter for pointsAwarded
+    public void setPointsAwarded(boolean pointsAwarded) {
+        this.pointsAwarded = pointsAwarded;
     }
 
     /**

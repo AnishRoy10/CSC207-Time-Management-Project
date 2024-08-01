@@ -9,131 +9,24 @@
     "todo": {
       "tasks": [
         {
-          "id": "5bd2101d-16bc-4e26-9368-d794b70bfbde",
-          "title": "Task 1",
-          "description": "This is a sample description. They can be as long as you want, but should ideally be short.",
-          "completed": true,
-          "startDate": "2024-07-17T03:30:00",
-          "deadline": "2024-07-24T04:00:00",
-          "course": "CSC1000",
-          "completionDate": "2024-07-30T19:13:47.7786618"
-        },
-        {
-          "id": "5bd2101d-16bc-4e26-9368-d794b70bfbdf",
-          "title": "Task 2",
-          "description": "This is a sample description.",
+          "id": "4758a929-37c8-4a25-bdb2-09a26f1cab02",
+          "title": "swag",
+          "description": "swag",
           "completed": false,
-          "startDate": "2024-07-12T03:30:00",
-          "deadline": "2024-07-24T04:00:00",
-          "course": "MAT457"
+          "startDate": "2024-07-30T03:00:00",
+          "deadline": "2024-07-25T03:30:00",
+          "course": "ddd",
+          "pointsAwarded": true
         },
         {
-          "id": "5bd2101d-16bc-4e26-9368-d794b70bfbdc",
-          "title": "Task 3",
-          "description": "This is a sample description",
-          "completed": true,
-          "startDate": "2024-07-01T03:30:00",
-          "deadline": "2024-07-29T04:00:00",
-          "course": "CHM200",
-          "completionDate": "2024-07-21T22:22:47.8447811"
-        },
-        {
-          "id": "5bd2101d-16bc-4e26-9368-d794b70bfadd",
-          "title": "Assignment 1",
-          "description": "This is a sample description",
-          "completed": true,
-          "startDate": "2024-07-30T03:30:00",
-          "deadline": "2024-07-30T04:00:00",
-          "course": "CSC207",
-          "completionDate": "2024-07-30T20:29:54.4546226"
-        },
-        {
-          "id": "ead8b13c-b2ff-4b6d-9ae4-d1d51f332715",
-          "title": "Project Phase 1",
-          "description": "meta",
+          "id": "3488e08f-0448-4595-8da1-f9b43cc2280a",
+          "title": "sasfaf",
+          "description": "fdafda",
           "completed": false,
-          "startDate": "2024-07-17T03:30:00",
-          "deadline": "2024-07-21T23:30:00",
-          "course": "CSC207"
-        },
-        {
-          "id": "85de2534-ea3b-4f5c-b954-d6eaeae24636",
-          "title": "Project Phase 2",
-          "description": "super meta",
-          "completed": true,
-          "startDate": "2024-07-30T03:30:00",
-          "deadline": "2024-08-08T23:30:00",
-          "course": "CSC207",
-          "completionDate": "2024-07-30T20:30:01.3448724"
-        }
-      ]
-    },
-    "score": 0,
-    "aNumber": 5,
-    "calendar": {
-      "events": {}
-    }
-  },
-  "bruhh": {
-    "username": "bruhh",
-    "password": "Bruh123",
-    "friends": {
-      "friends": []
-    },
-    "courses": [],
-    "todo": {
-      "tasks": []
-    },
-    "score": 0,
-    "aNumber": 5,
-    "calendar": {
-      "events": {}
-    }
-  },
-  "leaderboardtest": {
-    "username": "leaderboardtest",
-    "password": "Password1",
-    "friends": {
-      "friends": []
-    },
-    "courses": [],
-    "todo": {
-      "tasks": [
-        {
-          "id": "c017a80d-a27c-49d8-86c4-7c8448f7c9a2",
-          "title": "Spam task 1",
-          "description": "Spam task 1",
-          "completed": false,
-          "startDate": "2024-07-11T03:30:00",
-          "deadline": "2024-07-31T04:00:00",
-          "course": "dadd"
-        },
-        {
-          "id": "72ce0d64-3234-4f8e-b0e8-019e0f6d09bd",
-          "title": "spam task 2",
-          "description": "dsada",
-          "completed": false,
-          "startDate": "2024-07-30T02:00:00",
-          "deadline": "2024-07-30T03:30:00",
-          "course": "add"
-        },
-        {
-          "id": "f5ab2f11-e09f-41f0-a65d-7333353dad01",
-          "title": "spam task 4",
-          "description": "dsa",
-          "completed": false,
-          "startDate": "2024-07-24T04:00:00",
-          "deadline": "2024-07-31T04:30:00",
-          "course": "ggg"
-        },
-        {
-          "id": "f0d30618-491f-4963-858c-323b3280d30f",
-          "title": "spam task 444",
-          "description": "dsd",
-          "completed": false,
-          "startDate": "2024-07-17T04:00:00",
-          "deadline": "2024-07-05T04:30:00",
-          "course": "ddd"
+          "startDate": "2024-07-04T04:00:00",
+          "deadline": "2024-07-24T03:30:00",
+          "course": "ggg",
+          "pointsAwarded": true
         }
       ]
     },

@@ -53,6 +53,13 @@
             <version>3.12.4</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.45.1.0</version>
+        </dependency>
+
         <!-- Add other dependencies here -->
     </dependencies>
 

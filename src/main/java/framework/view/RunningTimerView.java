@@ -110,7 +110,7 @@ public class RunningTimerView extends JFrame {
      */
     private void endTimer() {
         actionTimer.stop();
-        Toolkit.getDefaultToolkit().beep();
+        playSound();
         pauseButton.setVisible(false);
         returnButton.setVisible(true);
     }
@@ -132,5 +132,12 @@ public class RunningTimerView extends JFrame {
     public void returnPrevious() {
         actionTimer.stop();
         dispose();
+    }
+
+    /**
+     * Plays a sound.
+     */
+    public void playSound() {
+        Toolkit.getDefaultToolkit().beep();
     }
 }

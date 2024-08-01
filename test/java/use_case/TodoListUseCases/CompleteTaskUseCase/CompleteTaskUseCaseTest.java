@@ -56,6 +56,9 @@ class CompleteTaskUseCaseTest {
         }
     }
 
+    /**
+     * Tests that a newly added task is not completed.
+     */
     @Test
     void testAddTaskUseCase() {
         User user = new User("testUser", "password", new User[]{}, new Course[]{});
@@ -79,8 +82,12 @@ class CompleteTaskUseCaseTest {
         assertNotNull(viewModel.getTasks());
         assertEquals(1, viewModel.getTasks().size());
         assertEquals("Test Task", viewModel.getTasks().get(0).getTitle());
+        assertFalse(viewModel.getTasks().get(0).isCompleted());
     }
 
+    /**
+     * Tests that a single task can be completed successfully
+     */
     @Test
     void testCompleteSingleTask() {
         User user = new User("testUser", "password", new User[]{}, new Course[]{});
@@ -109,6 +116,9 @@ class CompleteTaskUseCaseTest {
         assertTrue(viewModel.getTasks().get(0).isCompleted());
     }
 
+    /**
+     * Tests that multiple tasks can be completed successfully
+     */
     @Test
     void testCompleteMultipleTasks() {
         User user = new User("multiUser", "password", new User[]{}, new Course[]{});
@@ -146,6 +156,9 @@ class CompleteTaskUseCaseTest {
         assertTrue(viewModel.getTasks().get(1).isCompleted());
     }
 
+    /**
+     * Tests that a task cannot be wrongly computed by an invalid user.
+     */
     @Test
     void testCompleteTaskWithInvalidID() {
         User user = new User("invalidIDUser", "password", new User[]{}, new Course[]{});
@@ -165,6 +178,9 @@ class CompleteTaskUseCaseTest {
         assertThrows(RuntimeException.class, () -> completeTaskUseCase.execute(completeRequestModel));
     }
 
+    /**
+     * Tests that a task can be uncompleted successfully
+     */
     @Test
     void testCompleteAndUncompleteTask() {
         User user = new User("complexUser", "password", new User[]{}, new Course[]{});

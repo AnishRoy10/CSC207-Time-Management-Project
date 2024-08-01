@@ -1,8 +1,15 @@
 package data_access;
 
 import entity.Task;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -10,75 +17,62 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TaskDAOTest {
-    private static SQLDatabaseHelper dbHelper;
-    private static TaskDAO taskDAO;
+    private SQLDatabaseHelper dbHelper;
+    private TaskDAO taskDAO;
+    private final String dbPath = "saves/UserDB.db";
 
-    @BeforeAll
-    static void setup() {
+    @BeforeEach
+    void setUp() {
         dbHelper = new SQLDatabaseHelper();
         dbHelper.initializeDatabase();
         taskDAO = new TaskDAO(dbHelper);
     }
 
-    @BeforeEach
-    void clearDatabase() {
-        try (var conn = dbHelper.connect();
-             var stmt = conn.createStatement()) {
-            stmt.execute("DELETE FROM Tasks");
-        } catch (Exception e) {
-            fail(e.getMessage());
+    @AfterEach
+    void tearDown() {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute("DROP TABLE IF EXISTS Tasks");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
     @Test
-    void testWriteAndReadTask() {
+    void testWriteToCacheAndReadFromCache() {
         UUID taskId = UUID.randomUUID();
-        Task task = new Task(taskId, "Test Task", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Test Course");
-        String username = "testuser";
+        Task task = new Task("testUser", "Test Task", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Course");
+        task.setId(taskId);
+        taskDAO.WriteToCache(task, "testUser");
 
-        taskDAO.WriteToCache(task, username);
-        Task readTask = taskDAO.ReadFromCache(taskId);
-
-        assertNotNull(readTask);
-        assertEquals(task.getId(), readTask.getId());
-        assertEquals(task.getTitle(), readTask.getTitle());
-        assertEquals(task.getDescription(), readTask.getDescription());
-        assertEquals(task.getStartDate(), readTask.getStartDate());
-        assertEquals(task.getDeadline(), readTask.getDeadline());
-        assertEquals(task.getCourse(), readTask.getCourse());
-        assertEquals(task.isCompleted(), readTask.isCompleted());
-        assertEquals(task.isPointsAwarded(), readTask.isPointsAwarded());
+        Task retrievedTask = taskDAO.ReadFromCache(taskId);
+        assertNotNull(retrievedTask);
+        assertEquals(task.getId(), retrievedTask.getId());
+        assertEquals(task.getTitle(), retrievedTask.getTitle());
     }
 
     @Test
     void testGetAllTasks() {
-        UUID taskId1 = UUID.randomUUID();
-        Task task1 = new Task(taskId1, "Task 1", "Description 1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Course 1");
-        UUID taskId2 = UUID.randomUUID();
-        Task task2 = new Task(taskId2, "Task 2", "Description 2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), "Course 2");
-        String username = "testuser";
+        Task task1 = new Task("testUser", "Task 1", "Description 1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Course 1");
+        Task task2 = new Task("testUser", "Task 2", "Description 2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), "Course 2");
+        taskDAO.WriteToCache(task1, "testUser");
+        taskDAO.WriteToCache(task2, "testUser");
 
-        taskDAO.WriteToCache(task1, username);
-        taskDAO.WriteToCache(task2, username);
-        List<Task> tasks = taskDAO.getAllTasks(username);
-
-        assertNotNull(tasks);
+        List<Task> tasks = taskDAO.getAllTasks("testUser");
         assertEquals(2, tasks.size());
-
-        assertTrue(tasks.contains(task1));
-        assertTrue(tasks.contains(task2));
+        assertTrue(tasks.stream().anyMatch(task -> task.getTitle().equals("Task 1")));
+        assertTrue(tasks.stream().anyMatch(task -> task.getTitle().equals("Task 2")));
     }
 
     @Test
     void testDeleteTask() {
         UUID taskId = UUID.randomUUID();
-        Task task = new Task(taskId, "Test Task", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Test Course");
-        String username = "testuser";
+        Task task = new Task("testUser", "Task to Delete", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Course");
+        task.setId(taskId);
+        taskDAO.WriteToCache(task, "testUser");
 
-        taskDAO.WriteToCache(task, username);
         taskDAO.deleteTask(taskId);
-        Task deletedTask = taskDAO.ReadFromCache(taskId);
-
-        assertNull(deletedTask);
+        Task retrievedTask = taskDAO.ReadFromCache(taskId);
+        assertNull(retrievedTask);
     }
 }

@@ -45,6 +45,16 @@ public class LeaveCourseUseCase implements LeaveCourseInputBoundary {
             String username = inputData.getUsername();
             Course course = courseDataAccessObject.findByName(courseName);
 
+            /// if the course does not exist
+            if (course == null) {
+                LeaveCourseOutputData outputData = new LeaveCourseOutputData(
+                        false,
+                        courseName + " is not a course."
+                );
+                presenter.present(outputData);
+                return;
+            }
+
             /// check that the user is in the course they want to leave
             if (!course.containsUser(username)) {
                 LeaveCourseOutputData outputData = new LeaveCourseOutputData(

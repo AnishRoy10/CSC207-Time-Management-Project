@@ -91,21 +91,7 @@ public class CourseView extends JFrame {
         courseListScrollPane.setBorder(BorderFactory.createEmptyBorder());
         courseListScrollPane.setViewportBorder(BorderFactory.createEmptyBorder());
 
-        /// load courses
-        controller.loadCourses(username);
-        if (!listViewModel.isSuccess()) {
-            this.dispose();
-            JOptionPane.showMessageDialog(
-                    this,
-                    listViewModel.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-            );
-            return;
-        }
-        for (String courseName : listViewModel.getCourses()) {
-            addCourseButton(courseName);
-        }
+        refreshCourseList();
 
         JButton createCourseButton = new JButton("Create Course");
         createCourseButton.setBackground(Color.GRAY);
@@ -125,12 +111,19 @@ public class CourseView extends JFrame {
         leaveCourseButton.setBorder(new EmptyBorder(8, 8, 8, 8));
         leaveCourseButton.addActionListener(e -> openLeavePrompt());
 
+        JButton refreshCourseListButton = new JButton("Refresh");
+        refreshCourseListButton.setBackground(Color.GRAY);
+        refreshCourseListButton.setForeground(Color.WHITE);
+        refreshCourseListButton.setBorder(new EmptyBorder(8, 8, 8, 8));
+        refreshCourseListButton.addActionListener(e -> refreshCourseList());
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BorderLayout(1, 1));
         buttonPanel.setBackground(new Color(220, 220, 220));
         buttonPanel.add(createCourseButton, BorderLayout.SOUTH);
         buttonPanel.add(joinCourseButton, BorderLayout.WEST);
         buttonPanel.add(leaveCourseButton, BorderLayout.EAST);
+        buttonPanel.add(refreshCourseListButton, BorderLayout.NORTH);
 
         leftPanel = new JPanel();
         leftPanel.setLayout(new BorderLayout());
@@ -138,6 +131,26 @@ public class CourseView extends JFrame {
         leftPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         this.add(leftPanel, BorderLayout.WEST);
+    }
+
+    private void refreshCourseList() {
+        controller.loadCourses(username);
+        if (!listViewModel.isSuccess()) {
+            this.dispose();
+            JOptionPane.showMessageDialog(
+                    this,
+                    listViewModel.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+        courseListPanel.removeAll();
+        courseListPanel.updateUI();
+
+        for (String courseName : listViewModel.getCourses()) {
+            addCourseButton(courseName);
+        }
     }
 
     private void openJoinPrompt() {

@@ -1,12 +1,15 @@
 package framework.view;
 
 import app.gui.CourseInitializer;
+import app.gui.LeaderboardInitializer;
+import app.gui.TodoListInitializer;
 import interface_adapter.controller.CourseViewController;
 import interface_adapter.viewmodel.CourseListViewModel;
 import interface_adapter.viewmodel.CourseViewModel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 
 /**
@@ -29,6 +32,8 @@ public class CourseView extends JFrame {
 
     private JPanel mainPanel;
     private JLabel descriptionLabel;
+    private JButton viewTodoListButton;
+    private JButton viewLeaderboardsButton;
 
     public CourseView(String username, CourseViewController controller,
                       CourseViewModel viewModel, CourseListViewModel listViewModel) {
@@ -40,7 +45,7 @@ public class CourseView extends JFrame {
         this.setTitle("Course View");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
-        this.setSize(1200, 600);
+        this.setSize(750, 600);
 
         this.displayCourseList();
         this.displayMainView();
@@ -71,6 +76,11 @@ public class CourseView extends JFrame {
         userList.setModel(model);
         memberCountLabel.setText("Members - " + model.size());
         descriptionLabel.setText(viewModel.getCourseDescription());
+        if  (viewModel.getCourseDescription().isEmpty()) {
+            descriptionLabel.setText("No description was set.");
+        }
+        viewTodoListButton.setText("View " + courseName + " Todo List");
+        viewLeaderboardsButton.setText("View " + courseName + " Leaderboards");
 
         this.leftPanel.setVisible(true);
         this.rightPanel.setVisible(true);
@@ -197,9 +207,37 @@ public class CourseView extends JFrame {
         descriptionPanel.setBackground(new Color(200, 200, 200));
         descriptionPanel.add(descriptionLabel);
 
+        viewTodoListButton = new JButton("View Todolist");
+        viewTodoListButton.addActionListener(e -> openTodoListView());
+        viewTodoListButton.setBackground(new Color(88, 118, 161));
+        viewTodoListButton.setForeground(Color.WHITE);
+        viewTodoListButton.setBorder(new LineBorder(Color.LIGHT_GRAY, 2));
+
+        viewLeaderboardsButton = new JButton("View Leaderboards");
+        viewLeaderboardsButton.addActionListener(e -> openLeaderboardView());
+        viewLeaderboardsButton.setBackground(new Color(88, 118, 161));
+        viewLeaderboardsButton.setForeground(Color.WHITE);
+        viewLeaderboardsButton.setBorder(new LineBorder(Color.LIGHT_GRAY, 2));
+
+        JPanel viewButtonPanel = new JPanel();
+        viewButtonPanel.setLayout(new GridLayout(2, 1, 0, 10));
+        viewButtonPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
+        viewButtonPanel.add(viewTodoListButton);
+        viewButtonPanel.add(viewLeaderboardsButton);
+
         mainPanel.add(descriptionPanel, BorderLayout.NORTH);
+        mainPanel.add(viewButtonPanel, BorderLayout.CENTER);
         this.add(mainPanel, BorderLayout.CENTER);
     }
+
+    private void openTodoListView() {
+        TodoListInitializer.initializeTodoList(username);
+    }
+
+    private void openLeaderboardView() {
+        LeaderboardInitializer.LeaderboardInitializer();
+    }
+
 
     /**
      * Displays all the users in a course on the course view page.

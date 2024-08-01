@@ -1,8 +1,11 @@
 package use_case.CourseUseCases.ViewCourseUseCase;
 
+import entity.Course;
 import repositories.CourseRepository;
 
+import javax.swing.*;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Interactor class to the view course use case.
@@ -18,15 +21,30 @@ public class ViewCourseUseCase implements ViewCourseInputBoundary {
 
     @Override
     public void execute(ViewCourseInputData inputData) {
-        try {
-            /// TODO: with interface, load the course object and take its stuff
-            throw new IOException();
-        } catch (IOException e) {
+        Course course = courseDataAccessObject.findByName(inputData.getCourseName());
+
+        if (course == null) {
             ViewCourseOutputData outputData = new ViewCourseOutputData(
                     false,
-                    "Something went wrong trying to visualize " + inputData.getCourseName() + "."
+                    "Unable to find course with name " + inputData.getCourseName()
             );
             presenter.present(outputData);
+            return;
         }
+
+        DefaultListModel<String> model = new DefaultListModel<>();
+        model.addAll(List.of(course.getUserNames()));
+
+        ViewCourseOutputData outputData = new ViewCourseOutputData(
+                true,
+                "ok",
+                course.getDescription(),
+                model,
+                course.getTodoList(),
+                course.getDailyLeaderboard(),
+                course.getMonthlyLeaderboard(),
+                course.getAllTimeLeaderboard()
+        );
+        presenter.present(outputData);
     }
 }

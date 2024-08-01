@@ -1,9 +1,6 @@
 package use_case.CourseUseCases.ViewCourseUseCase;
 
-import entity.AllTimeLeaderboard;
-import entity.DailyLeaderboard;
-import entity.MonthlyLeaderboard;
-import entity.TodoList;
+import entity.*;
 
 import javax.swing.*;
 
@@ -14,9 +11,9 @@ public class ViewCourseOutputData {
     private String courseDescription;
     private DefaultListModel<String> usernames;
     private TodoList todoList;
-    private DailyLeaderboard dailyLeaderboard;
-    private MonthlyLeaderboard monthlyLeaderboard;
-    private AllTimeLeaderboard allTimeLeaderboard;
+    private Leaderboard dailyLeaderboard;
+    private Leaderboard monthlyLeaderboard;
+    private Leaderboard allTimeLeaderboard;
 
     public ViewCourseOutputData(boolean success, String message) {
         this.success = success;
@@ -29,9 +26,9 @@ public class ViewCourseOutputData {
             String courseDescription,
             DefaultListModel<String> usernames,
             TodoList todoList,
-            DailyLeaderboard dailyLeaderboard,
-            MonthlyLeaderboard monthlyLeaderboard,
-            AllTimeLeaderboard allTimeLeaderboard) {
+            Leaderboard dailyLeaderboard,
+            Leaderboard monthlyLeaderboard,
+            Leaderboard allTimeLeaderboard) {
         this.success = success;
         this.message = message;
         this.courseDescription = courseDescription;
@@ -52,9 +49,9 @@ public class ViewCourseOutputData {
 
     public TodoList getTodoList() { return todoList; }
 
-    public DailyLeaderboard getDailyLeaderboard() { return dailyLeaderboard; }
+    public Leaderboard getDailyLeaderboard() { return dailyLeaderboard; }
 
-    public MonthlyLeaderboard getMonthlyLeaderboard() { return monthlyLeaderboard; }
+    public Leaderboard getMonthlyLeaderboard() { return monthlyLeaderboard; }
 
-    public AllTimeLeaderboard getAllTimeLeaderboard() { return allTimeLeaderboard; }
+    public Leaderboard getAllTimeLeaderboard() { return allTimeLeaderboard; }
 }

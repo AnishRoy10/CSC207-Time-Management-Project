@@ -15,9 +15,9 @@ public class CourseViewModel {
     private String courseDescription;
     private DefaultListModel<String> usernames;
     private TodoList todoList;
-    private DailyLeaderboard dailyLeaderboard;
-    private MonthlyLeaderboard monthlyLeaderboard;
-    private AllTimeLeaderboard allTimeLeaderboard;
+    private Leaderboard dailyLeaderboard;
+    private Leaderboard monthlyLeaderboard;
+    private Leaderboard allTimeLeaderboard;
 
     public void setSuccess(boolean success) { this.success = success; }
 
@@ -29,11 +29,11 @@ public class CourseViewModel {
 
     public void setTodoList(TodoList todoList) { this.todoList = todoList; }
 
-    public void setDailyLeaderboard(DailyLeaderboard dailyLeaderboard) { this.dailyLeaderboard = dailyLeaderboard; }
+    public void setDailyLeaderboard(Leaderboard dailyLeaderboard) { this.dailyLeaderboard = dailyLeaderboard; }
 
-    public void setMonthlyLeaderboard(MonthlyLeaderboard monthlyLeaderboard) { this.monthlyLeaderboard = monthlyLeaderboard; }
+    public void setMonthlyLeaderboard(Leaderboard monthlyLeaderboard) { this.monthlyLeaderboard = monthlyLeaderboard; }
 
-    public void setAllTimeLeaderboard(AllTimeLeaderboard allTimeLeaderboard) { this.allTimeLeaderboard = allTimeLeaderboard; }
+    public void setAllTimeLeaderboard(Leaderboard allTimeLeaderboard) { this.allTimeLeaderboard = allTimeLeaderboard; }
 
     public boolean isSuccess() { return success; }
 
@@ -45,9 +45,9 @@ public class CourseViewModel {
 
     public TodoList getTodoList() { return todoList; }
 
-    public DailyLeaderboard getDailyLeaderboard() { return dailyLeaderboard; }
+    public Leaderboard getDailyLeaderboard() { return dailyLeaderboard; }
 
-    public MonthlyLeaderboard getMonthlyLeaderboard() { return monthlyLeaderboard; }
+    public Leaderboard getMonthlyLeaderboard() { return monthlyLeaderboard; }
 
-    public AllTimeLeaderboard getAllTimeLeaderboard() { return allTimeLeaderboard; }
+    public Leaderboard getAllTimeLeaderboard() { return allTimeLeaderboard; }
 }

@@ -67,7 +67,7 @@ public class LeaveCourseUseCase implements LeaveCourseInputBoundary {
 
             /// attempt to remove them
             User user = userDataAccessObject.ReadFromCache(username);
-            if (user.removeCourse(courseName)) {
+            if (user.removeCourse(courseName) && course.removeUser(username)) {
                 LeaveCourseOutputData outputData = new LeaveCourseOutputData(
                         true,
                         "You have been removed from " + courseName + "."

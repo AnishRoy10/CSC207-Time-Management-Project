@@ -10,13 +10,15 @@ import java.awt.*;
 public class CreateCoursePrompt {
     private final CoursePromptController controller;
     private final CoursePromptViewModel viewModel;
+    private final String username;
 
     private final JFrame frame;
     private final JPanel mainPanel;
     private JTextField nameField;
     private JTextField descField;
 
-    public CreateCoursePrompt(CoursePromptController controller, CoursePromptViewModel viewModel) {
+    public CreateCoursePrompt(String username, CoursePromptController controller, CoursePromptViewModel viewModel) {
+        this.username = username;
         this.controller = controller;
         this.viewModel = viewModel;
 
@@ -98,7 +100,7 @@ public class CreateCoursePrompt {
         }
 
         // execute use case
-        controller.createCourse(courseName, courseDesc);
+        controller.createCourse(username, courseName, courseDesc);
 
         if (viewModel.getResponse()) {
             frame.dispose();

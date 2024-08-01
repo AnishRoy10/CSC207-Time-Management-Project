@@ -49,8 +49,8 @@ public class CoursePromptController {
      * @param courseName        The name of the course to create.
      * @param courseDescription The description of the course to create.
      */
-    public void createCourse(String courseName, String courseDescription) {
-        createCourseInteractor.execute(new CreateCourseInputData(courseName, courseDescription));
+    public void createCourse(String username, String courseName, String courseDescription) {
+        createCourseInteractor.execute(new CreateCourseInputData(username, courseName, courseDescription));
     }
 
     /**

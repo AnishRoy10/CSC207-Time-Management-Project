@@ -78,19 +78,21 @@ public class CourseInitializer {
     /**
      * Initialize the course creation prompt.
      */
-    public static void initializeCreatePrompt() {
+    public static void initializeCreatePrompt(String username) {
         try {
+            String usersPath = "src/main/java/data_access/userCache.json";
             String coursesPath = "src/main/java/data_access/courseCache.json";
 
+            UserRepository userDataAccessObject = new FileCacheUserDataAccessObject(usersPath);
             CourseRepository courseDataAccessObject = new CourseDataAccessObject(coursesPath);
             CoursePromptViewModel viewModel = new CoursePromptViewModel();
             CoursePromptPresenter presenter = new CoursePromptPresenter(
                     viewModel, null, null);
             CreateCourseInputBoundary createCourseInteractor = new CreateCourseUseCase(
-                    presenter, courseDataAccessObject);
+                    presenter, courseDataAccessObject, userDataAccessObject);
             CoursePromptController controller = new CoursePromptController(createCourseInteractor);
 
-            new CreateCoursePrompt(controller, viewModel);
+            new CreateCoursePrompt(username, controller, viewModel);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

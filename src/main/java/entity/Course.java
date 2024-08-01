@@ -44,7 +44,7 @@ public class Course implements Serializable {
         this.todoList = new TodoList();
         this.dailyLeaderboard = new DailyLeaderboard(name + " Daily", LocalDate.now());
         this.monthlyLeaderboard = new MonthlyLeaderboard(name + " Monthly", LocalDate.now());
-        this.allTimeLeaderboard = new AllTimeLeaderboard(name + "All-time");
+        this.allTimeLeaderboard = new AllTimeLeaderboard(name + " All-time");
     }
 
     /**
@@ -99,11 +99,11 @@ public class Course implements Serializable {
      * Attempts to remove the specified user from this course. 
      * Returns a boolean value that indicates whether the attempt was successful.
      * 
-     * @param user the user to remove
-     * @return     the success value of the method
+     * @param username the name of the user to remove
+     * @return         the success value of the method
      */
-    public boolean removeUser(User user) {
-        return usernames.remove(user.getUsername());
+    public boolean removeUser(String username) {
+        return usernames.remove(username);
     }
 
     /**

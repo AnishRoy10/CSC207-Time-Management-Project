@@ -2,7 +2,9 @@ package use_case.CourseUseCases.CreateCourseUseCase;
 
 import data_access.CourseDataAccessObject;
 import entity.Course;
+import entity.User;
 import repositories.CourseRepository;
+import repositories.UserRepository;
 
 import java.io.IOException;
 
@@ -16,14 +18,20 @@ public class CreateCourseUseCase implements CreateCourseInputBoundary {
     /// The data access object for courses.
     private final CourseRepository courseDataAccessObject;
 
+    /// The data access object for users.
+    private final UserRepository userDataAccessObject;
+
     /**
      * Construct a new interactor instance.
      * @param presenter              The presenter to use.
      * @param courseDataAccessObject The course data access object to use.
      */
-    public CreateCourseUseCase(CreateCourseOutputBoundary presenter, CourseRepository courseDataAccessObject) {
+    public CreateCourseUseCase(CreateCourseOutputBoundary presenter,
+                               CourseRepository courseDataAccessObject,
+                               UserRepository userDataAccessObject) {
         this.presenter = presenter;
         this.courseDataAccessObject = courseDataAccessObject;
+        this.userDataAccessObject = userDataAccessObject;
     }
 
     /**
@@ -32,27 +40,46 @@ public class CreateCourseUseCase implements CreateCourseInputBoundary {
      */
     @Override
     public void execute(CreateCourseInputData inputData) {
-        String courseName = inputData.getCourseName();
-        String courseDescription = inputData.getCourseDescription();
+        try {
+            String username = inputData.getUsername();
+            String courseName = inputData.getCourseName();
+            String courseDescription = inputData.getCourseDescription();
 
-        /// check if a course by the name exists already
-        if (courseDataAccessObject.courseExists(courseName)) {
+            /// check if a course by the name exists already
+            if (courseDataAccessObject.courseExists(courseName)) {
+                CreateCourseOutputData outputData = new CreateCourseOutputData(
+                        false,
+                        courseName + " already exists. Try joining it!"
+                );
+                presenter.present(outputData);
+                return;
+            }
+
+            /// create the course and write changes
+            Course course = new Course(courseName, courseDescription);
+            User user = userDataAccessObject.ReadFromCache(username);
+
+            /// add the creation user to the new course
+            course.addUser(user);
+            user.addCourse(course);
+
+            /// write changes
+            courseDataAccessObject.WriteToCache(course);
+            userDataAccessObject.WriteToCache(user);
+
+            /// finally, present success
             CreateCourseOutputData outputData = new CreateCourseOutputData(
-                    false,
-                    courseName + " already exists. Try joining it!"
+                    true,
+                    courseName + " has been created."
             );
             presenter.present(outputData);
-            return;
+        } catch (IOException e) {
+            CreateCourseOutputData outputData = new CreateCourseOutputData(
+                    false,
+                    "Something went wrong creating a course."
+            );
+            presenter.present(outputData);
         }
 
-        /// create the course and write changes
-        Course course = new Course(courseName, courseDescription);
-        courseDataAccessObject.WriteToCache(course);
-
-        CreateCourseOutputData outputData = new CreateCourseOutputData(
-                true,
-                courseName + " has been created. Try joining it!"
-        );
-        presenter.present(outputData);
     }
 }

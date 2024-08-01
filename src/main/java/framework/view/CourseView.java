@@ -172,7 +172,7 @@ public class CourseView extends JFrame {
     }
 
     private void openCreatePrompt() {
-        CourseInitializer.initializeCreatePrompt();
+        CourseInitializer.initializeCreatePrompt(username);
     }
 
     /**

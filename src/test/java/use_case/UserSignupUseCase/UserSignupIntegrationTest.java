@@ -1,6 +1,7 @@
 package use_case.UserSignupUseCase;
 
 import entity.User;
+import data_access.FileCacheLeaderboardDataAccessObject;
 import data_access.FileCacheUserDataAccessObject;
 import interface_adapter.controller.UserSignupController;
 import interface_adapter.presenter.UserSignupPresenter;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repositories.LeaderboardRepository;
+import repositories.UserRepository;
 import use_case.UserUseCases.UserSignupUseCase.UserSignupUseCase;
 
 import java.io.File;
@@ -19,19 +21,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 // Integration test for the UserSignupUseCase to test the interaction between the controller, use case, and presenter.
 class UserSignupIntegrationTest {
     private FileCacheUserDataAccessObject userRepository;
+    private FileCacheLeaderboardDataAccessObject leaderboardRepository;
     private UserSignupPresenter userSignupPresenter;
     private UserSignupViewModel userSignupViewModel;
     private UserSignupController userSignupController;
-    private LeaderboardRepository leaderboardRepository;
-    private File testFile;
+    private File testUserFile;
+    private File testLeaderboardFile;
 
     @BeforeEach
     void setUp() throws IOException {
-        // Create a temporary file for testing
-        testFile = File.createTempFile("userCacheTest", ".txt");
+        // Create temporary files for testing
+        testUserFile = File.createTempFile("userCacheTest", ".txt");
+        testLeaderboardFile = File.createTempFile("leaderboardCacheTest", ".txt");
 
-        // Initialize the repository with the test file path
-        userRepository = new FileCacheUserDataAccessObject(testFile.getAbsolutePath());
+        // Initialize the repositories with the test file paths
+        userRepository = new FileCacheUserDataAccessObject(testUserFile.getAbsolutePath());
+        leaderboardRepository = new FileCacheLeaderboardDataAccessObject(testLeaderboardFile.getAbsolutePath());
+
         userSignupViewModel = new UserSignupViewModel();
         userSignupPresenter = new UserSignupPresenter(userSignupViewModel);
         UserSignupUseCase userSignupUseCase = new UserSignupUseCase(userRepository, userSignupPresenter, leaderboardRepository);
@@ -40,9 +46,12 @@ class UserSignupIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        // Delete the test file after each test
-        if (testFile.exists()) {
-            testFile.delete();
+        // Delete the test files after each test
+        if (testUserFile.exists()) {
+            testUserFile.delete();
+        }
+        if (testLeaderboardFile.exists()) {
+            testLeaderboardFile.delete();
         }
     }
 

@@ -8,6 +8,11 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Prompt to allow users to leave a course.
+ * <br/>
+ * The purpose of a prompt is to be more modular and potentially scalable.
+ */
 public class LeaveCoursePrompt {
     private final String username;
     private final CoursePromptController controller;
@@ -17,6 +22,10 @@ public class LeaveCoursePrompt {
     private final JPanel mainPanel;
     private JTextField nameField;
 
+    /**
+     * Instantiate a new prompt view.
+     * @param username The username of the current user.
+     */
     public LeaveCoursePrompt(String username, CoursePromptController controller, CoursePromptViewModel viewModel) {
         this.username = username;
         this.controller = controller;
@@ -72,6 +81,7 @@ public class LeaveCoursePrompt {
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
+    /// Main use case method to remove a user from the provided course.
     private void leaveCourse() {
         String courseName = nameField.getText();
 
@@ -88,11 +98,13 @@ public class LeaveCoursePrompt {
 
         controller.leaveCourse(username, courseName);
 
+        /// if the use case was successful, close prompt
         if (viewModel.getResponse()) {
             frame.dispose();
             return;
         }
 
+        /// if the use case failed, show error message
         JOptionPane.showMessageDialog(
                 frame,
                 viewModel.getMessage(),

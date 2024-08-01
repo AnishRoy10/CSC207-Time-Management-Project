@@ -4,6 +4,9 @@ import interface_adapter.viewmodel.CourseListViewModel;
 import use_case.CourseUseCases.LoadCoursesUseCase.LoadCoursesOutputBoundary;
 import use_case.CourseUseCases.LoadCoursesUseCase.LoadCoursesOutputData;
 
+/**
+ * Presenter for the course list view.
+ */
 public class CourseListPresenter implements LoadCoursesOutputBoundary {
     private final CourseListViewModel viewModel;
 

@@ -12,6 +12,11 @@ import javax.swing.border.EmptyBorder;
 import interface_adapter.controller.CoursePromptController;
 import interface_adapter.viewmodel.CoursePromptViewModel;
 
+/**
+ * Prompt to allow users to join courses.
+ * <br/>
+ * The purpose of a prompt is to be more modular and potentially scalable.
+ */
 public class JoinCoursePrompt {
     private final String username;
     private final CoursePromptController controller;
@@ -20,6 +25,10 @@ public class JoinCoursePrompt {
     private final JFrame frame;
     private final JTextField courseNameField;
 
+    /**
+     * Instantiate a new prompt view.
+     * @param username The username of the current user.
+     */
     public JoinCoursePrompt(String username, CoursePromptController controller, CoursePromptViewModel viewModel) {
         this.username = username;
         this.controller = controller;
@@ -62,6 +71,7 @@ public class JoinCoursePrompt {
         frame.setVisible(true);
     }
 
+    /// Attempt to add a user to the provided course.
     private void attemptToJoinCourse() {
         String courseName = courseNameField.getText();
 

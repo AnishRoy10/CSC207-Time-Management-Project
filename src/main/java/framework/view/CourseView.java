@@ -35,6 +35,10 @@ public class CourseView extends JFrame {
     private JButton viewTodoListButton;
     private JButton viewLeaderboardsButton;
 
+    /**
+     * Instantiate a new course view frame.
+     * @param username The username of the current user.
+     */
     public CourseView(String username, CourseViewController controller,
                       CourseViewModel viewModel, CourseListViewModel listViewModel) {
         this.username = username;
@@ -42,11 +46,13 @@ public class CourseView extends JFrame {
         this.viewModel = viewModel;
         this.listViewModel = listViewModel;
 
+        /// instantiate the main frame
         this.setTitle("Course View");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
         this.setSize(750, 600);
 
+        /// display different main panels
         this.displayCourseList();
         this.displayMainView();
         this.displayUserList();
@@ -61,6 +67,7 @@ public class CourseView extends JFrame {
      */
     private void visualize(String courseName) {
         controller.viewCourse(courseName);
+        /// if something went wrong loading the course, present an error message
         if (!viewModel.isSuccess()) {
             JOptionPane.showMessageDialog(
                     this,
@@ -73,6 +80,7 @@ public class CourseView extends JFrame {
         this.setTitle(courseName);
         DefaultListModel<String> model = viewModel.getUsernames();
 
+        /// visualize course fields on the view fields
         userList.setModel(model);
         memberCountLabel.setText("Members - " + model.size());
         descriptionLabel.setText(viewModel.getCourseDescription());
@@ -82,6 +90,7 @@ public class CourseView extends JFrame {
         viewTodoListButton.setText("View " + courseName + " Todo List");
         viewLeaderboardsButton.setText("View " + courseName + " Leaderboards");
 
+        /// make all panels visible
         this.leftPanel.setVisible(true);
         this.rightPanel.setVisible(true);
         this.mainPanel.setVisible(true);
@@ -143,8 +152,12 @@ public class CourseView extends JFrame {
         this.add(leftPanel, BorderLayout.WEST);
     }
 
+    /**
+     * Refresh the course list by invoking the controller.
+     */
     private void refreshCourseList() {
         controller.loadCourses(username);
+        /// if the use case failed, present an error message
         if (!listViewModel.isSuccess()) {
             this.dispose();
             JOptionPane.showMessageDialog(
@@ -155,6 +168,7 @@ public class CourseView extends JFrame {
             );
             return;
         }
+        /// update the list panel
         courseListPanel.removeAll();
         courseListPanel.updateUI();
 
@@ -163,14 +177,17 @@ public class CourseView extends JFrame {
         }
     }
 
+    /// Invokes the join course prompt initializer.
     private void openJoinPrompt() {
         CourseInitializer.initializeJoinPrompt(username);
     }
 
+    /// Invokes the leave course prompt initializer.
     private void openLeavePrompt() {
         CourseInitializer.initializeLeavePrompt(username);
     }
 
+    /// Invokes the create course prompt initializer.
     private void openCreatePrompt() {
         CourseInitializer.initializeCreatePrompt(username);
     }
@@ -230,14 +247,15 @@ public class CourseView extends JFrame {
         this.add(mainPanel, BorderLayout.CENTER);
     }
 
+    /// Invokes the todolist view initializer.
     private void openTodoListView() {
         TodoListInitializer.initializeTodoList(username);
     }
 
+    /// Invokes the leaderboard view initializer.
     private void openLeaderboardView() {
         LeaderboardInitializer.LeaderboardInitializer();
     }
-
 
     /**
      * Displays all the users in a course on the course view page.

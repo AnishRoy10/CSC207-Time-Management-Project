@@ -7,6 +7,11 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+/**
+ * Prompt to allow users to create new courses.
+ * <br/>
+ * The purpose of a prompt lets this view be more modular and potentially scalable.
+ */
 public class CreateCoursePrompt {
     private final CoursePromptController controller;
     private final CoursePromptViewModel viewModel;
@@ -17,6 +22,10 @@ public class CreateCoursePrompt {
     private JTextField nameField;
     private JTextField descField;
 
+    /**
+     * Instantiate a new view instance.
+     * @param username The username of the current user.
+     */
     public CreateCoursePrompt(String username, CoursePromptController controller, CoursePromptViewModel viewModel) {
         this.username = username;
         this.controller = controller;
@@ -38,6 +47,7 @@ public class CreateCoursePrompt {
         frame.setVisible(true);
     }
 
+    /// Initialize name field related components.
     private void initNameComponents() {
         JPanel namePanel = new JPanel();
         namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.Y_AXIS));
@@ -53,6 +63,7 @@ public class CreateCoursePrompt {
         mainPanel.add(namePanel, BorderLayout.NORTH);
     }
 
+    /// Initialize description field related components.
     private void initDescComponents() {
         JPanel descPanel = new JPanel();
         descPanel.setLayout(new BoxLayout(descPanel, BoxLayout.Y_AXIS));
@@ -68,6 +79,7 @@ public class CreateCoursePrompt {
         mainPanel.add(descPanel, BorderLayout.CENTER);
     }
 
+    /// Initialize button panel related components.
     private void initButtonComponents() {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BorderLayout());
@@ -85,6 +97,7 @@ public class CreateCoursePrompt {
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
+    /// Execute the use case using given field values.
     private void createCourse() {
         String courseName = nameField.getText();
         String courseDesc = descField.getText();
@@ -102,11 +115,13 @@ public class CreateCoursePrompt {
         // execute use case
         controller.createCourse(username, courseName, courseDesc);
 
+        /// if the use case was successful, exit prompt
         if (viewModel.getResponse()) {
             frame.dispose();
             return;
         }
 
+        /// show error message dialog since something went wrong
         JOptionPane.showMessageDialog(
                 frame,
                 viewModel.getMessage(),

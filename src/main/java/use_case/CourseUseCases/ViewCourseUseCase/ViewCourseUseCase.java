@@ -11,9 +11,17 @@ import java.util.List;
  * Interactor class to the view course use case.
  */
 public class ViewCourseUseCase implements ViewCourseInputBoundary {
+    /// The output boundary to present to.
     private final ViewCourseOutputBoundary presenter;
+
+    /// The data access object to fetch courses from.
     private final CourseRepository courseDataAccessObject;
 
+    /**
+     * Construct a new interactor instance.
+     * @param presenter              The output boundary to present to.
+     * @param courseDataAccessObject The data access object to fetch courses from.
+     */
     public ViewCourseUseCase(ViewCourseOutputBoundary presenter, CourseRepository courseDataAccessObject) {
         this.presenter = presenter;
         this.courseDataAccessObject = courseDataAccessObject;
@@ -23,6 +31,7 @@ public class ViewCourseUseCase implements ViewCourseInputBoundary {
     public void execute(ViewCourseInputData inputData) {
         Course course = courseDataAccessObject.findByName(inputData.getCourseName());
 
+        /// if the course does not exist
         if (course == null) {
             ViewCourseOutputData outputData = new ViewCourseOutputData(
                     false,

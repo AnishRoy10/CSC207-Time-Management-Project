@@ -5,6 +5,9 @@ import use_case.CourseUseCases.LoadCoursesUseCase.LoadCoursesInputData;
 import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseInputBoundary;
 import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseInputData;
 
+/**
+ * Controller for the course view page.
+ */
 public class CourseViewController {
     private final LoadCoursesInputBoundary loadCoursesInteractor;
     private final ViewCourseInputBoundary viewCourseInteractor;

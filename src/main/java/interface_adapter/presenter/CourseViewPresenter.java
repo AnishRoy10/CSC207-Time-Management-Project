@@ -4,6 +4,9 @@ import interface_adapter.viewmodel.CourseViewModel;
 import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseOutputBoundary;
 import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseOutputData;
 
+/**
+ * Presenter for the main course view page.
+ */
 public class CourseViewPresenter implements ViewCourseOutputBoundary {
     private final CourseViewModel viewModel;
 

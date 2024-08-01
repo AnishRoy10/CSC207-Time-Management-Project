@@ -20,14 +20,26 @@ public class CreateCourseInputData {
         this.courseDescription = courseDescription;
     }
 
+    /**
+     * Get the username embedded in this data object.
+     * @return The username.
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Get the course name embedding in this data object.
+     * @return The course name.
+     */
     public String getCourseName() {
         return courseName;
     }
 
+    /**
+     * Get the course description embedded in this data object.
+     * @return The course description.
+     */
     public String getCourseDescription() {
         return courseDescription;
     }

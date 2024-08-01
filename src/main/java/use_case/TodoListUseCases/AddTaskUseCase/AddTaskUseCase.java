@@ -2,6 +2,7 @@ package use_case.TodoListUseCases.AddTaskUseCase;
 
 import entity.Task;
 import entity.User;
+import repositories.TaskRepository;
 import repositories.UserRepository;
 import use_case.TaskData;
 
@@ -14,10 +15,12 @@ import java.util.stream.Collectors;
  */
 public class AddTaskUseCase implements AddTaskInputBoundary {
     private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
     private final AddTaskOutputBoundary addTaskOutputBoundary;
 
-    public AddTaskUseCase(UserRepository userRepository, AddTaskOutputBoundary addTaskOutputBoundary) {
+    public AddTaskUseCase(UserRepository userRepository, TaskRepository taskRepository, AddTaskOutputBoundary addTaskOutputBoundary) {
         this.userRepository = userRepository;
+        this.taskRepository = taskRepository;
         this.addTaskOutputBoundary = addTaskOutputBoundary;
     }
 
@@ -32,6 +35,7 @@ public class AddTaskUseCase implements AddTaskInputBoundary {
 
             // Add the task to the user's to-do list
             Task newTask = new Task(
+                    requestModel.getUsername(),
                     requestModel.getTitle(),
                     requestModel.getDescription(),
                     requestModel.getStartDate(),
@@ -40,11 +44,13 @@ public class AddTaskUseCase implements AddTaskInputBoundary {
             );
 
             user.getTodoList().addTask(newTask);
+            taskRepository.WriteToCache(newTask, user.getUsername());
             userRepository.WriteToCache(user);
 
             List<TaskData> tasks = user.getTodoList().getTasks().stream()
                     .map(task -> new TaskData(
                             task.getId(),
+                            task.getUsername(),
                             task.getTitle(),
                             task.getDescription(),
                             task.getStartDate(),

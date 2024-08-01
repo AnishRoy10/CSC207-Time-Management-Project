@@ -6,72 +6,61 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * DatabaseHelper class manages SQLite database connection and schema creation.
- * This class provides methods to connect to the database and create necessary tables.
+ * The SQLDatabaseHelper class provides methods to initialize and manage the SQLite database.
+ * It is used by the UserDAO class to connect to the database and perform CRUD operations.
+ * The database schema includes tables for Users and Tasks.
+ * The Users table stores user information such as username, password, score, and other data.
+ * The Tasks table stores task information such as title, description, deadline, and other data.
  */
 public class SQLDatabaseHelper {
-
-    // URL to connect to SQLite database located in saves/UserDB.db
-    private static final String URL = "jdbc:sqlite:Saves/UserDB.db";
+    private static final String URL = "jdbc:sqlite:saves/UserDB.db";
 
     /**
-     * Establishes a connection to the SQLite database.
-     *
-     * @return Connection object to interact with the database.
+     * Initializes the database by creating the necessary tables if they do not exist.
      */
-    public static Connection connect() {
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection(URL);
-            System.out.println("Connection to SQLite has been established.");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return conn;
-    }
-
-    /**
-     * Creates a new database if it does not exist, and initializes the schema.
-     * This method creates necessary tables for Users and Tasks.
-     */
-    public static void createNewDatabase() {
-        // Establish connection and create tables
-        try (Connection conn = connect()) {
+    public void initializeDatabase() {
+        try (Connection conn = DriverManager.getConnection(URL);
+             Statement stmt = conn.createStatement()) {
             if (conn != null) {
-                Statement stmt = conn.createStatement();
-                // Create Users table
-                String sqlUsers = "CREATE TABLE IF NOT EXISTS Users ("
-                        + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                        + "username TEXT NOT NULL UNIQUE, "
-                        + "password TEXT NOT NULL, "
-                        + "friends TEXT, "
-                        + "courses TEXT, "
-                        + "todo TEXT, "
-                        + "score INTEGER, "
-                        + "aNumber INTEGER, "
+                String createUserTable = "CREATE TABLE IF NOT EXISTS Users ("
+                        + "username TEXT PRIMARY KEY,"
+                        + "password TEXT NOT NULL,"
+                        + "friends TEXT,"
+                        + "courses TEXT,"
+                        + "tasks TEXT,"
+                        + "score INTEGER,"
+                        + "anumber INTEGER,"
                         + "calendar TEXT"
                         + ");";
-                stmt.execute(sqlUsers);
 
-                // Create Tasks table
-                String sqlTasks = "CREATE TABLE IF NOT EXISTS Tasks ("
-                        + "id TEXT PRIMARY KEY, "
-                        + "user_id INTEGER, "
-                        + "title TEXT, "
-                        + "description TEXT, "
-                        + "completed BOOLEAN, "
-                        + "startDate TEXT, "
-                        + "deadline TEXT, "
-                        + "course TEXT, "
-                        + "pointsAwarded BOOLEAN, "
-                        + "FOREIGN KEY (user_id) REFERENCES Users (id)"
+                String createTasksTable = "CREATE TABLE IF NOT EXISTS Tasks ("
+                        + "id TEXT PRIMARY KEY,"
+                        + "title TEXT NOT NULL,"
+                        + "description TEXT,"
+                        + "completed BOOLEAN,"
+                        + "startDate TEXT,"
+                        + "deadline TEXT,"
+                        + "course TEXT,"
+                        + "pointsAwarded BOOLEAN"
                         + ");";
-                stmt.execute(sqlTasks);
+
+                stmt.execute(createUserTable);
+                stmt.execute(createTasksTable);
 
                 System.out.println("Database schema has been initialized.");
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    /**
+     * Establishes a connection to the SQLite database.
+     *
+     * @return a Connection object to the SQLite database
+     * @throws SQLException if a database access error occurs
+     */
+    public Connection connect() throws SQLException {
+        return DriverManager.getConnection(URL);
     }
 }

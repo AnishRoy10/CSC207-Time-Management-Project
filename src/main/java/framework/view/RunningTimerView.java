@@ -34,6 +34,8 @@ public class RunningTimerView extends JFrame {
 
     private final Timer actionTimer;
 
+    private Clip clip;
+
     /**
      * Constructor for RunningTimerView. Sets up the UI components for this page.
      * @param timerController controller for timer use cases
@@ -45,7 +47,7 @@ public class RunningTimerView extends JFrame {
         this.runningTimerViewModel = runningTimerViewModel;
 
         setTitle(RunningTimerViewModel.TITLE_LABEL);
-        setSize(1200, 720);
+        setSize(300, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -82,10 +84,14 @@ public class RunningTimerView extends JFrame {
         actionTimer.setInitialDelay(100);
         actionTimer.start();
 
+        String filePath = System.getProperty("user.dir") + "\\src\\main\\java\\data_access\\massobeats-honey_jam.wav";
+        clip = playSound(filePath, true);
+
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 actionTimer.stop();
+                clip.stop();
             }
         });
 
@@ -114,7 +120,9 @@ public class RunningTimerView extends JFrame {
      */
     private void endTimer() {
         actionTimer.stop();
-        playSound();
+        String filePath = System.getProperty("user.dir") + "\\src\\main\\java\\data_access\\timer_alarm.wav";
+        clip.stop();
+        clip = playSound(filePath, false);
         pauseButton.setVisible(false);
         returnButton.setVisible(true);
     }
@@ -128,6 +136,12 @@ public class RunningTimerView extends JFrame {
             pauseButton.setText(RunningTimerViewModel.PAUSE_LABEL);
             paused = !paused;
         }
+        if (paused) {
+            clip.stop();
+        }
+        else {
+            clip.start();
+        }
     }
 
     /**
@@ -135,18 +149,19 @@ public class RunningTimerView extends JFrame {
      */
     public void returnPrevious() {
         actionTimer.stop();
+        clip.stop();
         dispose();
     }
 
     /**
      * Plays a sound.
      */
-    public void playSound() {
+    public Clip playSound(String path, boolean loop) {
 //        Toolkit.getDefaultToolkit().beep();
         Clip clip;
-        String fileName = System.getProperty("user.dir") + "\\src\\main\\java\\data_access\\timer_alarm.wav";
+//        String fileName = System.getProperty("user.dir") + "\\src\\main\\java\\data_access\\timer_alarm.wav";
         try {
-            File file = new File(fileName);
+            File file = new File(path);
             if (file.exists()) {
                 AudioInputStream sound = AudioSystem.getAudioInputStream(file);
                 // load the sound into memory (a Clip)
@@ -154,7 +169,7 @@ public class RunningTimerView extends JFrame {
                 clip.open(sound);
             }
             else {
-                throw new RuntimeException("Sound: file not found: " + fileName);
+                throw new RuntimeException("Sound: file not found: " + path);
             }
         }
         catch (MalformedURLException e) {
@@ -174,6 +189,10 @@ public class RunningTimerView extends JFrame {
             throw new RuntimeException("Sound: Line Unavailable Exception Error: " + e);
         }
 
+        if (loop) {
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        }
         clip.start();
+        return clip;
     }
 }

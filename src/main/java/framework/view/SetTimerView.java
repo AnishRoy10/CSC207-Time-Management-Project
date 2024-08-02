@@ -38,7 +38,7 @@ public class SetTimerView extends JFrame{
         this.runningTimerViewModel = runningTimerViewModel;
 
         setTitle(SetTimerViewModel.TITLE_LABEL);
-        setSize(1200, 720);
+        setSize(300, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 

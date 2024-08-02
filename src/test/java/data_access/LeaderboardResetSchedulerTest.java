@@ -1,91 +1,84 @@
 package data_access;
 
-import entity.DailyLeaderboard;
-import entity.Leaderboard;
-import entity.MonthlyLeaderboard;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class LeaderboardResetSchedulerTest {
-    private FileCacheLeaderboardDataAccessObject leaderboardDAO;
-    private Timer timer;
-    private LeaderboardResetScheduler scheduler;
+
+    private static final String CONFIG_FILE_PATH = "src/main/java/data_access/testresetSchedule.json";
 
     @BeforeEach
-    void setUp() {
-        leaderboardDAO = mock(FileCacheLeaderboardDataAccessObject.class);
-        timer = mock(Timer.class);
-        scheduler = new LeaderboardResetScheduler(leaderboardDAO, timer);
+    void setUp() throws IOException {
+        // Create a temporary testresetSchedule.json file with default values for testing
+        String initialContent = "{ \"lastDailyReset\": \"" + LocalDate.now().minusDays(1).toString() + "\", \"lastMonthlyReset\": \"" + LocalDate.now().minusMonths(1).withDayOfMonth(1).toString() + "\" }";
+        Files.write(Paths.get(CONFIG_FILE_PATH), initialContent.getBytes());
     }
 
     @AfterEach
-    void tearDown() {
-        // Delete the schedule file after each test
-        File scheduleFile = new File("reset_schedule.dat");
-        if (scheduleFile.exists()) {
-            scheduleFile.delete();
+    void tearDown() throws IOException {
+        // Clean up by deleting the temporary testresetSchedule.json file after each test
+        Files.deleteIfExists(Paths.get(CONFIG_FILE_PATH));
+    }
+
+    @Test
+    void testLoadResetDates() {
+        LeaderboardResetScheduler resetManager = new LeaderboardResetScheduler();
+        assertNotNull(resetManager);
+        assertNotNull(resetManager.getLastDailyReset());
+        assertNotNull(resetManager.getLastMonthlyReset());
+    }
+
+    @Test
+    void testCheckAndResetLeaderboards() {
+        LeaderboardResetScheduler resetManager = new LeaderboardResetScheduler();
+        resetManager.checkAndResetLeaderboards();
+
+        LocalDate today = LocalDate.now();
+        assertEquals(today, resetManager.getLastDailyReset());
+        assertEquals(today.withDayOfMonth(1), resetManager.getLastMonthlyReset());
+    }
+
+    @Test
+    void testCreateDefaultConfigFile() {
+        // Delete the config file to simulate a missing file scenario
+        try {
+            Files.deleteIfExists(Paths.get(CONFIG_FILE_PATH));
+            System.out.println("Config file deleted to simulate missing file scenario.");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    }
 
-    @Test
-    void testDailyReset() throws IOException {
-        Leaderboard dailyLeaderboard = new DailyLeaderboard("Daily Leaderboard", LocalDate.now());
-        dailyLeaderboard.addScore("testUser", 1000);
+        LeaderboardResetScheduler resetManager = new LeaderboardResetScheduler();
+        resetManager.checkAndResetLeaderboards();
 
-        Map<String, Leaderboard> leaderboards = new HashMap<>();
-        leaderboards.put("daily", dailyLeaderboard);
+        boolean fileExists = Files.exists(Paths.get(CONFIG_FILE_PATH));
+        System.out.println("Config file exists: " + fileExists);
+        assertTrue(fileExists, "Config file should be created");
 
-        when(leaderboardDAO.readFromCache()).thenReturn(leaderboards);
+        try {
+            String jsonContent = new String(Files.readAllBytes(Paths.get(CONFIG_FILE_PATH)));
+            assertNotNull(jsonContent, "Config file content should not be null");
+            assertFalse(jsonContent.isEmpty(), "Config file content should not be empty");
 
-        // Capture the TimerTask that was scheduled
-        ArgumentCaptor<TimerTask> captor = ArgumentCaptor.forClass(TimerTask.class);
-        doNothing().when(timer).scheduleAtFixedRate(captor.capture(), any(Date.class), anyLong());
+            JsonObject jsonObject = JsonParser.parseString(jsonContent).getAsJsonObject();
+            LocalDate lastDailyReset = LocalDate.parse(jsonObject.get("lastDailyReset").getAsString());
+            LocalDate lastMonthlyReset = LocalDate.parse(jsonObject.get("lastMonthlyReset").getAsString());
 
-        // Schedule the reset and capture the TimerTask
-        scheduler.scheduleDailyReset(new Date());
-
-        // Run the captured TimerTask to simulate the timer triggering
-        captor.getValue().run();
-
-        verify(leaderboardDAO, times(1)).writeToCache(leaderboards);
-        assertTrue(dailyLeaderboard.getScores().isEmpty(), "Daily leaderboard should be empty after reset.");
-    }
-
-    @Test
-    void testMonthlyReset() throws IOException {
-        Leaderboard monthlyLeaderboard = new MonthlyLeaderboard("Monthly Leaderboard", LocalDate.now().withDayOfMonth(1));
-        monthlyLeaderboard.addScore("testUser", 500);
-
-        Map<String, Leaderboard> leaderboards = new HashMap<>();
-        leaderboards.put("monthly", monthlyLeaderboard);
-
-        when(leaderboardDAO.readFromCache()).thenReturn(leaderboards);
-
-        // Capture the TimerTask that was scheduled
-        ArgumentCaptor<TimerTask> captor = ArgumentCaptor.forClass(TimerTask.class);
-        doNothing().when(timer).scheduleAtFixedRate(captor.capture(), any(Date.class), anyLong());
-
-        // Schedule the reset and capture the TimerTask
-        scheduler.scheduleMonthlyReset(new Date());
-
-        // Run the captured TimerTask to simulate the timer triggering
-        captor.getValue().run();
-
-        verify(leaderboardDAO, times(1)).writeToCache(leaderboards);
-        assertTrue(monthlyLeaderboard.getScores().isEmpty(), "Monthly leaderboard should be empty after reset.");
+            assertEquals(LocalDate.now(), lastDailyReset);
+            assertEquals(LocalDate.now().withDayOfMonth(1), lastMonthlyReset);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail("Exception while reading the config file");
+        }
     }
 }

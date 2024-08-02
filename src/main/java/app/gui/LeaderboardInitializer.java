@@ -32,7 +32,8 @@ public class LeaderboardInitializer {
             FileCacheLeaderboardDataAccessObject leaderboardDAO = new FileCacheLeaderboardDataAccessObject("src/main/java/data_access/leaderboards.json");
 
             // Initialize the scheduler to auto-reset leaderboards
-            new LeaderboardResetScheduler(leaderboardDAO);
+            LeaderboardResetScheduler resetScheduler = new LeaderboardResetScheduler();
+            resetScheduler.checkAndResetLeaderboards();
 
             Map<String, Leaderboard> leaderboards = leaderboardDAO.readFromCache();
 

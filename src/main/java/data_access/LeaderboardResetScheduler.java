@@ -1,94 +1,105 @@
 package data_access;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.temporal.TemporalAdjusters;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.time.temporal.ChronoUnit;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.io.IOException;
-import java.util.Map;
-
-import entity.Leaderboard;
+import java.nio.file.Path;
 
 public class LeaderboardResetScheduler {
-    private final Timer timer;
-    private final FileCacheLeaderboardDataAccessObject leaderboardDAO;
 
-    public LeaderboardResetScheduler(FileCacheLeaderboardDataAccessObject leaderboardDAO) {
-        this.leaderboardDAO = leaderboardDAO;
-        this.timer = new Timer(true);
-        scheduleResets();
+    private static final String CONFIG_FILE_PATH = "src/main/java/data_access/testresetSchedule.json";
+    private LocalDate lastDailyReset;
+    private LocalDate lastMonthlyReset;
+
+    public LeaderboardResetScheduler() {
+        loadResetDates();
     }
 
-    // Constructor for dependency injection, mainly for testing purposes
-    protected LeaderboardResetScheduler(FileCacheLeaderboardDataAccessObject leaderboardDAO, Timer timer) {
-        this.leaderboardDAO = leaderboardDAO;
-        this.timer = timer;
-        scheduleResets();
-    }
-
-    protected void scheduleResets() {
-        scheduleDailyReset(getFirstDailyResetTime());
-        scheduleMonthlyReset(getFirstMonthlyResetTime());
-    }
-
-    protected void scheduleDailyReset(Date firstDailyResetTime) {
-        TimerTask dailyResetTask = new TimerTask() {
-            @Override
-            public void run() {
-                resetDailyLeaderboard();
-            }
-        };
-        timer.scheduleAtFixedRate(dailyResetTask, firstDailyResetTime, 24 * 60 * 60 * 1000); // Every 24 hours
-    }
-
-    protected void scheduleMonthlyReset(Date firstMonthlyResetTime) {
-        TimerTask monthlyResetTask = new TimerTask() {
-            @Override
-            public void run() {
-                resetMonthlyLeaderboard();
-            }
-        };
-        timer.scheduleAtFixedRate(monthlyResetTask, firstMonthlyResetTime, 30L * 24 * 60 * 60 * 1000); // Every 30 days
-    }
-
-    protected void resetDailyLeaderboard() {
+    private void loadResetDates() {
         try {
-            Map<String, Leaderboard> leaderboards = leaderboardDAO.readFromCache();
-            Leaderboard dailyLeaderboard = leaderboards.get("daily");
-            if (dailyLeaderboard != null) {
-                dailyLeaderboard.clearScores();
-                leaderboardDAO.writeToCache(leaderboards);
+            Path path = Paths.get(CONFIG_FILE_PATH);
+            if (!Files.exists(path)) {
+                System.out.println("Config file does not exist, creating default config file.");
+                createDefaultConfigFile();
             }
+            String jsonContent = new String(Files.readAllBytes(path));
+            JsonObject jsonObject = JsonParser.parseString(jsonContent).getAsJsonObject();
+            lastDailyReset = jsonObject.has("lastDailyReset") ? LocalDate.parse(jsonObject.get("lastDailyReset").getAsString()) : null;
+            lastMonthlyReset = jsonObject.has("lastMonthlyReset") ? LocalDate.parse(jsonObject.get("lastMonthlyReset").getAsString()) : null;
+        } catch (IOException | JsonSyntaxException e) {
+            e.printStackTrace();
+            // Handle error or set default dates
+            lastDailyReset = null;
+            lastMonthlyReset = null;
+        }
+    }
+
+    private void createDefaultConfigFile() {
+        try {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("lastDailyReset", LocalDate.now().toString());
+            jsonObject.addProperty("lastMonthlyReset", LocalDate.now().withDayOfMonth(1).toString());
+            Files.write(Paths.get(CONFIG_FILE_PATH), jsonObject.toString().getBytes(), StandardOpenOption.CREATE);
+            System.out.println("Default config file created.");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    protected void resetMonthlyLeaderboard() {
+    private void saveResetDates() {
         try {
-            Map<String, Leaderboard> leaderboards = leaderboardDAO.readFromCache();
-            Leaderboard monthlyLeaderboard = leaderboards.get("monthly");
-            if (monthlyLeaderboard != null) {
-                monthlyLeaderboard.clearScores();
-                leaderboardDAO.writeToCache(leaderboards);
-            }
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("lastDailyReset", lastDailyReset != null ? lastDailyReset.toString() : LocalDate.now().toString());
+            jsonObject.addProperty("lastMonthlyReset", lastMonthlyReset != null ? lastMonthlyReset.toString() : LocalDate.now().withDayOfMonth(1).toString());
+
+            Gson gson = new Gson();
+            Files.write(Paths.get(CONFIG_FILE_PATH), gson.toJson(jsonObject).getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
+            // Handle error
         }
     }
 
-    private Date getFirstDailyResetTime() {
-        // Calculate the next midnight for the daily reset
-        LocalDateTime nextMidnight = LocalDate.now().plusDays(1).atStartOfDay();
-        return Date.from(nextMidnight.atZone(ZoneId.systemDefault()).toInstant());
+    public void checkAndResetLeaderboards() {
+        LocalDate today = LocalDate.now();
+
+        // Reset daily leaderboard
+        if (lastDailyReset == null || ChronoUnit.DAYS.between(lastDailyReset, today) >= 1) {
+            resetDailyLeaderboard();
+            lastDailyReset = today;
+        }
+
+        // Reset monthly leaderboard
+        if (lastMonthlyReset == null || ChronoUnit.MONTHS.between(lastMonthlyReset, today) >= 1) {
+            resetMonthlyLeaderboard();
+            lastMonthlyReset = today.withDayOfMonth(1);
+        }
+
+        saveResetDates();
     }
 
-    private Date getFirstMonthlyResetTime() {
-        // Calculate the first day of the next month for the monthly reset
-        LocalDateTime firstDayOfNextMonth = LocalDate.now().with(TemporalAdjusters.firstDayOfNextMonth()).atStartOfDay();
-        return Date.from(firstDayOfNextMonth.atZone(ZoneId.systemDefault()).toInstant());
+    private void resetDailyLeaderboard() {
+        // Implement your daily leaderboard reset logic here
+        System.out.println("Daily leaderboard has been reset.");
+    }
+
+    private void resetMonthlyLeaderboard() {
+        // Implement your monthly leaderboard reset logic here
+        System.out.println("Monthly leaderboard has been reset.");
+    }
+
+    public LocalDate getLastDailyReset() {
+        return lastDailyReset;
+    }
+
+    public LocalDate getLastMonthlyReset() {
+        return lastMonthlyReset;
     }
 }

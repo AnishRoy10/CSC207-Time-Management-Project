@@ -19,7 +19,7 @@ public class CalendarDataAccessObjectTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        testFilePath = "src/test/userCacheTest.json";
+        testFilePath = "test/userCacheTest.json";
         fileCacheUserDAO = new FileCacheUserDataAccessObject(testFilePath);
         gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer())

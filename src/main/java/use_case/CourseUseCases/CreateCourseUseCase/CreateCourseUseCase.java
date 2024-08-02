@@ -59,6 +59,15 @@ public class CreateCourseUseCase implements CreateCourseInputBoundary {
             Course course = new Course(courseName, courseDescription);
             User user = userDataAccessObject.ReadFromCache(username);
 
+            if (user == null) {
+                CreateCourseOutputData outputData = new CreateCourseOutputData(
+                        false,
+                        "Something went wrong getting the current user."
+                );
+                presenter.present(outputData);
+                return;
+            }
+
             /// add the creation user to the new course
             course.addUser(user);
             user.addCourse(course);

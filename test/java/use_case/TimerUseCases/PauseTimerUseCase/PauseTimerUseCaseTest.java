@@ -70,7 +70,7 @@ public class PauseTimerUseCaseTest {
 //            controller.execute_pause_timer(false);
             pause_method.invoke(view);
             long startTime = System.currentTimeMillis();
-            while (System.currentTimeMillis() - startTime < 2000) {
+            while (System.currentTimeMillis() - startTime < 500) {
                 update_method.invoke(view);
 
             }
@@ -82,7 +82,7 @@ public class PauseTimerUseCaseTest {
             controller.execute_pause_timer(true);
 
             startTime = System.currentTimeMillis();
-            while (System.currentTimeMillis() - startTime < 1900) {
+            while (System.currentTimeMillis() - startTime < 1000) {
                 controller.execute_update_timer();
 
             }
@@ -90,7 +90,7 @@ public class PauseTimerUseCaseTest {
             assertEquals("Pause", RunningTimerViewModel.PAUSE_LABEL);
             assertEquals("0", RunningTimerViewModel.HOURS);
             assertEquals("59", RunningTimerViewModel.MINUTES);
-            assertEquals("58", RunningTimerViewModel.SECONDS);
+            assertEquals("59", RunningTimerViewModel.SECONDS);
         });
     }
 }

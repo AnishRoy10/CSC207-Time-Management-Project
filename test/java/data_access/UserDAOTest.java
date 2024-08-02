@@ -17,11 +17,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserDAOTest {
     private UserDAO userDAO;
     private SQLDatabaseHelper dbHelper;
-    private static final String DB_URL = "jdbc:sqlite:Saves/UserDB.db";
+    private static final String DB_URL = "jdbc:sqlite:Saves/TestDB.db";
 
     @BeforeEach
     void setUp() {
-        dbHelper = new SQLDatabaseHelper();
+        dbHelper = new SQLDatabaseHelper(DB_URL);
         dbHelper.initializeDatabase();
         userDAO = new UserDAO(dbHelper);
     }

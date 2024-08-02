@@ -24,7 +24,7 @@ class TodoListDAOTest {
 
     @BeforeEach
     void setUp() {
-        dbHelper = new SQLDatabaseHelper();
+        dbHelper = new SQLDatabaseHelper("jdbc:sqlite:Saves/TestDB.db");
         dbHelper.initializeDatabase();
         taskRepository = new TaskDAO(dbHelper);
         todoListRepository = new TodoListDAO(taskRepository);

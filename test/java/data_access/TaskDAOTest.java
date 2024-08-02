@@ -19,18 +19,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class TaskDAOTest {
     private SQLDatabaseHelper dbHelper;
     private TaskDAO taskDAO;
-    private final String dbPath = "saves/UserDB.db";
+    private final String dbPath = "jdbc:sqlite:Saves/TestDB.db";
 
     @BeforeEach
     void setUp() {
-        dbHelper = new SQLDatabaseHelper();
+        dbHelper = new SQLDatabaseHelper(dbPath);
         dbHelper.initializeDatabase();
         taskDAO = new TaskDAO(dbHelper);
     }
 
     @AfterEach
     void tearDown() {
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+        try (Connection conn = DriverManager.getConnection(dbPath);
              Statement stmt = conn.createStatement()) {
             stmt.execute("DROP TABLE IF EXISTS Tasks");
         } catch (SQLException e) {

@@ -13,13 +13,30 @@ import java.sql.Statement;
  * The Tasks table stores task information such as title, description, deadline, and other data.
  */
 public class SQLDatabaseHelper {
-    private static final String URL = "jdbc:sqlite:saves/UserDB.db";
+    private static final String DEFAULT_URL = "jdbc:sqlite:saves/UserDB.db";
+    private String url;
+
+    /**
+     * Default constructor using the default database URL.
+     */
+    public SQLDatabaseHelper() {
+        this.url = DEFAULT_URL;
+    }
+
+    /**
+     * Constructor to specify a custom database URL.
+     *
+     * @param url The database URL to use.
+     */
+    public SQLDatabaseHelper(String url) {
+        this.url = url;
+    }
 
     /**
      * Initializes the database by creating the necessary tables if they do not exist.
      */
     public void initializeDatabase() {
-        try (Connection conn = DriverManager.getConnection(URL);
+        try (Connection conn = DriverManager.getConnection(this.url);
              Statement stmt = conn.createStatement()) {
             if (conn != null) {
                 String createUserTable = "CREATE TABLE IF NOT EXISTS Users ("
@@ -64,6 +81,6 @@ public class SQLDatabaseHelper {
      * @throws SQLException if a database access error occurs
      */
     public Connection connect() throws SQLException {
-        return DriverManager.getConnection(URL);
+        return DriverManager.getConnection(url);
     }
 }

@@ -41,7 +41,7 @@ class TimerTest {
 
     @Test
     void pause() {
-        long seconds = 2000;
+        long seconds = 100;
         long start = System.currentTimeMillis();
         timer.pause();
         while (System.currentTimeMillis() < start + seconds) {
@@ -49,6 +49,6 @@ class TimerTest {
         }
         timer.resume();
         long actual = timer.timerLength();
-        assertEquals(3602000, actual);
+        assertEquals(3600100, actual);
     }
 }

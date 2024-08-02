@@ -34,10 +34,11 @@ public class CompleteTaskFilePersistenceTest {
     private CompleteTaskUseCase completeTaskUseCase;
     private User user;
     private Task task;
+    private static final String DB_URL = "jdbc:sqlite:Saves/TestDB.db";
 
     @BeforeEach
     public void setUp() {
-        dbHelper = new SQLDatabaseHelper();
+        dbHelper = new SQLDatabaseHelper(DB_URL);
         dbHelper.initializeDatabase();
         userRepository = new UserDAO(dbHelper);
         taskRepository = new TaskDAO(dbHelper);

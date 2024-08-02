@@ -8,6 +8,7 @@ import interface_adapter.viewmodel.TodoListViewModel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.sqlite.core.DB;
 import repositories.TaskRepository;
 import repositories.UserRepository;
 import use_case.TodoListUseCases.AddTaskUseCase.AddTaskRequestModel;
@@ -26,10 +27,11 @@ class AddTaskUseCaseTest {
     private SQLDatabaseHelper dbHelper;
     private UserRepository userRepository;
     private TaskRepository taskRepository;
+    private static final String DB_URL = "jdbc:sqlite:Saves/TestDB.db";
 
     @BeforeEach
     void setUp() {
-        dbHelper = new SQLDatabaseHelper();
+        dbHelper = new SQLDatabaseHelper(DB_URL);
         dbHelper.initializeDatabase();
         userRepository = new UserDAO(dbHelper);
         taskRepository = new TaskDAO(dbHelper);

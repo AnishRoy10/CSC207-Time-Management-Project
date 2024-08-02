@@ -192,6 +192,7 @@ public class User implements Serializable {
     */
     public boolean removeCourse(Course course) {
         if (this.courses.contains(course)) {
+            this.courses.remove(course);
             return course.removeUser(this);
         }
         return false;

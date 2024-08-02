@@ -34,7 +34,7 @@ public class Course implements Serializable {
 
     /**
      * Gets the name of this course.
-     * 
+     *
      * @return the name of this course
      */
     public String getName() {
@@ -43,7 +43,7 @@ public class Course implements Serializable {
 
     /**
      * Gets the description of this course.
-     * 
+     *
      * @return the description of this course
      */
     public String getDescription() {
@@ -52,7 +52,7 @@ public class Course implements Serializable {
 
     /**
      * Sets the name of this course.
-     * 
+     *
      * @param name the new name for this course
      */
     public void setName(String name) {
@@ -61,7 +61,7 @@ public class Course implements Serializable {
 
     /**
      * Sets the description of this course.
-     * 
+     *
      * @param description the new description for this course
      */
     public void setDescription(String description) {
@@ -70,7 +70,7 @@ public class Course implements Serializable {
 
     /**
      * Adds a new user to this course.
-     * 
+     *
      * @param user the user to add
      */
     public void addUser(User user) {
@@ -81,9 +81,9 @@ public class Course implements Serializable {
     }
 
     /**
-     * Attempts to remove the specified user from this course. 
+     * Attempts to remove the specified user from this course.
      * Returns a boolean value that indicates whether the attempt was successful.
-     * 
+     *
      * @param user the user to remove
      * @return     the success value of the method
      */
@@ -91,5 +91,12 @@ public class Course implements Serializable {
         return users.remove(user);
     }
 
-
+    /**
+     * Gets the list of users in this course.
+     *
+     * @return the list of users in this course
+     */
+    public ArrayList<User> getUsers() {
+        return users;
+    }
 }

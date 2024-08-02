@@ -1,21 +1,30 @@
 package use_case.TimerUseCases.SetTimerUseCase;
 
 import entity.Timer;
+import entity.User;
 
 /**
-Use case interactor for the set timer use case.
+ * Class representing the use case interactor for the set timer use case.
  */
 public class SetTimerInteractor implements SetTimerInputBoundary {
     final SetTimerDataAccessInterface userDataAccessObject;
     final SetTimerOutputBoundary userPresenter;
 
+    /**
+     * Constructor for SetTimerInteractor
+     * @param setTimerDataAccessInterface data access interface allowing the interactor to access the data access object
+     * @param setTimerOutputBoundary output boundary allowing the interactor to access the presenter
+     */
     public SetTimerInteractor(SetTimerDataAccessInterface setTimerDataAccessInterface,
                               SetTimerOutputBoundary setTimerOutputBoundary) {
         this.userDataAccessObject = setTimerDataAccessInterface;
         this.userPresenter = setTimerOutputBoundary;
     }
 
-
+    /**
+     * Executes the set timer use case. Creates a new timer entity to be saved to the user entity.
+     * @param setTimerInputData input data for set timer use case
+     */
     public void execute(SetTimerInputData setTimerInputData) {
         if (setTimerInputData.getHours() == 0 &&
                 setTimerInputData.getMinutes() == 0 &&
@@ -27,7 +36,9 @@ public class SetTimerInteractor implements SetTimerInputBoundary {
                     setTimerInputData.getMinutes(),
                     setTimerInputData.getSeconds());
 
-            userDataAccessObject.save(timer);
+            User user = userDataAccessObject.load();
+            user.addTimer(timer);
+            userDataAccessObject.save(user);
 
             long timerLength = timer.timerLength();
             int hours = (int) (timerLength / 3600000);

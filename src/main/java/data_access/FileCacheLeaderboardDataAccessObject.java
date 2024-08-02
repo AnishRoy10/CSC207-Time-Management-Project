@@ -2,6 +2,9 @@ package data_access;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import data_access.serializers.AllTimeLeaderboardDeserializer;
+import data_access.serializers.DailyLeaderboardDeserializer;
+import data_access.serializers.LocalDateSerializer;
 import entity.Leaderboard;
 import entity.AllTimeLeaderboard;
 import entity.DailyLeaderboard;

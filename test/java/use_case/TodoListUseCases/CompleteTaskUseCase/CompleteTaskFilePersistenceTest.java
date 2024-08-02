@@ -11,17 +11,11 @@ import org.junit.jupiter.api.Test;
 import repositories.LeaderboardRepository;
 import repositories.TaskRepository;
 import repositories.UserRepository;
-import interface_adapter.presenter.TodoListPresenter;
-import interface_adapter.viewmodel.TodoListViewModel;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 

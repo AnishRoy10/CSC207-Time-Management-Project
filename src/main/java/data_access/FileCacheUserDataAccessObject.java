@@ -3,6 +3,7 @@ package data_access;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import data_access.serializers.LocalDateTimeSerializer;
 import entity.FriendsList;
 import entity.User;
 import repositories.UserRepository;

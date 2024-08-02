@@ -16,15 +16,6 @@ import repositories.TaskRepository;
 import repositories.UserRepository;
 import use_case.TodoListUseCases.AddTaskUseCase.AddTaskRequestModel;
 import use_case.TodoListUseCases.AddTaskUseCase.AddTaskUseCase;
-import use_case.TodoListUseCases.CompleteTaskUseCase.CompleteTaskUseCase;
-import use_case.TodoListUseCases.CompleteTaskUseCase.CompleteTaskRequestModel;
-import use_case.TodoListUseCases.FilterTasksUseCase.FilterTasksOutputBoundary;
-import use_case.TodoListUseCases.FilterTasksUseCase.FilterTasksRequestModel;
-import use_case.TodoListUseCases.FilterTasksUseCase.FilterTasksUseCase;
-import use_case.TodoListUseCases.SortTasksUseCase.SortTasksOutputBoundary;
-import use_case.TodoListUseCases.SortTasksUseCase.SortTasksRequestModel;
-import use_case.TodoListUseCases.SortTasksUseCase.SortTasksUseCase;
-import use_case.TaskData;
 
 import java.sql.Connection;
 import java.sql.SQLException;

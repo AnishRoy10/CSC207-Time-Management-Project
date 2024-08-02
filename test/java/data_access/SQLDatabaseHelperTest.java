@@ -57,4 +57,10 @@ class SQLDatabaseHelperTest {
             fail("Database schema should be initialized without exception.");
         }
     }
+
+    @Test
+    void testDefaultConstructor() {
+        SQLDatabaseHelper dbHelper = new SQLDatabaseHelper();
+        assertNotNull(dbHelper);
+    }
 }

@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -124,5 +123,28 @@ class TodoListDAOTest {
         assertEquals(2, allTasks.size());
         assertTrue(allTasks.stream().anyMatch(task -> task.getTitle().equals("Task 1")));
         assertTrue(allTasks.stream().anyMatch(task -> task.getTitle().equals("Task 2")));
+    }
+
+    @Test
+    void testRemoveTaskFromCache() {
+        String username = "removeTaskUser";
+        TodoList todoList = new TodoList();
+
+        Task task1 = new Task(username, "Task 1", "Description 1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Course 1");
+        Task task2 = new Task(username, "Task 2", "Description 2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), "Course 2");
+
+        todoList.addTask(task1);
+        todoList.addTask(task2);
+        todoListRepository.WriteToCache(todoList, username);
+
+        // Remove task1 from the cache
+        todoListRepository.removeTaskFromCache(task1.getId());
+
+        TodoList retrievedTodoList = todoListRepository.ReadFromCache(username);
+
+        assertNotNull(retrievedTodoList);
+        assertEquals(1, retrievedTodoList.getTasks().size());
+        assertFalse(retrievedTodoList.getTasks().stream().anyMatch(task -> task.getTitle().equals("Task 1")));
+        assertTrue(retrievedTodoList.getTasks().stream().anyMatch(task -> task.getTitle().equals("Task 2")));
     }
 }

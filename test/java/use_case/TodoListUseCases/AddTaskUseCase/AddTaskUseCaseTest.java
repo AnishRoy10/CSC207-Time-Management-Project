@@ -8,11 +8,8 @@ import interface_adapter.viewmodel.TodoListViewModel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.sqlite.core.DB;
 import repositories.TaskRepository;
 import repositories.UserRepository;
-import use_case.TodoListUseCases.AddTaskUseCase.AddTaskRequestModel;
-import use_case.TodoListUseCases.AddTaskUseCase.AddTaskUseCase;
 import entity.Course;
 import entity.User;
 

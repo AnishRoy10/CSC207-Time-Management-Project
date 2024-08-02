@@ -76,4 +76,26 @@ class UserDAOTest {
         userDAO.deleteUser("TestUser");
         assertFalse(userDAO.UserExists("TestUser"));
     }
+
+    @Test
+    void testReadFromCache() {
+        User user = new User("TestUser", "TestPassword1", new User[]{}, new Course[]{});
+        userDAO.WriteToCache(user);
+
+        User retrievedUser = userDAO.ReadFromCache();
+        assertNotNull(retrievedUser);
+        assertEquals("TestUser", retrievedUser.getUsername());
+        assertTrue(retrievedUser.verifyPassword("TestPassword1"));
+    }
+
+    @Test
+    void testFindByUsername() {
+        User user = new User("TestUser", "TestPassword1", new User[]{}, new Course[]{});
+        userDAO.WriteToCache(user);
+
+        User retrievedUser = userDAO.findByUsername("TestUser");
+        assertNotNull(retrievedUser);
+        assertEquals("TestUser", retrievedUser.getUsername());
+        assertTrue(retrievedUser.verifyPassword("TestPassword1"));
+    }
 }

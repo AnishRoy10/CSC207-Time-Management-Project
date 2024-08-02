@@ -32,7 +32,7 @@ public class JoinCourseInputData {
      * Get the course name embedded in this data object.
      * @return The name of the course to join.
      */
-    String getCourseName() {
+    public String getCourseName() {
         return courseName;
     }
 }

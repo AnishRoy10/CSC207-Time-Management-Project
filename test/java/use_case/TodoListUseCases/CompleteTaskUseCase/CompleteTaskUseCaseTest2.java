@@ -34,7 +34,7 @@ public class CompleteTaskUseCaseTest2 {
         completeTaskUseCase = new CompleteTaskUseCase(userRepository, taskRepository, completeTaskOutputBoundary, leaderboardRepository);
 
         user = new User("testUser", "password", new User[0], new Course[0]);
-        task = new Task(UUID.randomUUID(), "Test Task", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Test Course");
+        task = new Task("testUser", "Test Task", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Test Course");
         task.setUsername(user.getUsername());
         user.getTodoList().addTask(task);
 

@@ -58,6 +58,8 @@ public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
                 task.setPointsAwarded(true);
             }
 
+            taskRepository.WriteToCache(task, user.getUsername());
+
             TaskData taskData = new TaskData(
                     task.getId(),
                     task.getUsername(),

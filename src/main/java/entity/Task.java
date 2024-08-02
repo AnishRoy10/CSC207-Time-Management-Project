@@ -45,19 +45,6 @@ public class Task implements Serializable {
         this.pointsAwarded = false; // By default, points are not awarded for a new task
     }
 
-    // Overridden constructor for testing.
-    public Task(UUID id, String title, String description, LocalDateTime startDate, LocalDateTime deadline, String course) {
-        this.id = id; // Use the provided UUID
-        this.title = title;
-        this.description = description != null ? description : "";
-        this.completed = false; // By default, a new task is not completed
-        this.startDate = startDate;
-        this.deadline = deadline;
-        this.course = course;
-        this.completionDate = null;
-        this.pointsAwarded = false; // By default, points are not awarded for a new task
-    }
-
     // Getter for the ID
     public UUID getId() {
         return id;

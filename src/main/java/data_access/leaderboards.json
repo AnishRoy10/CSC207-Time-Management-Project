@@ -3,9 +3,13 @@
     "currentDate": "2024-07-29",
     "name": "Daily Leaderboard",
     "scores": {
-      "user1": 200
+      "user1": 200,
+      "TestUser2": 500,
+      "TestUser": 500
     },
     "sortedScores": [
+      {},
+      {},
       {}
     ],
     "type": "DailyLeaderboard"
@@ -14,9 +18,13 @@
     "month": "2024-07-01",
     "name": "Monthly Leaderboard",
     "scores": {
-      "user1": 200
+      "user1": 200,
+      "TestUser2": 500,
+      "TestUser": 500
     },
     "sortedScores": [
+      {},
+      {},
       {}
     ],
     "type": "MonthlyLeaderboard"
@@ -24,9 +32,13 @@
   "allTime": {
     "name": "All-Time Leaderboard",
     "scores": {
-      "user1": 200
+      "user1": 200,
+      "TestUser2": 500,
+      "TestUser": 500
     },
     "sortedScores": [
+      {},
+      {},
       {}
     ],
     "type": "AllTimeLeaderboard"

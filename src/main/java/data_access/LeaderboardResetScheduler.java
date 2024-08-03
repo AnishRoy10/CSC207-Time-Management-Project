@@ -6,23 +6,42 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import entity.DailyLeaderboard;
+import entity.Leaderboard;
+import entity.MonthlyLeaderboard;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Map;
 
+/**
+ * The LeaderboardResetScheduler class is responsible for managing the reset schedules of leaderboards.
+ * It handles loading reset dates from a configuration file, saving reset dates, and performing resets
+ * for daily and monthly leaderboards.
+ */
 public class LeaderboardResetScheduler {
 
-    private static final String CONFIG_FILE_PATH = "src/main/java/data_access/testresetSchedule.json";
+    private static final String CONFIG_FILE_PATH = "src/main/java/data_access/ResetSchedule.json";
     private LocalDate lastDailyReset;
     private LocalDate lastMonthlyReset;
+    private Map<String, Leaderboard> leaderboards;
 
-    public LeaderboardResetScheduler() {
+
+    /**
+     * Constructs a LeaderboardResetScheduler and loads the reset dates from the configuration file.
+     */
+    public LeaderboardResetScheduler(Map<String, Leaderboard> leaderboards) {
+        this.leaderboards = leaderboards;
         loadResetDates();
     }
 
-    private void loadResetDates() {
+    /**
+     * Loads the reset dates from the configuration file. If the file does not exist, a default file will be created.
+     */
+    protected void loadResetDates() {
         try {
             Path path = Paths.get(CONFIG_FILE_PATH);
             if (!Files.exists(path)) {
@@ -41,6 +60,9 @@ public class LeaderboardResetScheduler {
         }
     }
 
+    /**
+     * Creates a default configuration file with the current date as the last reset date.
+     */
     private void createDefaultConfigFile() {
         try {
             JsonObject jsonObject = new JsonObject();
@@ -53,6 +75,9 @@ public class LeaderboardResetScheduler {
         }
     }
 
+    /**
+     * Saves the current reset dates to the configuration file.
+     */
     private void saveResetDates() {
         try {
             JsonObject jsonObject = new JsonObject();
@@ -67,6 +92,11 @@ public class LeaderboardResetScheduler {
         }
     }
 
+    /**
+     * Checks and resets the leaderboards if necessary based on the last reset dates.
+     * If the daily leaderboard has not been reset today, it resets.
+     * If the monthly leaderboard has not been reset this month, it resets.
+     */
     public void checkAndResetLeaderboards() {
         LocalDate today = LocalDate.now();
 
@@ -86,19 +116,37 @@ public class LeaderboardResetScheduler {
     }
 
     private void resetDailyLeaderboard() {
-        // Implement your daily leaderboard reset logic here
-        System.out.println("Daily leaderboard has been reset.");
+        for (Leaderboard leaderboard : leaderboards.values()) {
+            if (leaderboard instanceof DailyLeaderboard) {
+                leaderboard.clearScores();
+                System.out.println("Daily leaderboard (" + leaderboard.getName() + ") has been reset.");
+            }
+        }
     }
 
     private void resetMonthlyLeaderboard() {
-        // Implement your monthly leaderboard reset logic here
-        System.out.println("Monthly leaderboard has been reset.");
+        for (Leaderboard leaderboard : leaderboards.values()) {
+            if (leaderboard instanceof MonthlyLeaderboard) {
+                leaderboard.clearScores();
+                System.out.println("Monthly leaderboard (" + leaderboard.getName() + ") has been reset.");
+            }
+        }
     }
 
+    /**
+     * Returns the date of the last daily reset.
+     *
+     * @return the date of the last daily reset
+     */
     public LocalDate getLastDailyReset() {
         return lastDailyReset;
     }
 
+    /**
+     * Returns the date of the last monthly reset.
+     *
+     * @return the date of the last monthly reset
+     */
     public LocalDate getLastMonthlyReset() {
         return lastMonthlyReset;
     }

@@ -6,12 +6,14 @@ import entity.Course;
 import entity.User;
 import interface_adapter.presenter.CoursePromptPresenter;
 import interface_adapter.viewmodel.CoursePromptViewModel;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repositories.CourseRepository;
 import repositories.UserRepository;
 
+import java.io.File;
 import java.io.IOException;
 
 public class JoinCourseUseCaseTest {
@@ -24,6 +26,12 @@ public class JoinCourseUseCaseTest {
     public void setUp() throws IOException {
         userDataAccessObject = new FileCacheUserDataAccessObject(userpath);
         courseDataAccessObject = new CourseDataAccessObject(coursepath);
+    }
+
+    @AfterEach
+    public void tearDown() throws IOException {
+        new File(userpath).delete();
+        new File(coursepath).delete();
     }
 
     @Test

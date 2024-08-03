@@ -7,12 +7,14 @@ import entity.Course;
 import interface_adapter.presenter.CourseViewPresenter;
 import interface_adapter.viewmodel.CourseViewModel;
 import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repositories.CourseRepository;
 import repositories.UserRepository;
 
+import java.io.File;
 import java.io.IOException;
 
 public class ViewCourseUseCaseTest {
@@ -22,6 +24,11 @@ public class ViewCourseUseCaseTest {
     @BeforeEach
     public void setUp() throws IOException {
         courseDataAccessObject = new CourseDataAccessObject(coursepath);
+    }
+
+    @AfterEach
+    public void tearDown() throws IOException {
+        new File(coursepath).delete();
     }
 
     @Test
@@ -43,10 +50,10 @@ public class ViewCourseUseCaseTest {
 
             Assertions.assertTrue(viewModel.isSuccess());
             Assertions.assertEquals(course.getDescription(), viewModel.getCourseDescription());
-            Assertions.assertEquals(course.getTodoList(), viewModel.getTodoList());
-            Assertions.assertEquals(course.getDailyLeaderboard(), viewModel.getDailyLeaderboard());
-            Assertions.assertEquals(course.getMonthlyLeaderboard(), viewModel.getMonthlyLeaderboard());
-            Assertions.assertEquals(course.getAllTimeLeaderboard(), viewModel.getAllTimeLeaderboard());
+            Assertions.assertEquals(course.getTodoList().getTasks(), viewModel.getTodoList().getTasks());
+            Assertions.assertEquals(course.getDailyLeaderboard().getScores(), viewModel.getDailyLeaderboard().getScores());
+            Assertions.assertEquals(course.getMonthlyLeaderboard().getScores(), viewModel.getMonthlyLeaderboard().getScores());
+            Assertions.assertEquals(course.getAllTimeLeaderboard().getScores(), viewModel.getAllTimeLeaderboard().getScores());
         });
     }
 

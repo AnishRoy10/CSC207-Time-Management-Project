@@ -7,12 +7,14 @@ import entity.User;
 import interface_adapter.presenter.CourseListPresenter;
 import interface_adapter.viewmodel.CourseListViewModel;
 import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repositories.CourseRepository;
 import repositories.UserRepository;
 
+import java.io.File;
 import java.io.IOException;
 
 public class LoadCourseUseCaseTest {
@@ -22,6 +24,11 @@ public class LoadCourseUseCaseTest {
     @BeforeEach
     public void setUp() throws IOException {
         userDataAccessObject = new FileCacheUserDataAccessObject(userpath);
+    }
+
+    @AfterEach
+    public void tearDown() throws IOException {
+        new File(userpath).delete();
     }
 
     @Test

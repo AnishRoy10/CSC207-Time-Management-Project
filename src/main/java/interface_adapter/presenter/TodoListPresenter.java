@@ -45,7 +45,7 @@ public class TodoListPresenter implements AddTaskOutputBoundary, RemoveTaskOutpu
     public void present(CompleteTaskResponseModel responseModel) {
         TaskData completedTask = responseModel.getTaskData();
         List<TaskData> updatedTasks = viewModel.getTasks().stream()
-                .map(task -> task.getId() == completedTask.getId() ? completedTask : task)
+                .map(task -> task.getId().equals(completedTask.getId()) ? completedTask : task)
                 .collect(Collectors.toList());
         viewModel.setTasks(updatedTasks);
         System.out.println("Task completed: " + completedTask.getTitle());
@@ -68,4 +68,9 @@ public class TodoListPresenter implements AddTaskOutputBoundary, RemoveTaskOutpu
         viewModel.setTasks(responseModel.getTasks());
         responseModel.getTasks().forEach(task -> System.out.println("Task filtered: " + task.getTitle()));
     }
+
+    public TodoListViewModel getViewModel() {
+        return viewModel;
+    }
+
 }

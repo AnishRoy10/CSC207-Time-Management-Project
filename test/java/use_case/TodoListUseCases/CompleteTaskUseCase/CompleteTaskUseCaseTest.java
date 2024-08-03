@@ -2,6 +2,7 @@ package use_case.TodoListUseCases.CompleteTaskUseCase;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import data_access.FileCacheLeaderboardDataAccessObject;
 import entity.Course;
 import entity.Task;
 import entity.User;
@@ -11,6 +12,7 @@ import interface_adapter.viewmodel.TodoListViewModel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import repositories.LeaderboardRepository;
 import repositories.UserRepository;
 import use_case.TodoListUseCases.AddTaskUseCase.AddTaskRequestModel;
 import use_case.TodoListUseCases.AddTaskUseCase.AddTaskUseCase;
@@ -28,11 +30,14 @@ class CompleteTaskUseCaseTest {
     private FileCacheUserDataAccessObject fileCacheUserDAO;
     private final String testFilePath = "test_userCache.json";
     private UserRepository userRepository;
+    private LeaderboardRepository leaderboardRepository;
+    private final String testLeaderboardFilePath = "test_leaderboards.json";
 
     @BeforeEach
     void setUp() throws IOException {
         fileCacheUserDAO = new FileCacheUserDataAccessObject(testFilePath);
         userRepository = new FileCacheUserDataAccessObject(testFilePath);
+        leaderboardRepository = new FileCacheLeaderboardDataAccessObject(testLeaderboardFilePath);
     }
 
     @AfterEach
@@ -72,7 +77,7 @@ class CompleteTaskUseCaseTest {
             TodoListViewModel viewModel = new TodoListViewModel();
             TodoListPresenter presenter = new TodoListPresenter(viewModel);
             AddTaskUseCase addTaskUseCase = new AddTaskUseCase(userRepository, presenter);
-            CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase(userRepository, presenter);
+            CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase(userRepository, presenter, leaderboardRepository);
 
             LocalDateTime startDate = LocalDateTime.now();
             LocalDateTime deadline = LocalDateTime.now().plusDays(1);
@@ -96,7 +101,7 @@ class CompleteTaskUseCaseTest {
             TodoListViewModel viewModel = new TodoListViewModel();
             TodoListPresenter presenter = new TodoListPresenter(viewModel);
             AddTaskUseCase addTaskUseCase = new AddTaskUseCase(userRepository, presenter);
-            CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase(userRepository, presenter);
+            CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase(userRepository, presenter, leaderboardRepository);
 
             LocalDateTime startDate = LocalDateTime.now();
             LocalDateTime deadline = LocalDateTime.now().plusDays(1);
@@ -128,7 +133,7 @@ class CompleteTaskUseCaseTest {
             fileCacheUserDAO.WriteToCache(user);
             TodoListViewModel viewModel = new TodoListViewModel();
             TodoListPresenter presenter = new TodoListPresenter(viewModel);
-            CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase(userRepository, presenter);
+            CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase(userRepository, presenter, leaderboardRepository);
 
             CompleteTaskRequestModel completeRequestModel = new CompleteTaskRequestModel(UUID.randomUUID(), "invalidIDUser");
 
@@ -144,7 +149,7 @@ class CompleteTaskUseCaseTest {
             TodoListViewModel viewModel = new TodoListViewModel();
             TodoListPresenter presenter = new TodoListPresenter(viewModel);
             AddTaskUseCase addTaskUseCase = new AddTaskUseCase(userRepository, presenter);
-            CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase(userRepository, presenter);
+            CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase(userRepository, presenter, leaderboardRepository);
 
             LocalDateTime startDate = LocalDateTime.now();
             LocalDateTime deadline = LocalDateTime.now().plusDays(1);
@@ -164,4 +169,6 @@ class CompleteTaskUseCaseTest {
             System.out.println("Task completion status after second completion: " + taskData.isCompleted());
         });
     }
+
+
 }

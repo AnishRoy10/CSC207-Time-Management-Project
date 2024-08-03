@@ -1,10 +1,10 @@
 package framework.view;
 
 
-import data_access.InMemoryTimerDataAccessObject;
 import interface_adapter.controller.TimerController;
 import interface_adapter.viewmodel.RunningTimerViewModel;
 
+import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -12,7 +12,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
+/**
+ * This class represents the page for the timer when it is running.
+ * This is displayed after the timer has been set by the user and includes
+ * the ability for the user to pause the timer.
+ */
 public class RunningTimerView extends JFrame {
 
     private final TimerController timerController;
@@ -22,15 +30,24 @@ public class RunningTimerView extends JFrame {
     private final JButton pauseButton;
     private final JButton returnButton;
 
+    private boolean paused = false;
+
     private final Timer actionTimer;
 
+    private Clip clip;
+
+    /**
+     * Constructor for RunningTimerView. Sets up the UI components for this page.
+     * @param timerController controller for timer use cases
+     * @param runningTimerViewModel view model for RunningTimerView
+     */
     public RunningTimerView(TimerController timerController,
                             RunningTimerViewModel runningTimerViewModel) {
         this.timerController = timerController;
         this.runningTimerViewModel = runningTimerViewModel;
 
         setTitle(RunningTimerViewModel.TITLE_LABEL);
-        setSize(1200, 720);
+        setSize(300, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -64,39 +81,118 @@ public class RunningTimerView extends JFrame {
         };
         actionTimer = new Timer(100, updateTimer);
         actionTimer.setRepeats(true);
-        actionTimer.setInitialDelay(1000);
+        actionTimer.setInitialDelay(100);
         actionTimer.start();
+
+        String filePath = System.getProperty("user.dir") + "\\src\\main\\java\\data_access\\massobeats-honey_jam.wav";
+        clip = playSound(filePath, true);
 
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 actionTimer.stop();
+                clip.stop();
             }
         });
 
     }
 
+    /**
+     * Executes the update timer use case. If the timer has ended, this method
+     * will call the endTimer() method.
+     */
     private void updateTimer() {
-        timerController.execute_update_timer();
-        timerLabel.setText(RunningTimerViewModel.HOURS +
-                ":" + RunningTimerViewModel.MINUTES + ":" + RunningTimerViewModel.SECONDS);
-        if (RunningTimerViewModel.HOURS.equals("0") &&
-        RunningTimerViewModel.MINUTES.equals("0") &&
-                RunningTimerViewModel.SECONDS.equals("0")) {
-            endTimer();
+        if (!paused) {
+            timerController.execute_update_timer();
+            timerLabel.setText(RunningTimerViewModel.HOURS +
+                    ":" + RunningTimerViewModel.MINUTES + ":" + RunningTimerViewModel.SECONDS);
+            if (RunningTimerViewModel.HOURS.equals("0") &&
+                    RunningTimerViewModel.MINUTES.equals("0") &&
+                    RunningTimerViewModel.SECONDS.equals("0")) {
+                endTimer();
+            }
         }
     }
 
+    /**
+     * Ends the timer by playing a sound to notify the user and allowing
+     * the user to return to the main page.
+     */
     private void endTimer() {
         actionTimer.stop();
+        String filePath = System.getProperty("user.dir") + "\\src\\main\\java\\data_access\\timer_alarm.wav";
+        clip.stop();
+        clip = playSound(filePath, false);
+        pauseButton.setVisible(false);
         returnButton.setVisible(true);
     }
 
+    /**
+     * Executes the pause timer use case when the user presses the pause button.
+     */
     private void pauseTimer() {
-
+        timerController.execute_pause_timer(paused);
+        if (runningTimerViewModel.getMessage().equals("Success")) {
+            pauseButton.setText(RunningTimerViewModel.PAUSE_LABEL);
+            paused = !paused;
+        }
+        if (paused) {
+            clip.stop();
+        }
+        else {
+            clip.start();
+        }
     }
 
+    /**
+     * Lets the user return to the main page.
+     */
     public void returnPrevious() {
+        actionTimer.stop();
+        clip.stop();
+        dispose();
+    }
 
+    /**
+     * Plays a sound.
+     */
+    public Clip playSound(String path, boolean loop) {
+//        Toolkit.getDefaultToolkit().beep();
+        Clip clip;
+//        String fileName = System.getProperty("user.dir") + "\\src\\main\\java\\data_access\\timer_alarm.wav";
+        try {
+            File file = new File(path);
+            if (file.exists()) {
+                AudioInputStream sound = AudioSystem.getAudioInputStream(file);
+                // load the sound into memory (a Clip)
+                clip = AudioSystem.getClip();
+                clip.open(sound);
+            }
+            else {
+                throw new RuntimeException("Sound: file not found: " + path);
+            }
+        }
+        catch (MalformedURLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Sound: Malformed URL: " + e);
+        }
+        catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Sound: Unsupported Audio File: " + e);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Sound: Input/Output Error: " + e);
+        }
+        catch (LineUnavailableException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Sound: Line Unavailable Exception Error: " + e);
+        }
+
+        if (loop) {
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        }
+        clip.start();
+        return clip;
     }
 }

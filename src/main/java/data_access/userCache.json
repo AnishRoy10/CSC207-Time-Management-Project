@@ -1,0 +1,45 @@
+{
+  "TestUser": {
+    "username": "TestUser",
+    "password": "TestPassword1",
+    "friends": {
+      "friends": []
+    },
+    "courses": [],
+    "todo": {
+      "tasks": [
+        {
+          "id": "4758a929-37c8-4a25-bdb2-09a26f1cab02",
+          "title": "swag",
+          "description": "swag",
+          "completed": false,
+          "startDate": "2024-07-30T03:00:00",
+          "deadline": "2024-07-25T03:30:00",
+          "course": "ddd",
+          "pointsAwarded": true
+        },
+        {
+          "id": "3488e08f-0448-4595-8da1-f9b43cc2280a",
+          "title": "sasfaf",
+          "description": "fdafda",
+          "completed": false,
+          "startDate": "2024-07-04T04:00:00",
+          "deadline": "2024-07-24T03:30:00",
+          "course": "ggg",
+          "pointsAwarded": true
+        }
+      ]
+    },
+    "score": 0,
+    "timer": {
+      "start_time": 1722567082585,
+      "end_time": 1722570682585,
+      "elapsed_time": 0,
+      "pause_time": 0
+    },
+    "aNumber": 5,
+    "calendar": {
+      "events": {}
+    }
+  }
+}

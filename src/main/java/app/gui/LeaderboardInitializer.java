@@ -1,6 +1,7 @@
 package app.gui;
 
 import data_access.FileCacheLeaderboardDataAccessObject;
+import data_access.LeaderboardResetScheduler;
 import entity.AllTimeLeaderboard;
 import entity.DailyLeaderboard;
 import entity.Leaderboard;
@@ -20,9 +21,14 @@ import java.time.LocalDate;
 import java.util.Map;
 
 /**
- * Initializer class for the leaderboard system.
+ * Initializer class for the leaderboard system. This class sets up and initializes the leaderboard system, controllers,
+ * views and reset scheduler.
  */
 public class LeaderboardInitializer {
+    /**
+     * Initializes the leaderboard system.
+     * This method sets up the leaderboard.
+     */
     public static void LeaderboardInitializer() {
         LocalDate today = LocalDate.now();
         LocalDate thisMonth = LocalDate.now().withDayOfMonth(1);
@@ -31,6 +37,11 @@ public class LeaderboardInitializer {
             FileCacheLeaderboardDataAccessObject leaderboardDAO = new FileCacheLeaderboardDataAccessObject("src/main/java/data_access/leaderboards.json");
 
             Map<String, Leaderboard> leaderboards = leaderboardDAO.readFromCache();
+
+            // Initialize the scheduler to auto-reset leaderboards
+            LeaderboardResetScheduler resetScheduler = new LeaderboardResetScheduler(leaderboards);
+            resetScheduler.checkAndResetLeaderboards();
+
 
             Leaderboard monthlyLeaderboard = leaderboards.getOrDefault("monthly", new MonthlyLeaderboard("Monthly Leaderboard", thisMonth));
             Leaderboard allTimeLeaderboard = leaderboards.getOrDefault("allTime", new AllTimeLeaderboard("All-Time Leaderboard"));

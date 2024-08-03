@@ -26,7 +26,7 @@ public class CourseDeserializer implements JsonDeserializer<Course> {
         Course course = new Course(name, description);
 
         course.setUsernames(usernames);
-        course.setTodoList(jsonDeserializationContext.deserialize(jsonObj.get("todolist"), TodoList.class));
+        course.setTodoList(jsonDeserializationContext.deserialize(jsonObj.get("todoList"), TodoList.class));
         course.setDailyLeaderboard(jsonDeserializationContext.deserialize(jsonObj.get("dailyLeaderboard"), DailyLeaderboard.class));
         course.setMonthlyLeaderboard(jsonDeserializationContext.deserialize(jsonObj.get("monthlyLeaderboard"), MonthlyLeaderboard.class));
         course.setAllTimeLeaderboard(jsonDeserializationContext.deserialize(jsonObj.get("allTimeLeaderboard"), AllTimeLeaderboard.class));

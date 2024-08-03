@@ -1,4 +1,4 @@
-package use_case.CourseUseCases.ViewCourseUseCase;
+package java.use_case.CourseUseCases.ViewCourseUseCase;
 
 import com.sun.source.tree.AssertTree;
 import data_access.CourseDataAccessObject;
@@ -13,6 +13,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repositories.CourseRepository;
 import repositories.UserRepository;
+import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseInputBoundary;
+import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseInputData;
+import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseOutputBoundary;
+import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseUseCase;
 
 import java.io.File;
 import java.io.IOException;

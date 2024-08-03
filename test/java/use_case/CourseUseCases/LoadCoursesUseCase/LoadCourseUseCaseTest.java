@@ -1,4 +1,4 @@
-package use_case.CourseUseCases.LoadCoursesUseCase;
+package java.use_case.CourseUseCases.LoadCoursesUseCase;
 
 import data_access.CourseDataAccessObject;
 import data_access.FileCacheUserDataAccessObject;
@@ -13,6 +13,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repositories.CourseRepository;
 import repositories.UserRepository;
+import use_case.CourseUseCases.LoadCoursesUseCase.LoadCoursesInputBoundary;
+import use_case.CourseUseCases.LoadCoursesUseCase.LoadCoursesInputData;
+import use_case.CourseUseCases.LoadCoursesUseCase.LoadCoursesOutputBoundary;
+import use_case.CourseUseCases.LoadCoursesUseCase.LoadCoursesUseCase;
 
 import java.io.File;
 import java.io.IOException;

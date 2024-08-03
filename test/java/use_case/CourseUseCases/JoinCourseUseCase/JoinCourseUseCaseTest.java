@@ -1,4 +1,4 @@
-package use_case.CourseUseCases.LeaveCourseUseCase;
+package java.use_case.CourseUseCases.JoinCourseUseCase;
 
 import data_access.CourseDataAccessObject;
 import data_access.FileCacheUserDataAccessObject;
@@ -6,18 +6,21 @@ import entity.Course;
 import entity.User;
 import interface_adapter.presenter.CoursePromptPresenter;
 import interface_adapter.viewmodel.CoursePromptViewModel;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repositories.CourseRepository;
 import repositories.UserRepository;
+import use_case.CourseUseCases.JoinCourseUseCase.JoinCourseInputBoundary;
+import use_case.CourseUseCases.JoinCourseUseCase.JoinCourseInputData;
+import use_case.CourseUseCases.JoinCourseUseCase.JoinCourseOutputBoundary;
+import use_case.CourseUseCases.JoinCourseUseCase.JoinCourseUseCase;
 
 import java.io.File;
 import java.io.IOException;
 
-public class LeaveCourseUseCaseTest {
+public class JoinCourseUseCaseTest {
     private String userpath = "test_userCache.json";
     private String coursepath = "test_courses.json";
     private UserRepository userDataAccessObject;
@@ -36,25 +39,21 @@ public class LeaveCourseUseCaseTest {
     }
 
     @Test
-    public void testLeaveCourseValid() {
+    public void testValidJoin() {
         Assertions.assertDoesNotThrow(() -> {
             CoursePromptViewModel viewModel = new CoursePromptViewModel();
-            LeaveCourseOutputBoundary presenter = new CoursePromptPresenter(null, null, viewModel);
-            LeaveCourseInputBoundary interactor = new LeaveCourseUseCase(presenter, userDataAccessObject, courseDataAccessObject);
+            JoinCourseOutputBoundary presenter = new CoursePromptPresenter(null, viewModel, null);
+            JoinCourseInputBoundary interactor = new JoinCourseUseCase(presenter, userDataAccessObject, courseDataAccessObject);
 
             User user = new User("Test User", "TestPassword1", new User[]{}, new Course[]{});
             Course course = new Course("Test Course", "Test Description");
 
-            user.addCourse(course);
-            course.addUser(user);
-
             userDataAccessObject.WriteToCache(user);
             courseDataAccessObject.WriteToCache(course);
 
-            Assertions.assertTrue(course.containsUser("Test User"));
-            Assertions.assertTrue(user.getCourses().contains("Test Course"));
+            Assertions.assertFalse(course.containsUser(user.getUsername()));
 
-            LeaveCourseInputData inputData = new LeaveCourseInputData(
+            JoinCourseInputData inputData = new JoinCourseInputData(
                     user.getUsername(),
                     course.getName()
             );
@@ -62,28 +61,30 @@ public class LeaveCourseUseCaseTest {
             interactor.execute(inputData);
 
             Assertions.assertTrue(viewModel.getResponse());
-            Assertions.assertTrue(userDataAccessObject.ReadFromCache("Test User").getCourses().isEmpty());
-            Assertions.assertEquals(0, courseDataAccessObject.findByName("Test Course").getUserNames().length);
+            Assertions.assertFalse(userDataAccessObject.ReadFromCache("Test User").getCourses().isEmpty());
+            Assertions.assertTrue(courseDataAccessObject.findByName("Test Course").containsUser(user.getUsername()));
         });
     }
 
     @Test
-    public void testNotInCourse() {
+    public void testAlreadyInCourse() {
         Assertions.assertDoesNotThrow(() -> {
             CoursePromptViewModel viewModel = new CoursePromptViewModel();
-            LeaveCourseOutputBoundary presenter = new CoursePromptPresenter(null, null, viewModel);
-            LeaveCourseInputBoundary interactor = new LeaveCourseUseCase(presenter, userDataAccessObject, courseDataAccessObject);
+            JoinCourseOutputBoundary presenter = new CoursePromptPresenter(null, viewModel, null);
+            JoinCourseInputBoundary interactor = new JoinCourseUseCase(presenter, userDataAccessObject, courseDataAccessObject);
 
             User user = new User("Test User", "TestPassword1", new User[]{}, new Course[]{});
             Course course = new Course("Test Course", "Test Description");
 
+            user.addCourse(course);
+            course.addUser(user);
+
+            Assertions.assertTrue(course.containsUser(user.getUsername()));
+
             userDataAccessObject.WriteToCache(user);
             courseDataAccessObject.WriteToCache(course);
 
-            Assertions.assertFalse(course.containsUser("Test User"));
-            Assertions.assertFalse(user.getCourses().contains("Test Course"));
-
-            LeaveCourseInputData inputData = new LeaveCourseInputData(
+            JoinCourseInputData inputData = new JoinCourseInputData(
                     user.getUsername(),
                     course.getName()
             );
@@ -91,8 +92,6 @@ public class LeaveCourseUseCaseTest {
             interactor.execute(inputData);
 
             Assertions.assertFalse(viewModel.getResponse());
-            Assertions.assertTrue(userDataAccessObject.ReadFromCache("Test User").getCourses().isEmpty());
-            Assertions.assertEquals(0, courseDataAccessObject.findByName("Test Course").getUserNames().length);
         });
     }
 
@@ -100,16 +99,14 @@ public class LeaveCourseUseCaseTest {
     public void testCourseDoesNotExist() {
         Assertions.assertDoesNotThrow(() -> {
             CoursePromptViewModel viewModel = new CoursePromptViewModel();
-            LeaveCourseOutputBoundary presenter = new CoursePromptPresenter(null, null, viewModel);
-            LeaveCourseInputBoundary interactor = new LeaveCourseUseCase(presenter, userDataAccessObject, courseDataAccessObject);
+            JoinCourseOutputBoundary presenter = new CoursePromptPresenter(null, viewModel, null);
+            JoinCourseInputBoundary interactor = new JoinCourseUseCase(presenter, userDataAccessObject, courseDataAccessObject);
 
             User user = new User("Test User", "TestPassword1", new User[]{}, new Course[]{});
 
             userDataAccessObject.WriteToCache(user);
 
-            Assertions.assertEquals(0, user.getCourses().size());
-
-            LeaveCourseInputData inputData = new LeaveCourseInputData(
+            JoinCourseInputData inputData = new JoinCourseInputData(
                     user.getUsername(),
                     "Test Course"
             );

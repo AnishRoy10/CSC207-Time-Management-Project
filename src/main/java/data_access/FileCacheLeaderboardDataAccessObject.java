@@ -23,10 +23,16 @@ import java.util.Map;
  * using a JSON file. This class provides methods to write a Leaderboard object to the cache, read a Leaderboard
  * object from the cache, and check if a Leaderboard exists in the cache.
  */
-public class FileCacheLeaderboardDataAccessObject implements LeaderboardRepository, AddScoreDataAccessInterface, RemoveScoreDataAccessInterface, UpdateScoreDataAccessInterface, ClearScoresDataAccessInterface, CacheDataAccessInterface {
+public class FileCacheLeaderboardDataAccessObject implements LeaderboardRepository, AddScoreDataAccessInterface, RemoveScoreDataAccessInterface, UpdateScoreDataAccessInterface, ClearScoresDataAccessInterface {
     private final File fileCache;
     private final Gson gson;
 
+    /**
+     * Constructs a FileCacheLeaderboardDataAccessObject with the specified file path.
+     *
+     * @param filePath the path to the file used for caching
+     * @throws IOException if an I/O error occurs during file creation.
+     */
     public FileCacheLeaderboardDataAccessObject(String filePath) throws IOException {
         this.fileCache = new File(filePath);
         if (!fileCache.exists()) {
@@ -42,12 +48,23 @@ public class FileCacheLeaderboardDataAccessObject implements LeaderboardReposito
                 .create();
     }
 
+    /**
+     * Initializes the file with an empty JSON object.
+     *
+     * @throws IOException if an I/0 occurs during file writing.
+     */
     private void initializeEmptyFile() throws IOException {
         try (Writer writer = new FileWriter(fileCache)) {
             writer.write("{}");
         }
     }
 
+    /**
+     * Adds a score to all leaderboards.
+     *
+     * @param username the username of the player
+     * @param score the score to be added
+     */
     @Override
     public void addScore(String username, int score) {
         try {
@@ -62,6 +79,11 @@ public class FileCacheLeaderboardDataAccessObject implements LeaderboardReposito
         }
     }
 
+    /**
+     * Removes a score from all leaderboards.
+     *
+     * @param username the username of the player
+     */
     @Override
     public void removeScore(String username) {
         try {
@@ -75,6 +97,12 @@ public class FileCacheLeaderboardDataAccessObject implements LeaderboardReposito
         }
     }
 
+    /**
+     * Updates a score in all leaderboards.
+     *
+     * @param username the username of the player
+     * @param newScore the new score to be updated
+     */
     @Override
     public void updateScore(String username, int newScore) {
         try {
@@ -88,6 +116,9 @@ public class FileCacheLeaderboardDataAccessObject implements LeaderboardReposito
         }
     }
 
+    /**
+     * Clears scores from all leaderboards.
+     */
     @Override
     public void clearScores() {
         try {
@@ -101,6 +132,12 @@ public class FileCacheLeaderboardDataAccessObject implements LeaderboardReposito
         }
     }
 
+    /**
+     * Writes the leaderboards to the cache file.
+     *
+     * @param leaderboards the leaderboards to be written
+     * @throws IOException if an I/O error occurs during file writing
+     */
     @Override
     public void writeToCache(Map<String, Leaderboard> leaderboards) throws IOException {
         try (Writer writer = new FileWriter(fileCache)) {
@@ -116,6 +153,12 @@ public class FileCacheLeaderboardDataAccessObject implements LeaderboardReposito
         }
     }
 
+    /**
+     * Reads the leaderboards from the cache file.
+     *
+     * @return the leaderboards read from the cache
+     * @throws IOException if an I/O error occurs during file reading
+     */
     @Override
     public Map<String, Leaderboard> readFromCache() throws IOException {
         if (fileCache.length() == 0) {
@@ -136,6 +179,12 @@ public class FileCacheLeaderboardDataAccessObject implements LeaderboardReposito
         }
     }
 
+    /**
+     * Returns the class of the leaderboard based on its type.
+     *
+     * @param type the type of the leaderboard
+     * @return the class of the leaderboard
+     */
     private Class<? extends Leaderboard> getLeaderboardClass(String type) {
         switch (type) {
             case "AllTimeLeaderboard":
@@ -149,18 +198,13 @@ public class FileCacheLeaderboardDataAccessObject implements LeaderboardReposito
         }
     }
 
-    @Override
-    public boolean leaderboardExists(String name) throws IOException {
-        Map<String, Leaderboard> leaderboards = readFromCache();
-        return leaderboards.containsKey(name);
-    }
 
-    @Override
-    public Leaderboard findByName(String name) throws IOException {
-        Map<String, Leaderboard> leaderboards = readFromCache();
-        return leaderboards.get(name);
-    }
-
+    /**
+     * Adds a new user to all leaderboards with an initial score of 0.
+     *
+     * @param username the username of the new player
+     * @throws IOException if an I/O error occurs during file operations
+     */
     @Override
     public void addNewUser(String username) throws IOException {
         Map<String, Leaderboard> leaderboards = readFromCache();

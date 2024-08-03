@@ -13,6 +13,12 @@
       "tasks": []
     },
     "score": 0,
+    "timer": {
+      "start_time": 1722567082585,
+      "end_time": 1722570682585,
+      "elapsed_time": 0,
+      "pause_time": 0
+    },
     "aNumber": 5,
     "calendar": {
       "events": {}

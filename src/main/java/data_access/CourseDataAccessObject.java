@@ -45,9 +45,6 @@ public class CourseDataAccessObject implements CourseRepository {
     @Override
     public Map<String, Course> ReadFromCache() throws IOException {
         if (fileCache.length() == 0) {
-            try (Writer writer = new FileWriter(fileCache)) {
-                writer.write("{}");
-            }
             return new HashMap<>();
         }
 
@@ -68,10 +65,24 @@ public class CourseDataAccessObject implements CourseRepository {
 
     @Override
     public boolean WriteToCache(Course course) {
+        Map<String, Course> read;
+        try {
+            read = ReadFromCache();
+        } catch (IOException e) {
+            return false;
+        }
+
+        read.put(course.getName(), course);
+
         try (Writer writer = new FileWriter(fileCache)) {
             JsonObject json = new JsonObject();
-            JsonObject courseJson = gson.toJsonTree(course).getAsJsonObject();
-            json.add(course.getName(), courseJson);
+
+            for (Map.Entry<String, Course> coursePair : read.entrySet()) {
+                JsonObject courseJson = gson.toJsonTree(coursePair.getValue()).getAsJsonObject();
+                json.add(coursePair.getKey(), courseJson);
+            }
+
+
             gson.toJson(json, writer);
             System.out.println("Courses written to cache: " + json);
             return true;

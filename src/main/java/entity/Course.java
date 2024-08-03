@@ -2,12 +2,11 @@ package entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
 
 /**
- * The Course class represents a course that users can join.
+ * {@code Course} represents a course that users can join.
  */
 public class Course implements Serializable {
     /// Name of this course.
@@ -17,19 +16,19 @@ public class Course implements Serializable {
     private String description;
 
     /// List of users in this course.
-    private final List<String> usernames;
+    private List<String> usernames;
 
     /// Todolist associated with this course.
-    private final TodoList todoList;
+    private TodoList todoList;
 
     /// Daily leaderboard associated with this course.
-    private final DailyLeaderboard dailyLeaderboard;
+    private DailyLeaderboard dailyLeaderboard;
 
     /// Monthly leaderboard associated with this course.
-    private final MonthlyLeaderboard monthlyLeaderboard;
+    private MonthlyLeaderboard monthlyLeaderboard;
 
     /// ALl-time leaderboard associated with this course.
-    private final AllTimeLeaderboard allTimeLeaderboard;
+    private AllTimeLeaderboard allTimeLeaderboard;
 
     /**
      * Constructs a new Course object.
@@ -157,5 +156,45 @@ public class Course implements Serializable {
      */
     public AllTimeLeaderboard getAllTimeLeaderboard() {
         return allTimeLeaderboard;
+    }
+
+    /**
+     * Set the list of usernames in this course to a new list.
+     * @param names The new list of names.
+     */
+    public void setUsernames(List<String> names) {
+        this.usernames = names;
+    }
+
+    /**
+     * Set the todolist of this course to a new instance.
+     * @param todoList The new todolist.
+     */
+    public void setTodoList(TodoList todoList) {
+        this.todoList = todoList;
+    }
+
+    /**
+     * Set the daily leaderboard of this course to a new instance.
+     * @param dailyLeaderboard The new daily leaderboard.
+     */
+    public void setDailyLeaderboard(DailyLeaderboard dailyLeaderboard) {
+        this.dailyLeaderboard = dailyLeaderboard;
+    }
+
+    /**
+     * Set the monthly leaderboard of this course to a new instance.
+     * @param monthlyLeaderboard The new monthly leaderboard.
+     */
+    public void setMonthlyLeaderboard(MonthlyLeaderboard monthlyLeaderboard) {
+        this.monthlyLeaderboard = monthlyLeaderboard;
+    }
+
+    /**
+     * Set the all-time leaderboard of this course to a new instance.
+     * @param allTimeLeaderboard The new all-time leaderboard.
+     */
+    public void setAllTimeLeaderboard(AllTimeLeaderboard allTimeLeaderboard) {
+        this.allTimeLeaderboard = allTimeLeaderboard;
     }
 }

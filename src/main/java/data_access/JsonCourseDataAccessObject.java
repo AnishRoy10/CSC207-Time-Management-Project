@@ -4,7 +4,7 @@ import entity.Course;
 import repositories.CourseRepository;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Map;
 
 public class JsonCourseDataAccessObject implements CourseRepository {
     private final String path;
@@ -15,7 +15,7 @@ public class JsonCourseDataAccessObject implements CourseRepository {
     }
 
     @Override
-    public ArrayList<Course> ReadFromCache() throws IOException, ClassNotFoundException {
+    public Map<String, Course> ReadFromCache() throws IOException, ClassNotFoundException {
         return null;
     }
 

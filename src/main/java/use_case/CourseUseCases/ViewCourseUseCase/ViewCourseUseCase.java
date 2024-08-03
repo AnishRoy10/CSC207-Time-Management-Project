@@ -35,7 +35,7 @@ public class ViewCourseUseCase implements ViewCourseInputBoundary {
         if (course == null) {
             ViewCourseOutputData outputData = new ViewCourseOutputData(
                     false,
-                    "Unable to find course with name " + inputData.getCourseName()
+                    "Unable to find course with name " + inputData.getCourseName() + "."
             );
             presenter.present(outputData);
             return;
@@ -46,7 +46,7 @@ public class ViewCourseUseCase implements ViewCourseInputBoundary {
 
         ViewCourseOutputData outputData = new ViewCourseOutputData(
                 true,
-                "ok",
+                "Success",
                 course.getDescription(),
                 model,
                 course.getTodoList(),

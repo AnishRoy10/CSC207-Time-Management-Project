@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class LeaderboardResetScheduler {
 
-    private static final String CONFIG_FILE_PATH = "src/main/java/data_access/ResetSchedule.json";
+    private static final String CONFIG_FILE_PATH = "src/main/java/data_access/resetSchedule.json";
     private LocalDate lastDailyReset;
     private LocalDate lastMonthlyReset;
     private Map<String, Leaderboard> leaderboards;

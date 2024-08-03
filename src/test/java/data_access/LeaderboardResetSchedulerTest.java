@@ -27,12 +27,12 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class LeaderboardResetSchedulerTest {
 
-    private static final String CONFIG_FILE_PATH = "src/main/java/data_access/ResetSchedule.json";
+    private static final String CONFIG_FILE_PATH = "src/main/java/data_access/resetSchedule.json";
     private Map<String, Leaderboard> leaderboards;
     private Path configFilePath;
 
     /**
-     * Sets up the test environment by creating a temporary testResetSchedule.json file with default values.
+     * Sets up the test environment by creating a temporary resetSchedule.json file with default values.
      *
      * @throws IOException if an I/O error occurs during file creation
      */
@@ -55,7 +55,7 @@ class LeaderboardResetSchedulerTest {
     }
 
     /**
-     * Cleans up the test environment by deleting the temporary testResetSchedule.json file after each test.
+     * Cleans up the test environment by deleting the temporary resetSchedule.json file after each test.
      *
      * @throws IOException if an I/O error occurs during file deletion
      */

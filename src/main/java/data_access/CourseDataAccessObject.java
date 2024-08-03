@@ -101,4 +101,28 @@ public class CourseDataAccessObject implements CourseRepository {
         }
         return null;
     }
+
+    @Override
+    public boolean addToCourse(String courseName, User user) {
+        Course course = findByName(courseName);
+        if (course == null) {
+            return false;
+        }
+
+        course.addUser(user);
+        WriteToCache(course);
+        return true;
+    }
+
+    @Override
+    public boolean addTask(String courseName, Task task) {
+        Course course = findByName(courseName);
+        if (course == null) {
+            return false;
+        }
+
+        course.getTodoList().addTask(task);
+        WriteToCache(course);
+        return true;
+    }
 }

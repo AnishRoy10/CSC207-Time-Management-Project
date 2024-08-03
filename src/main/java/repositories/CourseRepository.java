@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import entity.Course;
+import entity.Task;
+import entity.User;
 
 /**
  * Repository for accessing courses.
@@ -40,4 +42,22 @@ public interface CourseRepository {
 	 * @return           the course, if it exists, or null
 	 */
 	Course findByName(String courseName);
+
+	/**
+	 * Add a user to a course by name.
+	 *
+	 * @param courseName the name of the course to add the user to.
+	 * @param user       the user to add to the course.
+	 * @return           if the user could be added to the course successfully.
+	 */
+	boolean addToCourse(String courseName, User user);
+
+	/**
+	 * Add a task to a course.
+	 *
+	 * @param courseName the name of the course to add the task to.
+	 * @param task       the task to add to the course.
+	 * @return           if the task could be added successfully
+	 */
+	boolean addTask(String courseName, Task task);
 }

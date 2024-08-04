@@ -64,8 +64,16 @@ public class SQLDatabaseHelper {
                         + "FOREIGN KEY(username) REFERENCES Users(username)"
                         + ");";
 
+                String createLeaderboardTable = "CREATE TABLE IF NOT EXISTS Leaderboard ("
+                        + "username TEXT,"
+                        + "score INTEGER,"
+                        + "type TEXT,"
+                        + "PRIMARY KEY (username, type)"
+                        + ");";
+
                 stmt.execute(createUserTable);
                 stmt.execute(createTasksTable);
+                stmt.execute(createLeaderboardTable);
 
                 System.out.println("Database schema has been initialized.");
             }

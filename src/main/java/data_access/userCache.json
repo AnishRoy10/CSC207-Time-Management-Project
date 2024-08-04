@@ -27,13 +27,24 @@
           "deadline": "2024-07-24T03:30:00",
           "course": "ggg",
           "pointsAwarded": true
+        },
+        {
+          "id": "2848190d-c031-4e22-ad8e-02d0bdcf5ac2",
+          "title": "dd",
+          "description": "dd",
+          "completed": true,
+          "startDate": "2024-08-22T04:30:00",
+          "deadline": "2024-08-23T04:00:00",
+          "course": "dd",
+          "completionDate": "2024-08-03T21:54:23.9280282",
+          "pointsAwarded": true
         }
       ]
     },
     "score": 0,
     "timer": {
-      "start_time": 1722567082585,
-      "end_time": 1722570682585,
+      "start_time": 1722736754625,
+      "end_time": 1722736819625,
       "elapsed_time": 0,
       "pause_time": 0
     },

@@ -1,6 +1,6 @@
 package use_case.TodoListUseCases.CompleteTaskUseCase;
 
-import data_access.FileCacheLeaderboardDataAccessObject;
+import data_access.SQLLeaderboardDAO;
 import data_access.SQLDatabaseHelper;
 import data_access.TaskDAO;
 import data_access.UserDAO;
@@ -36,12 +36,8 @@ public class CompleteTaskFilePersistenceTest {
         dbHelper.initializeDatabase();
         userRepository = new UserDAO(dbHelper);
         taskRepository = new TaskDAO(dbHelper);
-        try {
-            leaderboardRepository = new FileCacheLeaderboardDataAccessObject("test_leaderboards.json");
-        } catch (Exception e) {
-            System.out.println("Failed to create leaderboard repository: " + e.getMessage());
-            fail("Failed to create leaderboard repository: " + e.getMessage());
-        }
+        leaderboardRepository = new SQLLeaderboardDAO(dbHelper);
+
         completeTaskOutputBoundary = responseModel -> {
             // No-op implementation for testing
         };

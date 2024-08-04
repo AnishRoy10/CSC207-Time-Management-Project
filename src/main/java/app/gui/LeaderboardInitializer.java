@@ -1,7 +1,8 @@
 package app.gui;
 
-import data_access.FileCacheLeaderboardDataAccessObject;
+import data_access.SQLLeaderboardDAO;
 import data_access.LeaderboardResetScheduler;
+import data_access.SQLDatabaseHelper;
 import entity.AllTimeLeaderboard;
 import entity.DailyLeaderboard;
 import entity.Leaderboard;
@@ -16,13 +17,12 @@ import use_case.LeaderboardUseCases.remove_score.*;
 import use_case.LeaderboardUseCases.update_score.*;
 
 import javax.swing.*;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
 
 /**
  * Initializer class for the leaderboard system. This class sets up and initializes the leaderboard system, controllers,
- * views and reset scheduler.
+ * views, and reset scheduler.
  */
 public class LeaderboardInitializer {
     /**
@@ -33,15 +33,16 @@ public class LeaderboardInitializer {
         LocalDate today = LocalDate.now();
         LocalDate thisMonth = LocalDate.now().withDayOfMonth(1);
 
-        try {
-            FileCacheLeaderboardDataAccessObject leaderboardDAO = new FileCacheLeaderboardDataAccessObject("src/main/java/data_access/leaderboards.json");
+        SQLDatabaseHelper dbHelper = new SQLDatabaseHelper();
+        SQLLeaderboardDAO leaderboardDAO = new SQLLeaderboardDAO(dbHelper);
+        dbHelper.initializeDatabase();
 
+        try {
             Map<String, Leaderboard> leaderboards = leaderboardDAO.readFromCache();
 
             // Initialize the scheduler to auto-reset leaderboards
             LeaderboardResetScheduler resetScheduler = new LeaderboardResetScheduler(leaderboards);
             resetScheduler.checkAndResetLeaderboards();
-
 
             Leaderboard monthlyLeaderboard = leaderboards.getOrDefault("monthly", new MonthlyLeaderboard("Monthly Leaderboard", thisMonth));
             Leaderboard allTimeLeaderboard = leaderboards.getOrDefault("allTime", new AllTimeLeaderboard("All-Time Leaderboard"));
@@ -79,7 +80,7 @@ public class LeaderboardInitializer {
             frame.add(leaderboardView);
             frame.setVisible(true);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

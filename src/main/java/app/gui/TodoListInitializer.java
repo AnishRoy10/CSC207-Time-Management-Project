@@ -1,9 +1,6 @@
 package app.gui;
 
-import data_access.SQLDatabaseHelper;
-import data_access.TaskDAO;
-import data_access.UserDAO;
-import data_access.FileCacheLeaderboardDataAccessObject;
+import data_access.*;
 import framework.view.TodoListView;
 import interface_adapter.controller.TodoListController;
 import interface_adapter.presenter.TodoListPresenter;
@@ -28,16 +25,13 @@ public class TodoListInitializer {
             // Initialize the user and task repositories
             UserRepository userRepository = new UserDAO(dbHelper);
             TaskRepository taskRepository = new TaskDAO(dbHelper);
+            LeaderboardRepository leaderboardRepository = new SQLLeaderboardDAO(dbHelper);
 
             // Initialize the view model
             TodoListViewModel viewModel = new TodoListViewModel();
 
             // Initialize the presenter
             TodoListPresenter presenter = new TodoListPresenter(viewModel);
-
-            // Initialize the leaderboard repository (still using file cache for now)
-            String leaderboardFilePath = "src/main/java/data_access/leaderboards.json";
-            LeaderboardRepository leaderboardRepository = new FileCacheLeaderboardDataAccessObject(leaderboardFilePath);
 
             // Initialize use cases
             AddTaskUseCase addTaskUseCase = new AddTaskUseCase(userRepository, taskRepository, presenter);

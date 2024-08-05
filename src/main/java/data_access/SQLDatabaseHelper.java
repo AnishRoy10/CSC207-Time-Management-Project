@@ -11,6 +11,9 @@ import java.sql.Statement;
  * The database schema includes tables for Users and Tasks.
  * The Users table stores user information such as username, password, score, and other data.
  * The Tasks table stores task information such as title, description, deadline, and other data.
+ * The Leaderboard table stores leaderboard information for users.
+ * The Course table stores course information such as course name, description, and other data.
+ * Running the default method initializes a databse with url "jdbc:sqlite:saves/UserDB.db". This may be overridden for testing.
  */
 public class SQLDatabaseHelper {
     private static final String DEFAULT_URL = "jdbc:sqlite:saves/UserDB.db";
@@ -71,9 +74,20 @@ public class SQLDatabaseHelper {
                         + "PRIMARY KEY (username, type)"
                         + ");";
 
+                String createCoursesTable = "CREATE TABLE IF NOT EXISTS Courses ("
+                        + "name TEXT PRIMARY KEY,"
+                        + "description TEXT,"
+                        + "usernames TEXT,"
+                        + "todoList TEXT,"
+                        + "dailyLeaderboard TEXT,"
+                        + "monthlyLeaderboard TEXT,"
+                        + "allTimeLeaderboard TEXT"
+                        + ");";
+
                 stmt.execute(createUserTable);
                 stmt.execute(createTasksTable);
                 stmt.execute(createLeaderboardTable);
+                stmt.execute(createCoursesTable);
 
                 System.out.println("Database schema has been initialized.");
             }

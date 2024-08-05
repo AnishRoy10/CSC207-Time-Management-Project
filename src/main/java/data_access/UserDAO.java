@@ -8,6 +8,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.io.IOException;
+
 /**
  * The UserDAO class handles CRUD operations for User objects in an SQLite database.
  * It implements the UserRepository interface.
@@ -31,20 +33,22 @@ public class UserDAO implements UserRepository {
      * @param user The User object to write to the database.
      */
     @Override
-    public void WriteToCache(User user) {
-        String sql = "INSERT INTO Users(username, password, score) VALUES(?, ?, ?) " +
-                "ON CONFLICT(username) DO UPDATE SET password=excluded.password, score=excluded.score";
+    public void WriteToCache(User user) throws IOException {
+        String sql = "INSERT INTO Users(username, password, score, courses) VALUES(?, ?, ?, ?) " +
+                "ON CONFLICT(username) DO UPDATE SET password=excluded.password, score=excluded.score, courses=excluded.courses";
 
         try (Connection conn = dbHelper.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getPassword());
             pstmt.setInt(3, user.getScore());
+            pstmt.setString(4, String.join(",", user.getCourses()));
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new IOException("Failed to write user to cache", e);
         }
     }
+
 
     /**
      * Reads the first User object from the database.
@@ -52,7 +56,7 @@ public class UserDAO implements UserRepository {
      * @return The first User object from the database, or null if the database is empty.
      */
     @Override
-    public User ReadFromCache() {
+    public User ReadFromCache() throws IOException {
         String sql = "SELECT * FROM Users LIMIT 1";
         User user = null;
 
@@ -63,9 +67,16 @@ public class UserDAO implements UserRepository {
             if (rs.next()) {
                 user = new User(rs.getString("username"), rs.getString("password"), new User[]{}, new Course[]{});
                 user.setScore(rs.getInt("score"));
+                String coursesStr = rs.getString("courses");
+                if (coursesStr != null && !coursesStr.isEmpty()) {
+                    String[] courses = coursesStr.split(",");
+                    for (String course : courses) {
+                        user.addCourse(new Course(course, ""));
+                    }
+                }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new IOException("Failed to read user from cache", e);
         }
         return user;
     }
@@ -77,7 +88,7 @@ public class UserDAO implements UserRepository {
      * @return The User object with the specified username, or null if not found.
      */
     @Override
-    public User ReadFromCache(String username) {
+    public User ReadFromCache(String username) throws IOException {
         String sql = "SELECT * FROM Users WHERE username = ?";
         User user = null;
 
@@ -89,9 +100,16 @@ public class UserDAO implements UserRepository {
             if (rs.next()) {
                 user = new User(rs.getString("username"), rs.getString("password"), new User[]{}, new Course[]{});
                 user.setScore(rs.getInt("score"));
+                String coursesStr = rs.getString("courses");
+                if (coursesStr != null && !coursesStr.isEmpty()) {
+                    String[] courses = coursesStr.split(",");
+                    for (String course : courses) {
+                        user.addCourse(new Course(course, ""));
+                    }
+                }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new IOException("Failed to read user from cache", e);
         }
         return user;
     }
@@ -125,7 +143,7 @@ public class UserDAO implements UserRepository {
      * @return The User object with the specified username, or null if not found.
      */
     @Override
-    public User findByUsername(String username) {
+    public User findByUsername(String username) throws IOException {
         return ReadFromCache(username);
     }
 

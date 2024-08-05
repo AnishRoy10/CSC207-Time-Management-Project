@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -94,22 +95,22 @@ class UserTest {
     @Test
     void testAddCourse() {
         user1.addCourse(course1);
-        assertTrue(user1.getCourses().contains(course1));
-        assertTrue(course1.getUsers().contains(user1));
+        assertTrue(user1.getCourses().contains(course1.getName()));
+        assertTrue(Arrays.stream(course1.getUserNames()).anyMatch(user1.getUsername()::equals));
     }
 
     @Test
     void testRemoveCourse() {
         user1.addCourse(course1);
-        assertTrue(user1.removeCourse(course1));
+        assertTrue(user1.removeCourse(course1.getName()));
         assertFalse(user1.getCourses().contains(course1));
-        assertFalse(course1.getUsers().contains(user1));
+        assertTrue(Arrays.stream(course1.getUserNames()).anyMatch(user1.getUsername()::equals));
     }
 
     @Test
     void testGetCourses() {
         user1.addCourse(course1);
-        assertTrue(user1.getCourses().contains(course1));
+        assertTrue(user1.getCourses().contains(course1.getName()));
     }
 
     @Test

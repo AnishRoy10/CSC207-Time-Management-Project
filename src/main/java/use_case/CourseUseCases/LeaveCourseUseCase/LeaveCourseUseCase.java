@@ -45,7 +45,6 @@ public class LeaveCourseUseCase implements LeaveCourseInputBoundary {
             String username = inputData.getUsername();
             Course course = courseDataAccessObject.findByName(courseName);
 
-            /// if the course does not exist
             if (course == null) {
                 LeaveCourseOutputData outputData = new LeaveCourseOutputData(
                         false,
@@ -55,7 +54,6 @@ public class LeaveCourseUseCase implements LeaveCourseInputBoundary {
                 return;
             }
 
-            /// check that the user is in the course they want to leave
             if (!course.containsUser(username)) {
                 LeaveCourseOutputData outputData = new LeaveCourseOutputData(
                         false,
@@ -65,29 +63,38 @@ public class LeaveCourseUseCase implements LeaveCourseInputBoundary {
                 return;
             }
 
-            /// attempt to remove them
             User user = userDataAccessObject.ReadFromCache(username);
-            if (user.removeCourse(courseName) && course.removeUser(username)) {
+            if (user == null) {
                 LeaveCourseOutputData outputData = new LeaveCourseOutputData(
-                        true,
-                        "You have been removed from " + courseName + "."
+                        false,
+                        "User not found."
                 );
-                // write changes
-                userDataAccessObject.WriteToCache(user);
-                courseDataAccessObject.WriteToCache(course);
-
                 presenter.present(outputData);
                 return;
             }
 
-            /// something went wrong
+            System.out.println("Before Removal: " + course.getUserNames().length + " users in course.");
+
+            if (user.removeCourse(courseName) && course.removeUser(username)) {
+                userDataAccessObject.WriteToCache(user);
+                courseDataAccessObject.WriteToCache(course);
+
+                System.out.println("After Removal: " + course.getUserNames().length + " users in course.");
+
+                LeaveCourseOutputData outputData = new LeaveCourseOutputData(
+                        true,
+                        "You have been removed from " + courseName + "."
+                );
+                presenter.present(outputData);
+                return;
+            }
+
             LeaveCourseOutputData outputData = new LeaveCourseOutputData(
                     false,
                     "Something went wrong removing you from " + courseName + "."
             );
             presenter.present(outputData);
         } catch (IOException e) {
-            /// something went very wrong
             LeaveCourseOutputData outputData = new LeaveCourseOutputData(
                     false,
                     "Something went wrong."

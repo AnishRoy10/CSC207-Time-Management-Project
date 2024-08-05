@@ -102,7 +102,7 @@ public class Course implements Serializable {
      * @return         the success value of the method
      */
     public boolean removeUser(String username) {
-        return usernames.remove(username);
+        return this.usernames.remove(username);
     }
 
     /**

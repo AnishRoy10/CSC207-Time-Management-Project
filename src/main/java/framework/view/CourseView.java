@@ -48,7 +48,7 @@ public class CourseView extends JFrame {
 
         /// instantiate the main frame
         this.setTitle("Course View");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLayout(new BorderLayout());
         this.setSize(750, 600);
 

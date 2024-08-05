@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -38,7 +39,7 @@ class UserDAOTest {
     }
 
     @Test
-    void testWriteToCacheAndReadFromCache() {
+    void testWriteToCacheAndReadFromCache() throws IOException {
         User user = new User("TestUser", "TestPassword1", new User[]{}, new Course[]{});
         userDAO.WriteToCache(user);
 
@@ -49,7 +50,7 @@ class UserDAOTest {
     }
 
     @Test
-    void testUserExists() {
+    void testUserExists() throws IOException {
         User user = new User("TestUser", "TestPassword1", new User[]{}, new Course[]{});
         userDAO.WriteToCache(user);
 
@@ -58,7 +59,7 @@ class UserDAOTest {
     }
 
     @Test
-    void testGetAllUsers() {
+    void testGetAllUsers() throws IOException {
         User user1 = new User("TestUser1", "TestPassword1", new User[]{}, new Course[]{});
         User user2 = new User("TestUser2", "TestPassword2", new User[]{}, new Course[]{});
         userDAO.WriteToCache(user1);
@@ -69,7 +70,7 @@ class UserDAOTest {
     }
 
     @Test
-    void testDeleteUser() {
+    void testDeleteUser() throws IOException {
         User user = new User("TestUser", "TestPassword1", new User[]{}, new Course[]{});
         userDAO.WriteToCache(user);
 
@@ -78,7 +79,7 @@ class UserDAOTest {
     }
 
     @Test
-    void testReadFromCache() {
+    void testReadFromCache() throws IOException {
         User user = new User("TestUser", "TestPassword1", new User[]{}, new Course[]{});
         userDAO.WriteToCache(user);
 
@@ -89,7 +90,7 @@ class UserDAOTest {
     }
 
     @Test
-    void testFindByUsername() {
+    void testFindByUsername() throws IOException {
         User user = new User("TestUser", "TestPassword1", new User[]{}, new Course[]{});
         userDAO.WriteToCache(user);
 

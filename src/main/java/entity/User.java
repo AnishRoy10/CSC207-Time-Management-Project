@@ -194,12 +194,7 @@ public class User implements Serializable {
     * @return           success value of the method
     */
     public boolean removeCourse(String courseName) {
-        for (String course : courses) {
-            if (course.equals(courseName)) {
-                return this.courses.remove(course);
-            }
-        }
-        return false;
+        return this.courses.remove(courseName);
     }
 
     // Getter and Setter for aNumber

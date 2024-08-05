@@ -1,62 +1,90 @@
 package data_access;
 
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
+import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import entity.Course;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import entity.*;
 import repositories.CourseRepository;
 
 public class CourseDataAccessObject implements CourseRepository {
-    private final File fileCache;
-    private final String activeDirectory;
+    public static ArrayList<Course> courses = new ArrayList<>();
 
-    public CourseDataAccessObject() throws IOException {
-        activeDirectory = System.getProperty("courses.dir");
-        System.out.println(activeDirectory);
-        fileCache = new File(activeDirectory+"\\src\\main\\java\\data_access\\courseCache.txt");
-        if (!fileCache.exists()) {
-            fileCache.createNewFile();
-        }
-    }
+    private final File fileCache;
+    private final Gson gson;
 
     public CourseDataAccessObject(String path) throws IOException {
-        this.activeDirectory = null;
         this.fileCache = new File(path);
         if (!fileCache.exists()) {
-            fileCache.createNewFile();
+            if (!fileCache.createNewFile()) {
+                throw new IOException("Something went wrong creating a course cache file.");
+            }
+            try (Writer writer = new FileWriter(fileCache)) {
+                writer.write("{}");
+            }
         }
+        this.gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateSerializer())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer())
+                .registerTypeAdapter(Course.class, new CourseDeserializer())
+                .registerTypeAdapter(AllTimeLeaderboard.class, new AllTimeLeaderboardDeserializer())
+                .registerTypeAdapter(DailyLeaderboard.class, new DailyLeaderboardDeserializer())
+                .registerTypeAdapter(MonthlyLeaderboard.class, new MonthlyLeaderboardDeserializer())
+                .setPrettyPrinting()
+                .create();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public ArrayList<Course> ReadFromCache() throws IOException, ClassNotFoundException {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileCache))) {
-            return (ArrayList<Course>) ois.readObject();
-        } catch (Exception e) {
-            return null;
+    public Map<String, Course> ReadFromCache() throws IOException {
+        if (fileCache.length() == 0) {
+            return new HashMap<>();
+        }
+
+        try (Reader reader = new FileReader(fileCache)) {
+            Type courseType = new TypeToken<Map<String, JsonObject>>() {
+            }.getType();
+            Map<String, JsonObject> jsonMap = gson.fromJson(reader, courseType);
+            Map<String, Course> courses = new HashMap<>();
+            for (Map.Entry<String, JsonObject> entry : jsonMap.entrySet()) {
+                JsonObject courseJson = entry.getValue();
+                Course course = gson.fromJson(courseJson, Course.class);
+                courses.put(entry.getKey(), course);
+            }
+            System.out.println("Courses read from cache: " + courses);
+            return courses;
         }
     }
 
     @Override
     public boolean WriteToCache(Course course) {
-        ArrayList<Course> toWrite = new ArrayList<>();
+        Map<String, Course> read;
         try {
-            ArrayList<Course> temp = ReadFromCache();
-            if (temp != null) {
-                toWrite.addAll(temp);
-            }
-        } catch (IOException | ClassNotFoundException e) {
+            read = ReadFromCache();
+        } catch (IOException e) {
             return false;
         }
-        toWrite.add(course);
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileCache))) {
-            oos.writeObject(toWrite);
+
+        read.put(course.getName(), course);
+
+        try (Writer writer = new FileWriter(fileCache)) {
+            JsonObject json = new JsonObject();
+
+            for (Map.Entry<String, Course> coursePair : read.entrySet()) {
+                JsonObject courseJson = gson.toJsonTree(coursePair.getValue()).getAsJsonObject();
+                json.add(coursePair.getKey(), courseJson);
+            }
+
+
+            gson.toJson(json, writer);
+            System.out.println("Courses written to cache: " + json);
             return true;
         } catch (IOException e) {
             return false;
@@ -66,24 +94,46 @@ public class CourseDataAccessObject implements CourseRepository {
     @Override
     public boolean courseExists(String courseName) {
         try {
-            ArrayList<Course> courses = ReadFromCache();
-            for (Course crs : courses)
-                if (crs.getName().equals(courseName)) return true;
-        } catch (IOException | ClassNotFoundException e) {
+            return ReadFromCache().containsKey(courseName);
+        } catch (IOException e) {
             return false;
         }
-        return false;
     }
 
     @Override
     public Course findByName(String courseName) {
         try {
-            ArrayList<Course> courses = ReadFromCache();
-            for (Course crs : courses)
-                if (crs.getName().equals(courseName)) return crs;
-        } catch (IOException | ClassNotFoundException e) {
+            Map<String, Course> courses = ReadFromCache();
+            if (courses.containsKey(courseName)) {
+                return courses.get(courseName);
+            }
+        } catch (IOException e) {
             return null;
         }
         return null;
+    }
+
+    @Override
+    public boolean addToCourse(String courseName, User user) {
+        Course course = findByName(courseName);
+        if (course == null) {
+            return false;
+        }
+
+        course.addUser(user);
+        WriteToCache(course);
+        return true;
+    }
+
+    @Override
+    public boolean addTask(String courseName, Task task) {
+        Course course = findByName(courseName);
+        if (course == null) {
+            return false;
+        }
+
+        course.getTodoList().addTask(task);
+        WriteToCache(course);
+        return true;
     }
 }

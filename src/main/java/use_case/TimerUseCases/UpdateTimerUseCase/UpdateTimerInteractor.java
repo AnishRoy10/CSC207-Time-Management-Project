@@ -3,18 +3,27 @@ package use_case.TimerUseCases.UpdateTimerUseCase;
 import entity.Timer;
 import entity.User;
 /**
- Use case interactor for the update timer use case.
+ * Class representing the use case interactor for the update timer use case.
  */
 public class UpdateTimerInteractor implements UpdateTimerInputBoundary {
     final UpdateTimerDataAccessInterface userDataAccessObject;
     final UpdateTimerOutputBoundary userPresenter;
 
+    /**
+     * Constructor for UpdateTimerInteractor
+     * @param userDataAccessObject data access interface allowing the interactor to access the data access object
+     * @param userPresenter output boundary allowing the interactor to access the presenter
+     */
     public UpdateTimerInteractor(UpdateTimerDataAccessInterface userDataAccessObject,
                                  UpdateTimerOutputBoundary userPresenter) {
         this.userDataAccessObject = userDataAccessObject;
         this.userPresenter = userPresenter;
     }
 
+    /**
+     * Executes the update timer use case. Updates elapsed time in the Timer entity.
+     * @param updateTimerInputData input data for update timer use case
+     */
     @Override
     public void execute(UpdateTimerInputData updateTimerInputData) {
         User user = userDataAccessObject.load();

@@ -1,7 +1,6 @@
 package framework.view;
 
 import java.awt.BorderLayout;
-
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,52 +9,57 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import interface_adapter.controller.CoursePromptController;
+import interface_adapter.viewmodel.CoursePromptViewModel;
 
-import interface_adapter.JoinCourseUseCase.JoinCourseController;
-import interface_adapter.JoinCourseUseCase.JoinCourseViewModel;
-
+/**
+ * Prompt to allow users to join courses.
+ * <br/>
+ * The purpose of a prompt is to be more modular and potentially scalable.
+ */
 public class JoinCoursePrompt {
-    private JoinCourseController controller;
-    private JoinCourseViewModel viewModel;
+    private final String username;
+    private final CoursePromptController controller;
+    private final CoursePromptViewModel viewModel;
 
-    private JFrame frame;
-    private JPanel labelPanel;
-    private JPanel fieldPanel;
-    private JPanel buttonPanel;
-    private JLabel courseNameLabel;
-    private JTextField courseNameField;
-    private JButton joinButton;
-    private JButton cancelButton;
+    private final JFrame frame;
+    private final JTextField courseNameField;
 
-    public JoinCoursePrompt(JoinCourseController controller, JoinCourseViewModel viewModel) {
+    /**
+     * Instantiate a new prompt view.
+     * @param username The username of the current user.
+     */
+    public JoinCoursePrompt(String username, CoursePromptController controller, CoursePromptViewModel viewModel) {
+        this.username = username;
         this.controller = controller;
+        this.viewModel = viewModel;
 
         frame = new JFrame("Join Course");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         frame.setSize(450, 200);
 
-        labelPanel = new JPanel();
+        JPanel labelPanel = new JPanel();
         labelPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        fieldPanel = new JPanel();
+        JPanel fieldPanel = new JPanel();
         fieldPanel.setBorder(new EmptyBorder(10 , 10, 10, 10));
 
-        courseNameLabel = new JLabel("Course Name:");
+        JLabel courseNameLabel = new JLabel("Course Name:");
         courseNameField = new JTextField();
         fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.Y_AXIS));
 
         labelPanel.add(courseNameLabel);
-        fieldPanel.add(courseNameField);;
+        fieldPanel.add(courseNameField);
 
-        buttonPanel = new JPanel();
+        JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BorderLayout());
         buttonPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        cancelButton = new JButton("Cancel");
+        JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(e -> frame.dispose());
 
-        joinButton = new JButton("Join");
+        JButton joinButton = new JButton("Join");
         joinButton.addActionListener(e -> attemptToJoinCourse());
 
         buttonPanel.add(cancelButton, BorderLayout.WEST);
@@ -67,6 +71,7 @@ public class JoinCoursePrompt {
         frame.setVisible(true);
     }
 
+    /// Attempt to add a user to the provided course.
     private void attemptToJoinCourse() {
         String courseName = courseNameField.getText();
 
@@ -79,7 +84,7 @@ public class JoinCoursePrompt {
             return;
         }
 
-        controller.execute(courseName);
+        controller.joinCourse(username, courseName);
 
         if (viewModel.getResponse()) {
             frame.dispose();

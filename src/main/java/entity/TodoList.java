@@ -22,6 +22,7 @@ public class TodoList implements Serializable {
         this.tasks = new ArrayList<>();
     }
 
+
     /**
      * Adds a task to the to-do list.
      *

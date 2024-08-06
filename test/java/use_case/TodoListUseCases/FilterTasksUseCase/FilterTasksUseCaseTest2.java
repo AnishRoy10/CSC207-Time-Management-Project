@@ -42,12 +42,20 @@ class FilterTasksUseCaseTest2 {
             public void WriteToCache(Task task, String username) { }
 
             @Override
+            public void WriteToCache(Task task, String username, String course) { }
+
+            @Override
             public Task ReadFromCache(UUID id) {
                 return null;
             }
 
             @Override
             public List<Task> getAllTasks(String username) {
+                return null;
+            }
+
+            @Override
+            public List<Task> getAllTasks(String username, String courseName) {
                 return null;
             }
 

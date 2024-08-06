@@ -38,6 +38,20 @@ public class TodoListDAO implements TodoListRepository {
     }
 
     /**
+     * Writes a TodoList object to the database for a specific course. This method writes each task in the TodoList.
+     *
+     * @param todoList The TodoList object to write to the database.
+     * @param username The username associated with the TodoList.
+     * @param courseName The name of the course.
+     */
+    @Override
+    public void WriteToCache(TodoList todoList, String username, String courseName) {
+        for (Task task : todoList.getTasks()) {
+            taskRepository.WriteToCache(task, username, courseName);
+        }
+    }
+
+    /**
      * Reads a TodoList object from the database for the specified username.
      *
      * @param username The username associated with the TodoList.
@@ -46,6 +60,23 @@ public class TodoListDAO implements TodoListRepository {
     @Override
     public TodoList ReadFromCache(String username) {
         List<Task> tasks = taskRepository.getAllTasks(username);
+        TodoList todoList = new TodoList();
+        for (Task task : tasks) {
+            todoList.addTask(task);
+        }
+        return todoList;
+    }
+
+    /**
+     * Reads a TodoList object from the database for the specified username and course.
+     *
+     * @param username The username associated with the TodoList.
+     * @param courseName The name of the course.
+     * @return The TodoList object read from the database.
+     */
+    @Override
+    public TodoList ReadFromCache(String username, String courseName) {
+        List<Task> tasks = taskRepository.getAllTasks(username, courseName);
         TodoList todoList = new TodoList();
         for (Task task : tasks) {
             todoList.addTask(task);

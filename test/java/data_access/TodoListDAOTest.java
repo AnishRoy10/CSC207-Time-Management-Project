@@ -147,4 +147,51 @@ class TodoListDAOTest {
         assertFalse(retrievedTodoList.getTasks().stream().anyMatch(task -> task.getTitle().equals("Task 1")));
         assertTrue(retrievedTodoList.getTasks().stream().anyMatch(task -> task.getTitle().equals("Task 2")));
     }
+
+    @Test
+    void testWriteAndReadTodoListForCourse() {
+        String username = "courseUser";
+        String courseName = "Course 1";
+        TodoList todoList = new TodoList();
+
+        Task task1 = new Task(username, "Task 1", "Description 1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), courseName);
+        Task task2 = new Task(username, "Task 2", "Description 2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), courseName);
+
+        todoList.addTask(task1);
+        todoList.addTask(task2);
+        todoListRepository.WriteToCache(todoList, username, courseName);
+
+        TodoList retrievedTodoList = todoListRepository.ReadFromCache(username, courseName);
+
+        assertNotNull(retrievedTodoList);
+        assertEquals(2, retrievedTodoList.getTasks().size());
+        assertTrue(retrievedTodoList.getTasks().stream().anyMatch(task -> task.getTitle().equals("Task 1")));
+        assertTrue(retrievedTodoList.getTasks().stream().anyMatch(task -> task.getTitle().equals("Task 2")));
+    }
+
+    @Test
+    void testSeparateTodoListsForUserAndCourse() {
+        String username = "separateUser";
+        String courseName = "Course 1";
+
+        TodoList userTodoList = new TodoList();
+        userTodoList.addTask(new Task(username, "User Task", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), null));
+        todoListRepository.WriteToCache(userTodoList, username);
+
+        TodoList courseTodoList = new TodoList();
+        courseTodoList.addTask(new Task(username, "Course Task", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), courseName));
+        todoListRepository.WriteToCache(courseTodoList, username, courseName);
+
+        TodoList retrievedUserTodoList = todoListRepository.ReadFromCache(username);
+        TodoList retrievedCourseTodoList = todoListRepository.ReadFromCache(username, courseName);
+
+        assertNotNull(retrievedUserTodoList);
+        assertNotNull(retrievedCourseTodoList);
+
+        assertEquals(1, retrievedUserTodoList.getTasks().size());
+        assertEquals("User Task", retrievedUserTodoList.getTasks().get(0).getTitle());
+
+        assertEquals(1, retrievedCourseTodoList.getTasks().size());
+        assertEquals("Course Task", retrievedCourseTodoList.getTasks().get(0).getTitle());
+    }
 }

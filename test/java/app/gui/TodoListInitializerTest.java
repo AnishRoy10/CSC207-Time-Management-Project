@@ -1,93 +1,61 @@
-//package app.gui;
-//
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.Mockito;
-//import interface_adapter.controller.TodoListController;
-//import interface_adapter.presenter.TodoListPresenter;
-//import interface_adapter.viewmodel.TodoListViewModel;
-//import repositories.LeaderboardRepository;
-//import repositories.TaskRepository;
-//import repositories.UserRepository;
-//import use_case.TodoListUseCases.AddTaskUseCase.AddTaskUseCase;
-//import use_case.TodoListUseCases.CompleteTaskUseCase.CompleteTaskUseCase;
-//import use_case.TodoListUseCases.FilterTasksUseCase.FilterTasksUseCase;
-//import use_case.TodoListUseCases.LoadTodoListUseCase.LoadTodoListUseCase;
-//import use_case.TodoListUseCases.RemoveTaskUseCase.RemoveTaskUseCase;
-//import use_case.TodoListUseCases.SortTasksUseCase.SortTasksUseCase;
-//import data_access.SQLDatabaseHelper;
-//import framework.view.TodoListView;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.Mockito.*;
-//
-//class TodoListInitializerTest {
-//
-//    private SQLDatabaseHelper dbHelper;
-//    private UserRepository userRepository;
-//    private TaskRepository taskRepository;
-//    private LeaderboardRepository leaderboardRepository;
-//    private TodoListViewModel viewModel;
-//    private TodoListPresenter presenter;
-//    private AddTaskUseCase addTaskUseCase;
-//    private RemoveTaskUseCase removeTaskUseCase;
-//    private CompleteTaskUseCase completeTaskUseCase;
-//    private SortTasksUseCase sortTasksUseCase;
-//    private FilterTasksUseCase filterTasksUseCase;
-//    private LoadTodoListUseCase loadTodoListUseCase;
-//    private TodoListController controller;
-//
-//    @BeforeEach
-//    void setUp() {
-//        dbHelper = mock(SQLDatabaseHelper.class);
-//        userRepository = mock(UserRepository.class);
-//        taskRepository = mock(TaskRepository.class);
-//        leaderboardRepository = mock(LeaderboardRepository.class);
-//        viewModel = new TodoListViewModel();
-//        presenter = new TodoListPresenter(viewModel);
-//        addTaskUseCase = new AddTaskUseCase(userRepository, taskRepository, presenter);
-//        removeTaskUseCase = new RemoveTaskUseCase(userRepository, taskRepository, presenter);
-//        completeTaskUseCase = new CompleteTaskUseCase(userRepository, taskRepository, presenter, leaderboardRepository);
-//        sortTasksUseCase = new SortTasksUseCase(userRepository, taskRepository, presenter);
-//        filterTasksUseCase = new FilterTasksUseCase(userRepository, taskRepository, presenter);
-//        loadTodoListUseCase = new LoadTodoListUseCase(userRepository, taskRepository, presenter);
-//        controller = new TodoListController(loadTodoListUseCase);
-//    }
-//
-//    @Test
-//    void testInitializeUserTodoList() {
-//        String username = "testUser";
-//
-//        // Mocking the required objects and methods
-//        doNothing().when(dbHelper).initializeDatabase();
-//        when(controller.loadTodoList(username)).thenReturn(new TodoListView(controller, viewModel, username));
-//
-//        // Calling the method to initialize the user's to-do list
-//        TodoListInitializer.initializeTodoList(username);
-//
-//        // Verifying the method calls
-//        verify(dbHelper, times(1)).initializeDatabase();
-//
-//        // Checking if the to-do list view is initialized correctly
-//        assertNotNull(controller);
-//    }
-//
-//    @Test
-//    void testInitializeCourseTodoList() {
-//        String username = "testUser";
-//        String courseName = "testCourse";
-//
-//        // Mocking the required objects and methods
-//        doNothing().when(dbHelper).initializeDatabase();
-//        when(controller.loadTodoList(username, courseName)).thenReturn(new TodoListView(controller, viewModel, username, courseName));
-//
-//        // Calling the method to initialize the course-specific to-do list
-//        TodoListInitializer.initializeTodoList(username, courseName);
-//
-//        // Verifying the method calls
-//        verify(dbHelper, times(1)).initializeDatabase();
-//
-//        // Checking if the to-do list view is initialized correctly
-//        assertNotNull(controller);
-//    }
-//}
+package app.gui;
+
+import entity.Task;
+import data_access.*;
+import repositories.TaskRepository;
+
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+class TodoListInitializerTest {
+    private SQLDatabaseHelper dbHelper;
+    private TaskRepository taskRepository;
+
+    @BeforeEach
+    void setUp() {
+        dbHelper = new SQLDatabaseHelper("jdbc:sqlite:Saves/TestDB.db");
+        dbHelper.initializeDatabase();
+        taskRepository = new TaskDAO(dbHelper);
+    }
+
+    @AfterEach
+    void tearDown() {
+        try (Connection conn = dbHelper.connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute("DELETE FROM Tasks");
+            stmt.execute("DELETE FROM Users");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Test
+    void testDistinguishUserAndCourseTodoLists() {
+        String username = "testUser";
+        String courseName = "testCourse";
+
+        // Add tasks to the user's personal to-do list
+        Task userTask = new Task(username, "User Task", "User Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), null);
+        taskRepository.WriteToCache(userTask, username);
+
+        // Add tasks to the course-specific to-do list
+        Task courseTask = new Task(username, "Course Task", "Course Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), courseName);
+        taskRepository.WriteToCache(courseTask, username);
+
+        // Retrieve and verify tasks for the user's personal to-do list
+        List<Task> userTasks = taskRepository.getAllTasks(username);
+        assertEquals(1, userTasks.size());
+        assertEquals("User Task", userTasks.get(0).getTitle());
+
+        // Retrieve and verify tasks for the course-specific to-do list
+        List<Task> courseTasks = taskRepository.getAllTasks(username, courseName);
+        assertEquals(1, courseTasks.size());
+        assertEquals("Course Task", courseTasks.get(0).getTitle());
+    }
+}

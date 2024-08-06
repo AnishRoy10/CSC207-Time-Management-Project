@@ -207,6 +207,7 @@ public class TodoListView extends JFrame {
         taskListPanel.revalidate(); // Refresh the task list panel
         taskListPanel.repaint(); // Refresh the task list panel
         filterTasks();
+        filterTasks();
     }
 
     private void updateTaskCardCompletion(UUID taskId, boolean isCompleted) {

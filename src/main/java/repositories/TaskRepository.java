@@ -9,35 +9,52 @@ import java.util.UUID;
  * The TaskRepository interface provides methods to manage tasks in the database.
  */
 public interface TaskRepository {
-
     /**
-     * Writes a Task object to the database. If the task already exists, updates the task's data.
+     * Writes a Task object to the database.
      *
      * @param task The Task object to write to the database.
-     * @param username The username associated with the task.
+     * @param username The username associated with the Task.
      */
     void WriteToCache(Task task, String username);
 
     /**
-     * Reads a Task object from the database by task ID.
+     * Writes a course-specific Task object to the database.
      *
-     * @param id The task ID to read.
-     * @return The Task object with the specified ID, or null if not found.
+     * @param task The Task object to write to the database.
+     * @param username The username associated with the Task.
+     * @param courseName The course name associated with the Task.
      */
-    Task ReadFromCache(UUID id);
+    void WriteToCache(Task task, String username, String courseName);
 
     /**
-     * Retrieves all tasks associated with a specific username from the database.
+     * Reads a Task object from the database by task ID.
      *
-     * @param username The username associated with the tasks.
-     * @return A list of Task objects.
+     * @param taskId The ID of the Task to read from the database.
+     * @return The Task object associated with the task ID.
+     */
+    Task ReadFromCache(UUID taskId);
+
+    /**
+     * Retrieves all Task objects associated with a specific user from the database.
+     *
+     * @param username The username associated with the Tasks.
+     * @return A list of Task objects for the specified user.
      */
     List<Task> getAllTasks(String username);
 
     /**
-     * Deletes a task by task ID from the database.
+     * Retrieves all course-specific Task objects associated with a specific user from the database.
      *
-     * @param id The task ID to delete.
+     * @param username The username associated with the Tasks.
+     * @param courseName The course name associated with the Tasks.
+     * @return A list of course-specific Task objects for the specified user.
      */
-    void deleteTask(UUID id);
+    List<Task> getAllTasks(String username, String courseName);
+
+    /**
+     * Deletes a Task object from the database by task ID.
+     *
+     * @param taskId The ID of the Task to delete from the database.
+     */
+    void deleteTask(UUID taskId);
 }

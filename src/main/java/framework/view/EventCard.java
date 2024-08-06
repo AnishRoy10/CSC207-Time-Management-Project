@@ -25,6 +25,7 @@ public class EventCard extends JPanel {
     private final JLabel endDateLabel;
     private final JLabel statusLabel;
     private final JLabel priorityLevelLabel;
+    private JButton removeEventButton = new JButton("Remove");
 
     public EventCard(CalendarEvent event) {
         this.event = event;
@@ -39,7 +40,7 @@ public class EventCard extends JPanel {
 
         endDateLabel = new JLabel("End Date and Time: " + (event.getHasEndDate() ? event.getEndDate() : "N/A"));
 
-        detailsPanel = new JPanel(new GridLayout(4, 1));
+        detailsPanel = new JPanel(new GridLayout(5, 1));
         detailsPanel.setVisible(true);
 
         textArea = new JTextArea("Description:" + "\n" +
@@ -59,6 +60,7 @@ public class EventCard extends JPanel {
         detailsPanel.add(endDateLabel);
         detailsPanel.add(statusLabel);
         detailsPanel.add(priorityLevelLabel);
+        detailsPanel.add(removeEventButton);
 
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.add(nameLabel, BorderLayout.CENTER);
@@ -68,4 +70,8 @@ public class EventCard extends JPanel {
         add(detailsPanel, BorderLayout.WEST);
         add(descriptionPanel, BorderLayout.CENTER);
     }
+
+    // Getters for the button and event
+    public JButton getRemoveEventButton() {return removeEventButton;}
+    public CalendarEvent getEvent() {return event;}
 }

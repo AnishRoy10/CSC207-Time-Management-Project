@@ -20,7 +20,7 @@ public class CheckConflictsUseCase {
 
     // Helper function for conflictChecker and showConflicts that returns the events in the order of start date.
     // If the start dates are the same, return in the order they come in.
-    private ArrayList<CalendarEvent> comesFirst(CalendarEvent eventOne, CalendarEvent eventTwo) {
+    private static ArrayList<CalendarEvent> comesFirst(CalendarEvent eventOne, CalendarEvent eventTwo) {
         if (eventTwo.getStartDate().isBefore(eventOne.getStartDate())) {
             ArrayList<CalendarEvent> orderedArray = new ArrayList<CalendarEvent>(2);
             orderedArray.add(eventTwo);
@@ -36,7 +36,7 @@ public class CheckConflictsUseCase {
     }
 
     // Helper method for showConflicts that says whether two events conflict
-    private boolean conflictChecker(CalendarEvent eventOne, CalendarEvent eventTwo) {
+    private static boolean conflictChecker(CalendarEvent eventOne, CalendarEvent eventTwo) {
         if (eventOne.getStartDate() == eventTwo.getStartDate()) {return true;}
         else {
             CalendarEvent firstEvent = comesFirst(eventOne, eventTwo).get(0);
@@ -49,11 +49,12 @@ public class CheckConflictsUseCase {
     }
     // Must find out what data type to use to store the information of which
     // Events conflict for the method showConflicts
-    public ArrayList<ArrayList<CalendarEvent>> showConflicts(Calendar calendar) {
+    public static ArrayList<ArrayList<CalendarEvent>> showConflicts(ArrayList<CalendarEvent> events) {
         ArrayList<ArrayList<CalendarEvent>> conflictList = new ArrayList<ArrayList<CalendarEvent>>();
+
         // Double loop which loop over all pairs of events in the Calendar, adding conflicting pairs to conflictList
-        for (CalendarEvent event : calendar.getAllEvents()) {
-            for (CalendarEvent anotherEvent : calendar.getAllEvents()) {
+        for (CalendarEvent event : events) {
+            for (CalendarEvent anotherEvent : events) {
                 // Condition that the events are not the same
                 boolean conditionOne = !event.equals(anotherEvent);
                 // Condition that the two events indeed have a conflict

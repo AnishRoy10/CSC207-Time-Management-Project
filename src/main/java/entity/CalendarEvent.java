@@ -1,5 +1,7 @@
 package entity;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.io.Serializable;
 import java.util.List;
@@ -163,7 +165,7 @@ public class CalendarEvent implements Serializable{
      */
 
     public static List<CalendarEvent> eventsBetweenDates(LocalDateTime dateOne, LocalDateTime dateTwo, List<CalendarEvent> eventList) {
-        List<CalendarEvent> includedEventList = new ArrayList<CalendarEvent>();
+        List<CalendarEvent> includedEventList = new ArrayList<>();
         for (CalendarEvent event : eventList) {
             boolean conditionOne = dateOne.isBefore(event.getStartDate());
             boolean conditionTwo =
@@ -171,6 +173,24 @@ public class CalendarEvent implements Serializable{
             if (conditionOne && conditionTwo){includedEventList.add(event);}
         }
         return includedEventList;
+    }
+
+    public boolean startEndOnSameDay() {
+        boolean conditionOne = this.endDate.getYear() == this.startDate.getYear();
+        boolean conditionTwo = this.startDate.getMonth() == this.endDate.getMonth();
+        boolean conditionThree = this.startDate.getDayOfMonth() == this.endDate.getDayOfMonth();
+        return conditionOne && conditionTwo && conditionThree;
+    }
+
+    public boolean priorityLevelIsValid() {
+        boolean conditionOne = (priorityLevel.equals("Low"));
+        boolean conditionTwo = (priorityLevel.equals( "Normal"));
+        boolean conditionThree = (priorityLevel.equals("High"));
+        return conditionOne || conditionTwo || conditionThree;
+    }
+
+    public boolean startBeforeEnd() {
+        return startDate.isBefore(endDate);
     }
 
     /**

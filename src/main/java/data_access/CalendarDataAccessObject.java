@@ -4,6 +4,7 @@ import entity.CalendarEvent;
 import entity.User;
 import use_case.AddEventUseCase.AddEventDataAccessInterface;
 import use_case.ViewEventsUseCase.ViewEventsDataAccessInterface;
+import use_case.RemoveEventUseCase.RemoveEventDataAccessInterface;
 import entity.Calendar;
 import java.io.IOException;
 /**
@@ -11,7 +12,8 @@ import java.io.IOException;
  * classes to update the calendar of a user and retrieve information in the calendar of the user who is
  * logged in.
  */
-public class CalendarDataAccessObject implements ViewEventsDataAccessInterface, AddEventDataAccessInterface
+public class CalendarDataAccessObject
+        implements ViewEventsDataAccessInterface, AddEventDataAccessInterface, RemoveEventDataAccessInterface
 {
     private FileCacheUserDataAccessObject fileCacheUserDataAccessObject;
     private String username;
@@ -34,8 +36,15 @@ public class CalendarDataAccessObject implements ViewEventsDataAccessInterface, 
     public Calendar getCalendar() throws IOException, ClassNotFoundException {
         return this.user.getCalendar();
     }
+
     // Method for adding an event to the logged in user's calendar.
     public void addEvent(CalendarEvent event) throws IOException, ClassNotFoundException
     {this.user.addEvent(event);
     fileCacheUserDataAccessObject.WriteToCache(user);}
+
+    // Method for removing an event from the logged in user's calendar
+    public void removeEvent(CalendarEvent event) throws IOException {
+        this.user.removeEvent(event);
+        fileCacheUserDataAccessObject.WriteToCache(user);
+    }
 }

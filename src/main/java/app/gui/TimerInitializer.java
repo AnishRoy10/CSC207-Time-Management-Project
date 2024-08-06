@@ -18,10 +18,8 @@ import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerInteractor;
 public class TimerInitializer {
     /**
      * The main method is the entry point of the timer page.
-     *
-     * @param args Command line arguments (not used in this application).
      */
-    public static void main(String[] args) {
+    public static void initializeTimer() {
         try {
             // Initialize the database
             SQLDatabaseHelper dbHelper = new SQLDatabaseHelper();

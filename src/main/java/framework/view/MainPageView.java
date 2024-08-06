@@ -92,7 +92,7 @@ public class MainPageView extends JFrame {
      * This method should be implemented to open the Timer view of the application.
      */
     private void openTimer() {
-        TimerInitializer.main(null);
+        TimerInitializer.initializeTimer();
     }
 
     /**

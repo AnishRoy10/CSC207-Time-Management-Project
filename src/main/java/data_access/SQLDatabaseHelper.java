@@ -50,7 +50,10 @@ public class SQLDatabaseHelper {
                         + "courses TEXT,"
                         + "tasks TEXT,"
                         + "score INTEGER,"
-                        + "anumber INTEGER,"
+                        + "timerStart INTEGER,"
+                        + "timerEnd INTEGER,"
+                        + "timerElapsed INTEGER,"
+                        + "timerPause INTEGER,"
                         + "calendar TEXT"
                         + ");";
 

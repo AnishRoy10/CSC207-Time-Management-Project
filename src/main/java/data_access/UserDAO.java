@@ -2,12 +2,12 @@ package data_access;
 
 import entity.User;
 import entity.Course;
+import entity.Timer;
 import repositories.UserRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.io.IOException;
 
 /**
@@ -34,8 +34,8 @@ public class UserDAO implements UserRepository {
      */
     @Override
     public void WriteToCache(User user) throws IOException {
-        String sql = "INSERT INTO Users(username, password, score, courses) VALUES(?, ?, ?, ?) " +
-                "ON CONFLICT(username) DO UPDATE SET password=excluded.password, score=excluded.score, courses=excluded.courses";
+        String sql = "INSERT INTO Users(username, password, score, courses, timerStart, timerEnd, timerElapsed, timerPause) VALUES(?, ?, ?, ?, ?, ?, ?, ?) " +
+                "ON CONFLICT(username) DO UPDATE SET password=excluded.password, score=excluded.score, courses=excluded.courses, timerStart=excluded.timerStart, timerEnd=excluded.timerEnd, timerElapsed=excluded.timerElapsed, timerPause=excluded.timerPause";
 
         try (Connection conn = dbHelper.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -43,12 +43,25 @@ public class UserDAO implements UserRepository {
             pstmt.setString(2, user.getPassword());
             pstmt.setInt(3, user.getScore());
             pstmt.setString(4, String.join(",", user.getCourses()));
+
+            Timer timer = user.getTimer();
+            if (timer != null) {
+                pstmt.setLong(5, timer.getStart_time());
+                pstmt.setLong(6, timer.getEnd_time());
+                pstmt.setLong(7, timer.getElapsed_time());
+                pstmt.setLong(8, timer.getPause_time());
+            } else {
+                pstmt.setNull(5, Types.INTEGER);
+                pstmt.setNull(6, Types.INTEGER);
+                pstmt.setNull(7, Types.INTEGER);
+                pstmt.setNull(8, Types.INTEGER);
+            }
+
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new IOException("Failed to write user to cache", e);
         }
     }
-
 
     /**
      * Reads the first User object from the database.
@@ -65,15 +78,7 @@ public class UserDAO implements UserRepository {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             if (rs.next()) {
-                user = new User(rs.getString("username"), rs.getString("password"), new User[]{}, new Course[]{});
-                user.setScore(rs.getInt("score"));
-                String coursesStr = rs.getString("courses");
-                if (coursesStr != null && !coursesStr.isEmpty()) {
-                    String[] courses = coursesStr.split(",");
-                    for (String course : courses) {
-                        user.addCourse(new Course(course, ""));
-                    }
-                }
+                user = extractUserFromResultSet(rs);
             }
         } catch (SQLException e) {
             throw new IOException("Failed to read user from cache", e);
@@ -98,19 +103,42 @@ public class UserDAO implements UserRepository {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                user = new User(rs.getString("username"), rs.getString("password"), new User[]{}, new Course[]{});
-                user.setScore(rs.getInt("score"));
-                String coursesStr = rs.getString("courses");
-                if (coursesStr != null && !coursesStr.isEmpty()) {
-                    String[] courses = coursesStr.split(",");
-                    for (String course : courses) {
-                        user.addCourse(new Course(course, ""));
-                    }
-                }
+                user = extractUserFromResultSet(rs);
             }
         } catch (SQLException e) {
             throw new IOException("Failed to read user from cache", e);
         }
+        return user;
+    }
+
+    /**
+     * Extracts a User object from the current row of the given ResultSet.
+     *
+     * @param rs The ResultSet containing the user data.
+     * @return The User object extracted from the ResultSet.
+     * @throws SQLException If an SQL error occurs while reading from the ResultSet.
+     */
+    private User extractUserFromResultSet(ResultSet rs) throws SQLException {
+        User user = new User(rs.getString("username"), rs.getString("password"), new User[]{}, new Course[]{});
+        user.setScore(rs.getInt("score"));
+
+        String coursesStr = rs.getString("courses");
+        if (coursesStr != null && !coursesStr.isEmpty()) {
+            String[] courses = coursesStr.split(",");
+            for (String course : courses) {
+                user.addCourse(new Course(course, ""));
+            }
+        }
+
+        long timerStart = rs.getLong("timerStart");
+        if (!rs.wasNull()) {
+            long timerEnd = rs.getLong("timerEnd");
+            long timerElapsed = rs.getLong("timerElapsed");
+            long timerPause = rs.getLong("timerPause");
+            Timer timer = new Timer(timerStart, timerEnd, timerElapsed, timerPause);
+            user.addTimer(timer);
+        }
+
         return user;
     }
 
@@ -161,8 +189,7 @@ public class UserDAO implements UserRepository {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                User user = new User(rs.getString("username"), rs.getString("password"), new User[]{}, new Course[]{});
-                user.setScore(rs.getInt("score"));
+                User user = extractUserFromResultSet(rs);
                 users.add(user);
             }
         } catch (SQLException e) {

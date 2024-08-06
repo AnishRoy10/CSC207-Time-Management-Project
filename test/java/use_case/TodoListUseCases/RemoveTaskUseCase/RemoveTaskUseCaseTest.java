@@ -5,6 +5,7 @@ import data_access.TaskDAO;
 import data_access.UserDAO;
 import entity.Course;
 import entity.User;
+import entity.Task;
 import interface_adapter.presenter.TodoListPresenter;
 import interface_adapter.viewmodel.TodoListViewModel;
 import org.junit.jupiter.api.AfterEach;
@@ -14,6 +15,7 @@ import repositories.TaskRepository;
 import repositories.UserRepository;
 import use_case.TodoListUseCases.AddTaskUseCase.AddTaskRequestModel;
 import use_case.TodoListUseCases.AddTaskUseCase.AddTaskUseCase;
+import use_case.TaskData;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -21,6 +23,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -186,5 +190,94 @@ class RemoveTaskUseCaseTest {
         Exception exception = assertThrows(RuntimeException.class, () -> removeTaskUseCase.execute(removeRequestModel));
 
         assertTrue(exception.getMessage().contains("Task not found"));
+    }
+
+    @Test
+    void testRemoveTaskUserNotFound() {
+        UserRepository mockUserRepository = new UserDAO(dbHelper) {
+            @Override
+            public User findByUsername(String username) throws IOException {
+                throw new IOException("Database read error");
+            }
+        };
+        RemoveTaskUseCase removeTaskUseCaseWithMock = new RemoveTaskUseCase(mockUserRepository, taskRepository, new RemoveTaskOutputBoundary() {
+            @Override
+            public void present(RemoveTaskResponseModel responseModel) {
+                // No-op
+            }
+        });
+
+        RemoveTaskRequestModel requestModel = new RemoveTaskRequestModel(UUID.randomUUID(), "nonExistentUser");
+
+        Exception exception = assertThrows(RuntimeException.class, () -> removeTaskUseCaseWithMock.execute(requestModel));
+        assertEquals("Database error", exception.getMessage());
+        assertEquals("Database read error", exception.getCause().getMessage());
+    }
+
+    @Test
+    void testRemoveTaskUserNotFound2() {
+        // Create a mock RemoveTaskOutputBoundary
+        RemoveTaskOutputBoundary mockOutputBoundary = responseModel -> {
+            // No-op
+        };
+
+        // Initialize RemoveTaskUseCase with real repositories
+        RemoveTaskUseCase removeTaskUseCase = new RemoveTaskUseCase(userRepository, taskRepository, mockOutputBoundary);
+
+        // Create a RemoveTaskRequestModel with a non-existent user
+        RemoveTaskRequestModel removeRequestModel = new RemoveTaskRequestModel(UUID.randomUUID(), "nonExistentUser");
+
+        // Assert that a RuntimeException is thrown with the expected message
+        Exception exception = assertThrows(RuntimeException.class, () -> removeTaskUseCase.execute(removeRequestModel));
+        assertEquals("User not found", exception.getMessage());
+    }
+
+    @Test
+    void testRemoveTaskRequestModelGettersAndSetters() {
+        UUID taskId = UUID.randomUUID();
+        String username = "testUser";
+
+        RemoveTaskRequestModel requestModel = new RemoveTaskRequestModel(taskId, username);
+
+        assertEquals(taskId, requestModel.getTaskId());
+        assertEquals(username, requestModel.getUsername());
+
+        UUID newTaskId = UUID.randomUUID();
+        String newUsername = "newUser";
+
+        requestModel.setTaskId(newTaskId);
+        requestModel.setUsername(newUsername);
+
+        assertEquals(newTaskId, requestModel.getTaskId());
+        assertEquals(newUsername, requestModel.getUsername());
+    }
+
+    @Test
+    void testRemoveTaskResponseModelGettersAndSetters() {
+        List<TaskData> tasks = new ArrayList<>();
+        UUID taskId = UUID.randomUUID();
+
+        RemoveTaskResponseModel responseModel = new RemoveTaskResponseModel(tasks, taskId);
+
+        assertEquals(tasks, responseModel.getTasks());
+        assertEquals(taskId, responseModel.getTaskId());
+
+        List<TaskData> newTasks = new ArrayList<>();
+        UUID newTaskId = UUID.randomUUID();
+
+        responseModel.setTasks(newTasks);
+        responseModel.setTaskId(newTaskId);
+
+        assertEquals(newTasks, responseModel.getTasks());
+        assertEquals(newTaskId, responseModel.getTaskId());
+    }
+
+    @Test
+    void testRemoveTaskResponseModelConstructorWithoutTaskId() {
+        List<TaskData> tasks = new ArrayList<>();
+        RemoveTaskResponseModel responseModel = new RemoveTaskResponseModel(tasks);
+
+        assertEquals(tasks, responseModel.getTasks());
+        assertNotNull(responseModel.getTasks());
     }
 }

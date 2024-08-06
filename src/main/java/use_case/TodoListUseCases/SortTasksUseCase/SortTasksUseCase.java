@@ -50,7 +50,7 @@ public class SortTasksUseCase implements SortTasksInputBoundary {
                     comparator = Comparator.comparing(Task::getCourse);
                     break;
                 case "completion":
-                    comparator = Comparator.comparing(Task::isCompleted);
+                    comparator = Comparator.comparing(Task::isCompleted).reversed(); // Modified to sort by completion status
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown sorting criteria: " + requestModel.getCriteria());
@@ -79,7 +79,7 @@ public class SortTasksUseCase implements SortTasksInputBoundary {
             sortTasksOutputBoundary.present(responseModel);
         } catch (IOException e) {
             e.printStackTrace();
-            // Handle the error appropriately
+            throw new RuntimeException("Database error", e);
         }
     }
 }

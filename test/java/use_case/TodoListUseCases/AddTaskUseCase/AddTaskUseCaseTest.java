@@ -3,6 +3,7 @@ package use_case.TodoListUseCases.AddTaskUseCase;
 import data_access.SQLDatabaseHelper;
 import data_access.TaskDAO;
 import data_access.UserDAO;
+import entity.Task;
 import interface_adapter.presenter.TodoListPresenter;
 import interface_adapter.viewmodel.TodoListViewModel;
 import org.junit.jupiter.api.AfterEach;
@@ -12,11 +13,18 @@ import repositories.TaskRepository;
 import repositories.UserRepository;
 import entity.Course;
 import entity.User;
+import use_case.TaskData;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
+
+import static org.mockito.Mockito.*;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -168,5 +176,82 @@ class AddTaskUseCaseTest {
         assertNotNull(viewModel2.getTasks());
         assertEquals(1, viewModel2.getTasks().size());
         assertEquals("User2 Task 1", viewModel2.getTasks().get(0).getTitle());
+    }
+
+    @Test
+    void testAddTaskUseCaseException() {
+        // Create and save the user
+        User user = new User("exceptionUser", "password", new User[]{}, new Course[]{});
+        try {
+            userRepository.WriteToCache(user);
+        } catch (Exception e) {
+            System.out.println("Failed to save user: " + e.getMessage());
+            fail("Exception thrown while saving user: " + e.getMessage());
+        }
+
+        // Mock the TaskRepository to throw a runtime exception
+        TaskRepository mockTaskRepository = mock(TaskRepository.class);
+        doThrow(new RuntimeException("Database write error")).when(mockTaskRepository).WriteToCache(any(Task.class), eq("exceptionUser"));
+
+        TodoListViewModel viewModel = new TodoListViewModel();
+        TodoListPresenter presenter = new TodoListPresenter(viewModel);
+        AddTaskUseCase addTaskUseCase = new AddTaskUseCase(userRepository, mockTaskRepository, presenter);
+
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime deadline = LocalDateTime.now().plusDays(1);
+        AddTaskRequestModel requestModel = new AddTaskRequestModel("Exception Task", "Test Description", startDate, deadline, "Test Course", "exceptionUser");
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            addTaskUseCase.execute(requestModel);
+        });
+
+        assertEquals("Failed to add task: Database write error", exception.getMessage());
+    }
+
+    @Test
+    void testAddTaskRequestModelSetters() {
+        AddTaskRequestModel requestModel = new AddTaskRequestModel("", "", null, null, "", "");
+
+        String title = "New Title";
+        String description = "New Description";
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime deadline = LocalDateTime.now().plusDays(1);
+        String course = "New Course";
+        String username = "newUser";
+
+        requestModel.setTitle(title);
+        requestModel.setDescription(description);
+        requestModel.setStartDate(startDate);
+        requestModel.setDeadline(deadline);
+        requestModel.setCourse(course);
+        requestModel.setUsername(username);
+
+        assertEquals(title, requestModel.getTitle());
+        assertEquals(description, requestModel.getDescription());
+        assertEquals(startDate, requestModel.getStartDate());
+        assertEquals(deadline, requestModel.getDeadline());
+        assertEquals(course, requestModel.getCourse());
+        assertEquals(username, requestModel.getUsername());
+    }
+
+    @Test
+    void testAddTaskResponseModelSettersAndConstructors() {
+        List<TaskData> taskDataList = List.of(
+                new TaskData(UUID.randomUUID(), "user1", "Task 1", "Description 1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course 1", null)
+        );
+
+        AddTaskResponseModel responseModel = new AddTaskResponseModel(taskDataList);
+
+        assertEquals(taskDataList, responseModel.getTasks());
+
+        List<TaskData> newTaskDataList = List.of(
+                new TaskData(UUID.randomUUID(), "user2", "Task 2", "Description 2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), false, "Course 2", null)
+        );
+        responseModel.setTasks(newTaskDataList);
+        assertEquals(newTaskDataList, responseModel.getTasks());
+
+        String title = "New Task Title";
+        responseModel.setTitle(title);
+        assertEquals(title, responseModel.getTitle());
     }
 }

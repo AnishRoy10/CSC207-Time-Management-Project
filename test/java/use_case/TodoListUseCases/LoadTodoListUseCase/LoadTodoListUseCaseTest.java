@@ -21,6 +21,7 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -97,5 +98,30 @@ class LoadTodoListUseCaseTest {
         List<TaskData> tasks = viewModel.getTasks();
         assertNotNull(tasks);
         assertTrue(tasks.isEmpty());
+    }
+
+
+    @Test
+    void testLoadTodoListIOException() {
+        UserRepository mockUserRepository = new UserDAO(dbHelper) {
+            @Override
+            public User findByUsername(String username) throws IOException {
+                throw new IOException("Database read error");
+            }
+        };
+        LoadTodoListUseCase loadTodoListUseCaseWithMock = new LoadTodoListUseCase(mockUserRepository, taskRepository, todoListPresenter);
+
+        LoadTodoListRequestModel requestModel = new LoadTodoListRequestModel("filterUser");
+
+        Exception exception = assertThrows(RuntimeException.class, () -> loadTodoListUseCaseWithMock.execute(requestModel));
+        assertEquals("Database error", exception.getMessage());
+        assertEquals("Database read error", exception.getCause().getMessage());
+    }
+
+    @Test
+    void testSetUsername() {
+        LoadTodoListRequestModel requestModel = new LoadTodoListRequestModel("initialUsername");
+        requestModel.setUsername("newUsername");
+        assertEquals("newUsername", requestModel.getUsername());
     }
 }

@@ -63,7 +63,7 @@ public class RemoveTaskUseCase implements RemoveTaskInputBoundary {
             removeTaskOutputBoundary.present(responseModel);
         } catch (IOException e) {
             e.printStackTrace();
-            // Handle the error appropriately
+            throw new RuntimeException("Database error", e);
         }
     }
 }

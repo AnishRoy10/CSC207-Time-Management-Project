@@ -6,6 +6,7 @@ import repositories.UserRepository;
 import repositories.TaskRepository;
 import use_case.TaskData;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,9 +53,9 @@ public class FilterTasksUseCase implements FilterTasksInputBoundary {
 
             FilterTasksResponseModel responseModel = new FilterTasksResponseModel(tasks);
             filterTasksOutputBoundary.present(responseModel);
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
-            // Handle the error appropriately
+            throw new RuntimeException("Database error", e);
         }
     }
 }

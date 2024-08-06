@@ -52,7 +52,7 @@ public class LoadTodoListUseCase implements LoadTodoListInputBoundary {
             loadTodoListOutputBoundary.present(new LoadTodoListResponseModel(taskDataList));
         } catch (IOException e) {
             e.printStackTrace();
-            // Handle the error appropriately
+            throw new RuntimeException("Database error", e);
         }
     }
 }

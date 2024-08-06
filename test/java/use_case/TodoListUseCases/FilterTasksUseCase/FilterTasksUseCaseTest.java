@@ -23,12 +23,17 @@ import use_case.TodoListUseCases.SortTasksUseCase.SortTasksRequestModel;
 import use_case.TodoListUseCases.SortTasksUseCase.SortTasksUseCase;
 import use_case.TaskData;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class FilterTasksUseCaseTest {
     private SQLDatabaseHelper dbHelper;
@@ -141,5 +146,53 @@ class FilterTasksUseCaseTest {
 
         System.out.println("Filtered and Sorted tasks count: " + viewModel.getTasks().size());
         viewModel.getTasks().forEach(task -> System.out.println("Task Title: " + task.getTitle() + " Deadline: " + task.getDeadline()));
+    }
+
+    @Test
+    public void testFilterTasksRequestModelSetters() {
+        FilterTasksRequestModel requestModel = new FilterTasksRequestModel(false, "initialUser");
+
+        // Test setters
+        requestModel.setHideCompleted(true);
+        assertEquals(true, requestModel.isHideCompleted());
+
+        requestModel.setUsername("updatedUser");
+        assertEquals("updatedUser", requestModel.getUsername());
+    }
+
+    @Test
+    public void testFilterTasksResponseModelSettersAndConstructors() {
+        UUID taskId = UUID.randomUUID();
+        TaskData taskData = new TaskData(taskId, "user1", "Task 1", "Description 1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course 1", null);
+
+        List<TaskData> taskDataList = new ArrayList<>();
+        taskDataList.add(taskData);
+
+        FilterTasksResponseModel responseModel = new FilterTasksResponseModel(taskDataList);
+
+        assertEquals(taskDataList, responseModel.getTasks());
+
+        List<TaskData> newTaskDataList = new ArrayList<>();
+        TaskData newTaskData = new TaskData(UUID.randomUUID(), "user2", "Task 2", "Description 2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), true, "Course 2", LocalDateTime.now());
+        newTaskDataList.add(newTaskData);
+
+        responseModel.setTasks(newTaskDataList);
+        assertEquals(newTaskDataList, responseModel.getTasks());
+    }
+
+    @Test
+    void testFilterTasksUserNotFound() throws IOException {
+        UserRepository mockUserRepository = mock(UserRepository.class);
+        when(mockUserRepository.findByUsername("nonExistentUser")).thenReturn(null);
+
+        FilterTasksOutputBoundary filterTasksOutputBoundary = responseModel -> {
+            // No-op
+        };
+        FilterTasksUseCase filterTasksUseCase = new FilterTasksUseCase(mockUserRepository, taskRepository, filterTasksOutputBoundary);
+
+        FilterTasksRequestModel filterRequestModel = new FilterTasksRequestModel(true, "nonExistentUser");
+
+        Exception exception = assertThrows(RuntimeException.class, () -> filterTasksUseCase.execute(filterRequestModel));
+        assertEquals("User not found", exception.getMessage());
     }
 }

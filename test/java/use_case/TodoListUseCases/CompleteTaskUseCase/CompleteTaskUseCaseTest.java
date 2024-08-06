@@ -6,6 +6,7 @@ import data_access.TaskDAO;
 import data_access.UserDAO;
 import entity.Course;
 import entity.User;
+import entity.Task;
 import interface_adapter.presenter.TodoListPresenter;
 import interface_adapter.viewmodel.TodoListViewModel;
 import org.junit.jupiter.api.AfterEach;
@@ -23,8 +24,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.*;
+
 
 class CompleteTaskUseCaseTest {
     private SQLDatabaseHelper dbHelper;
@@ -209,5 +214,106 @@ class CompleteTaskUseCaseTest {
         completeTaskUseCase.execute(completeRequestModel);
 
         assertFalse(viewModel.getTasks().get(0).isCompleted());
+    }
+
+    @Test
+    void testCompleteTaskWithNonExistentUser() {
+        TodoListViewModel viewModel = new TodoListViewModel();
+        TodoListPresenter presenter = new TodoListPresenter(viewModel);
+        CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase(userRepository, taskRepository, presenter, leaderboardRepository);
+
+        // Creating a CompleteTaskRequestModel with a non-existent user
+        CompleteTaskRequestModel completeRequestModel = new CompleteTaskRequestModel(UUID.randomUUID(), "nonExistentUser");
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            completeTaskUseCase.execute(completeRequestModel);
+        });
+
+        assertEquals("User not found", exception.getMessage());
+    }
+
+    @Test
+    void testCompleteTaskIOException() throws IOException {
+        UserRepository mockUserRepository = mock(UserRepository.class);
+        TaskRepository mockTaskRepository = mock(TaskRepository.class);
+        TodoListViewModel viewModel = new TodoListViewModel();
+        TodoListPresenter presenter = new TodoListPresenter(viewModel);
+        LeaderboardRepository mockLeaderboardRepository = mock(LeaderboardRepository.class);
+
+        CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase(mockUserRepository, mockTaskRepository, presenter, mockLeaderboardRepository);
+
+        UUID taskId = UUID.randomUUID();
+
+        try {
+            when(mockUserRepository.findByUsername("testUser")).thenThrow(new IOException("Database error"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        CompleteTaskRequestModel completeRequestModel = new CompleteTaskRequestModel(taskId, "testUser");
+
+        // Since the IOException is caught inside execute, it won't be thrown here
+        completeTaskUseCase.execute(completeRequestModel);
+
+        // Check if any further operations were stopped due to the exception
+        verify(mockTaskRepository, never()).ReadFromCache(any(UUID.class));
+        verify(mockTaskRepository, never()).WriteToCache(any(Task.class), any(String.class));
+        verify(mockLeaderboardRepository, never()).writeToCache(anyMap());
+    }
+
+    @Test
+    void testAddTaskRequestModelSetters() {
+        AddTaskRequestModel requestModel = new AddTaskRequestModel("Initial Title", "Initial Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Initial Course", "InitialUser");
+
+        requestModel.setTitle("Updated Title");
+        assertEquals("Updated Title", requestModel.getTitle());
+
+        requestModel.setDescription("Updated Description");
+        assertEquals("Updated Description", requestModel.getDescription());
+
+        LocalDateTime newStartDate = LocalDateTime.now().minusDays(1);
+        requestModel.setStartDate(newStartDate);
+        assertEquals(newStartDate, requestModel.getStartDate());
+
+        LocalDateTime newDeadline = LocalDateTime.now().plusDays(2);
+        requestModel.setDeadline(newDeadline);
+        assertEquals(newDeadline, requestModel.getDeadline());
+
+        requestModel.setCourse("Updated Course");
+        assertEquals("Updated Course", requestModel.getCourse());
+
+        requestModel.setUsername("UpdatedUser");
+        assertEquals("UpdatedUser", requestModel.getUsername());
+    }
+
+    @Test
+    public void testCompleteTaskResponseModelSettersAndConstructors() {
+        UUID taskId = UUID.randomUUID();
+        TaskData taskData = new TaskData(taskId, "user1", "Task 1", "Description 1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), false, "Course 1", null);
+
+        CompleteTaskResponseModel responseModel = new CompleteTaskResponseModel(taskData);
+
+        assertEquals(taskData, responseModel.getTaskData());
+
+        responseModel.setTaskId(taskId);
+        assertEquals(taskId, responseModel.getTaskId());
+
+        CompleteTaskResponseModel responseModelWithId = new CompleteTaskResponseModel(taskData, taskId);
+        assertEquals(taskData, responseModelWithId.getTaskData());
+        assertEquals(taskId, responseModelWithId.getTaskId());
+    }
+
+    @Test
+    public void testCompleteTaskRequestModelSetters() {
+        UUID taskId = UUID.randomUUID();
+        CompleteTaskRequestModel requestModel = new CompleteTaskRequestModel(taskId, "initialUser");
+
+        // Testing setters
+        UUID newTaskId = UUID.randomUUID();
+        requestModel.setTaskId(newTaskId);
+        assertEquals(newTaskId, requestModel.getTaskId());
+
+        requestModel.setUsername("updatedUser");
+        assertEquals("updatedUser", requestModel.getUsername());
     }
 }

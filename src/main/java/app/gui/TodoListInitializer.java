@@ -17,6 +17,10 @@ import use_case.TodoListUseCases.SortTasksUseCase.SortTasksUseCase;
 
 public class TodoListInitializer {
     public static void initializeTodoList(String username) {
+        initializeTodoList(username, null);
+    }
+
+    public static void initializeTodoList(String username, String courseName) {
         try {
             // Initialize the database helper
             SQLDatabaseHelper dbHelper = new SQLDatabaseHelper();
@@ -46,7 +50,7 @@ public class TodoListInitializer {
                     addTaskUseCase, removeTaskUseCase, completeTaskUseCase, sortTasksUseCase, filterTasksUseCase, loadTodoListUseCase);
 
             // Initialize and show the view
-            TodoListView view = new TodoListView(controller, viewModel, username);
+            TodoListView view = new TodoListView(controller, viewModel, username, courseName);
             view.setVisible(true);
         } catch (Exception e) {
             // Print the stack trace and an error message if an exception occurs

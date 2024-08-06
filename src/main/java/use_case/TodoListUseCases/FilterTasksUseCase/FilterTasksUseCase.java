@@ -33,11 +33,18 @@ public class FilterTasksUseCase implements FilterTasksInputBoundary {
                 throw new RuntimeException("User not found");
             }
 
-            List<Task> filteredTasks = taskRepository.getAllTasks(user.getUsername()).stream()
+            List<Task> tasks;
+            if (requestModel.getCourseName() != null) {
+                tasks = taskRepository.getAllTasks(user.getUsername(), requestModel.getCourseName());
+            } else {
+                tasks = taskRepository.getAllTasks(user.getUsername());
+            }
+
+            List<Task> filteredTasks = tasks.stream()
                     .filter(task -> !(requestModel.isHideCompleted() && task.isCompleted()))
                     .collect(Collectors.toList());
 
-            List<TaskData> tasks = filteredTasks.stream()
+            List<TaskData> taskDataList = filteredTasks.stream()
                     .map(task -> new TaskData(
                             task.getId(),
                             task.getUsername(),
@@ -51,7 +58,7 @@ public class FilterTasksUseCase implements FilterTasksInputBoundary {
                     ))
                     .collect(Collectors.toList());
 
-            FilterTasksResponseModel responseModel = new FilterTasksResponseModel(tasks);
+            FilterTasksResponseModel responseModel = new FilterTasksResponseModel(taskDataList);
             filterTasksOutputBoundary.present(responseModel);
         } catch (IOException e) {
             e.printStackTrace();

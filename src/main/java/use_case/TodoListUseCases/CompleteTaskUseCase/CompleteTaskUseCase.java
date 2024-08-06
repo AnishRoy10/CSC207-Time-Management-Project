@@ -10,7 +10,6 @@ import use_case.TaskData;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Use case for toggling the completion status of a task.
@@ -58,7 +57,12 @@ public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
                 task.setPointsAwarded(true);
             }
 
-            taskRepository.WriteToCache(task, user.getUsername());
+            // Determine if task is for a course or user and save accordingly
+            if (requestModel.getCourseName() != null) {
+                taskRepository.WriteToCache(task, user.getUsername(), requestModel.getCourseName());
+            } else {
+                taskRepository.WriteToCache(task, user.getUsername());
+            }
 
             TaskData taskData = new TaskData(
                     task.getId(),
@@ -74,7 +78,6 @@ public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
 
             CompleteTaskResponseModel responseModel = new CompleteTaskResponseModel(taskData, task.getId());
             completeTaskOutputBoundary.present(responseModel);
-            taskRepository.WriteToCache(task, user.getUsername());
         } catch (IOException e) {
             e.printStackTrace();
             // Handle the error appropriately

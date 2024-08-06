@@ -8,7 +8,6 @@ import use_case.TaskData;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -43,8 +42,14 @@ public class RemoveTaskUseCase implements RemoveTaskInputBoundary {
             // Remove the task from the repository
             taskRepository.deleteTask(task.getId());
 
-            // Fetch updated tasks list for the user
-            List<Task> tasks = taskRepository.getAllTasks(user.getUsername());
+            // Fetch updated tasks list for the user or course
+            List<Task> tasks;
+            if (requestModel.getCourseName() != null) {
+                tasks = taskRepository.getAllTasks(user.getUsername(), requestModel.getCourseName());
+            } else {
+                tasks = taskRepository.getAllTasks(user.getUsername());
+            }
+
             List<TaskData> taskDataList = tasks.stream()
                     .map(t -> new TaskData(
                             t.getId(),

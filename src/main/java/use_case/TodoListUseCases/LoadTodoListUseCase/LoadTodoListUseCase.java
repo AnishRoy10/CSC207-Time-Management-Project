@@ -34,7 +34,16 @@ public class LoadTodoListUseCase implements LoadTodoListInputBoundary {
             }
 
             // Get the user's tasks from the repository
-            List<Task> tasks = taskRepository.getAllTasks(user.getUsername());
+            List<Task> tasks;
+            if (requestModel.getCourseName() != null) {
+                // Load tasks for the specific course
+                tasks = taskRepository.getAllTasks(user.getUsername(), requestModel.getCourseName());
+                System.out.println("this part is getting touched.");
+            } else {
+                // Load personal tasks
+                tasks = taskRepository.getAllTasks(user.getUsername());
+            }
+
             List<TaskData> taskDataList = tasks.stream()
                     .map(task -> new TaskData(
                             task.getId(),

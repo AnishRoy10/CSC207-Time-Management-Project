@@ -49,6 +49,7 @@ public class UserDAO implements UserRepository {
         }
     }
 
+
     /**
      * Reads the first User object from the database.
      *

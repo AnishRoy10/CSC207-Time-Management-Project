@@ -28,9 +28,19 @@ public class AddTaskUseCase implements AddTaskInputBoundary {
     public void execute(AddTaskRequestModel requestModel) {
         try {
             Task newTask = new Task(requestModel.getUsername(), requestModel.getTitle(), requestModel.getDescription(), requestModel.getStartDate(), requestModel.getDeadline(), requestModel.getCourse());
-            taskRepository.WriteToCache(newTask, requestModel.getUsername());
 
-            List<Task> tasks = taskRepository.getAllTasks(requestModel.getUsername());
+            if (requestModel.getCourseName() != null) {
+                // Save the task in the course's to-do list
+                taskRepository.WriteToCache(newTask, requestModel.getUsername(), requestModel.getCourseName());
+            } else {
+                // Save the task in the user's personal to-do list
+                taskRepository.WriteToCache(newTask, requestModel.getUsername());
+            }
+
+            List<Task> tasks = requestModel.getCourseName() != null ?
+                    taskRepository.getAllTasks(requestModel.getUsername(), requestModel.getCourseName()) :
+                    taskRepository.getAllTasks(requestModel.getUsername());
+
             List<TaskData> taskDataList = tasks.stream()
                     .map(task -> new TaskData(
                             task.getId(),

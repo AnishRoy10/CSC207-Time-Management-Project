@@ -35,7 +35,12 @@ public class SortTasksUseCase implements SortTasksInputBoundary {
             }
 
             // Get the user's tasks from the repository
-            List<Task> tasks = taskRepository.getAllTasks(user.getUsername());
+            List<Task> tasks;
+            if (requestModel.getCourseName() != null) {
+                tasks = taskRepository.getAllTasks(user.getUsername(), requestModel.getCourseName());
+            } else {
+                tasks = taskRepository.getAllTasks(user.getUsername());
+            }
 
             Comparator<Task> comparator;
 

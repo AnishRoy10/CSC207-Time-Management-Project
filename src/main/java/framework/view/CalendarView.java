@@ -13,10 +13,12 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.*;
 import java.time.*;
 import java.time.Month;
+import use_case.CheckConflictsUseCase;
 
 import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 
@@ -138,6 +140,9 @@ public class CalendarView {
                 viewEventsController.execute(date);
                 if (!viewEventsViewModel.getEventListToBeShown().isEmpty()) {
                     return new HighlightInformation(Color.green, (Color) null, "This day has an event");
+                } else if (!CheckConflictsUseCase.showConflicts(
+                        (ArrayList<CalendarEvent>) viewEventsViewModel.getEventListToBeShown()).isEmpty()) {
+                    return new HighlightInformation(Color.red, (Color) null, "This day has events with conflicting times");
                 } else {
                     return null;
                 }

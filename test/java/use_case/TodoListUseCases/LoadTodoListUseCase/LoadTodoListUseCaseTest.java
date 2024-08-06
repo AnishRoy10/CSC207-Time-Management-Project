@@ -124,4 +124,40 @@ class LoadTodoListUseCaseTest {
         requestModel.setUsername("newUsername");
         assertEquals("newUsername", requestModel.getUsername());
     }
+
+    @Test
+    void testLoadTodoListWithCourseName() {
+        User user = new User("testUserWithCourse", "password", new User[]{}, new Course[]{});
+        try {
+            userRepository.WriteToCache(user);
+        } catch (Exception e) {
+            System.out.println("Failed to save user: " + e.getMessage());
+            fail("Exception thrown while saving user: " + e.getMessage());
+        }
+
+        Task task1 = new Task(user.getUsername(), "Task 1", "Description 1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Course 1");
+        taskRepository.WriteToCache(task1, user.getUsername(), "Course 1");
+
+        Task task2 = new Task(user.getUsername(), "Task 2", "Description 2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), "Course 2");
+        taskRepository.WriteToCache(task2, user.getUsername(), "Course 2");
+
+        // Testing the constructor with courseName
+        LoadTodoListRequestModel requestModel = new LoadTodoListRequestModel(user.getUsername(), "Course 1");
+        loadTodoListUseCase.execute(requestModel);
+
+        List<TaskData> tasks = viewModel.getTasks();
+        assertNotNull(tasks);
+        assertEquals(1, tasks.size());
+        assertEquals("Task 1", tasks.get(0).getTitle());
+
+        // Testing the setCourseName method
+        requestModel.setCourseName("Course 2");
+        loadTodoListUseCase.execute(requestModel);
+
+        tasks = viewModel.getTasks();
+        assertNotNull(tasks);
+        assertEquals(1, tasks.size());
+        assertEquals("Task 2", tasks.get(0).getTitle());
+    }
+
 }

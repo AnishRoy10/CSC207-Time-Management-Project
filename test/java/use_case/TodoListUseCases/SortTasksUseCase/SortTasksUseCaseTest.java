@@ -314,4 +314,51 @@ class SortTasksUseCaseTest {
         assertEquals(newTasks, responseModel.getTasks());
         assertNotNull(responseModel.getTasks());
     }
+
+    @Test
+    void testSortTasksWithCourseName() {
+        User user = new User("sortUserWithCourse", "password", new User[]{}, new Course[]{});
+        try {
+            userRepository.WriteToCache(user);
+        } catch (Exception e) {
+            System.out.println("Failed to save user: " + e.getMessage());
+            fail("Exception thrown while saving user: " + e.getMessage());
+        }
+
+        TodoListViewModel viewModel = new TodoListViewModel();
+        TodoListPresenter presenter = new TodoListPresenter(viewModel);
+        AddTaskUseCase addTaskUseCase = new AddTaskUseCase(userRepository, taskRepository, presenter);
+        SortTasksOutputBoundary sortTasksOutputBoundary = responseModel -> presenter.present(responseModel);
+        SortTasksUseCase sortTasksUseCase = new SortTasksUseCase(userRepository, taskRepository, sortTasksOutputBoundary);
+
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime deadline1 = LocalDateTime.now().plusDays(1);
+        LocalDateTime deadline2 = LocalDateTime.now().plusDays(2);
+
+        AddTaskRequestModel requestModel1 = new AddTaskRequestModel("Task 1", "Description 1", startDate, deadline1, "Course A", "sortUserWithCourse");
+        requestModel1.setCourseName("Course 1");
+        AddTaskRequestModel requestModel2 = new AddTaskRequestModel("Task 2", "Description 2", startDate, deadline2, "Course B", "sortUserWithCourse");
+        requestModel2.setCourseName("Course 2");
+
+        addTaskUseCase.execute(requestModel1);
+        addTaskUseCase.execute(requestModel2);
+
+        // Testing the constructor with courseName
+        SortTasksRequestModel sortRequestModel = new SortTasksRequestModel("deadline", true, "sortUserWithCourse", "Course 1");
+        sortTasksUseCase.execute(sortRequestModel);
+
+        List<TaskData> sortedTasks = viewModel.getTasks();
+        assertNotNull(sortedTasks);
+        assertEquals(1, sortedTasks.size());
+        assertEquals("Task 1", sortedTasks.get(0).getTitle());
+
+        // Testing the setCourseName method
+        sortRequestModel.setCourseName("Course 2");
+        sortTasksUseCase.execute(sortRequestModel);
+
+        sortedTasks = viewModel.getTasks();
+        assertNotNull(sortedTasks);
+        assertEquals(1, sortedTasks.size());
+        assertEquals("Task 2", sortedTasks.get(0).getTitle());
+    }
 }

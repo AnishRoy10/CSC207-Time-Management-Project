@@ -127,14 +127,21 @@ public class TaskDAO implements TaskRepository {
      */
     @Override
     public List<Task> getAllTasks(String username, String courseName) {
-        String sql = courseName == null ? "SELECT * FROM Tasks WHERE username = ? AND courseName IS NULL" : "SELECT * FROM Tasks WHERE username = ? AND courseName = ?";
+        String sql;
+        if (courseName == null) {
+            sql = "SELECT * FROM Tasks WHERE username = ? AND courseName IS NULL";
+        } else {
+            sql = "SELECT * FROM Tasks WHERE courseName = ?";
+        }
+
         List<Task> tasks = new ArrayList<>();
 
         try (Connection conn = dbHelper.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            if (courseName != null) {
-                pstmt.setString(2, courseName);
+            if (courseName == null) {
+                pstmt.setString(1, username);
+            } else {
+                pstmt.setString(1, courseName);
             }
             ResultSet rs = pstmt.executeQuery();
 

@@ -15,6 +15,7 @@ import use_case.UserUseCases.UserSignupUseCase.UserSignupUseCase;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -110,5 +111,21 @@ class UserSignupUseCaseTest {
         UserSignupResponseModel responseModel = captor.getValue();
 
         assertEquals("An error occurred during sign up.", responseModel.getMessage());
+    }
+
+    @Test
+    void testUserSignupResponseModelEqualsAndHashCode() {
+        UserSignupResponseModel responseModel1 = new UserSignupResponseModel(true, "Message");
+        UserSignupResponseModel responseModel2 = new UserSignupResponseModel(true, "Message");
+        UserSignupResponseModel responseModel3 = new UserSignupResponseModel(false, "Message");
+        UserSignupResponseModel responseModel4 = new UserSignupResponseModel(true, "Different message");
+
+        assertEquals(responseModel1, responseModel2);
+        assertNotEquals(responseModel1, responseModel3);
+        assertNotEquals(responseModel1, responseModel4);
+
+        assertEquals(responseModel1.hashCode(), responseModel2.hashCode());
+        assertNotEquals(responseModel1.hashCode(), responseModel3.hashCode());
+        assertNotEquals(responseModel1.hashCode(), responseModel4.hashCode());
     }
 }

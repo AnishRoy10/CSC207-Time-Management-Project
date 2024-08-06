@@ -316,4 +316,39 @@ class CompleteTaskUseCaseTest {
         requestModel.setUsername("updatedUser");
         assertEquals("updatedUser", requestModel.getUsername());
     }
+
+    @Test
+    void testCompleteTaskRequestModelWithCourseName() {
+        User user = new User("testUserWithCourse", "password", new User[]{}, new Course[]{});
+        try {
+            userRepository.WriteToCache(user);
+        } catch (Exception e) {
+            System.out.println("Failed to save user: " + e.getMessage());
+            fail("Exception thrown while saving user: " + e.getMessage());
+        }
+
+        TodoListViewModel viewModel = new TodoListViewModel();
+        TodoListPresenter presenter = new TodoListPresenter(viewModel);
+        AddTaskUseCase addTaskUseCase = new AddTaskUseCase(userRepository, taskRepository, presenter);
+        CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase(userRepository, taskRepository, presenter, leaderboardRepository);
+
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime deadline = LocalDateTime.now().plusDays(1);
+        AddTaskRequestModel addRequestModel = new AddTaskRequestModel("Test Task", "Test Description", startDate, deadline, "Test Course", "testUserWithCourse", "Course 1");
+
+        addTaskUseCase.execute(addRequestModel);
+
+        TaskData taskData = viewModel.getTasks().get(0);
+
+        // Testing the constructor with courseName
+        CompleteTaskRequestModel completeRequestModel = new CompleteTaskRequestModel(taskData.getId(), "testUserWithCourse", "Course 1");
+        completeTaskUseCase.execute(completeRequestModel);
+
+        assertTrue(viewModel.getTasks().get(0).isCompleted());
+
+        // Testing the setter for courseName
+        completeRequestModel.setCourseName("Course 2");
+        assertEquals("Course 2", completeRequestModel.getCourseName());
+    }
+
 }

@@ -195,4 +195,44 @@ class FilterTasksUseCaseTest {
         Exception exception = assertThrows(RuntimeException.class, () -> filterTasksUseCase.execute(filterRequestModel));
         assertEquals("User not found", exception.getMessage());
     }
+
+    @Test
+    void testFilterTasksRequestModelWithCourseName() {
+        User user = new User("filterUserWithCourse", "password", new User[]{}, new Course[]{});
+        try {
+            userRepository.WriteToCache(user);
+        } catch (Exception e) {
+            System.out.println("Failed to save user: " + e.getMessage());
+            fail("Exception thrown while saving user: " + e.getMessage());
+        }
+
+        TodoListViewModel viewModel = new TodoListViewModel();
+        TodoListPresenter presenter = new TodoListPresenter(viewModel);
+        AddTaskUseCase addTaskUseCase = new AddTaskUseCase(userRepository, taskRepository, presenter);
+        FilterTasksOutputBoundary filterTasksOutputBoundary = responseModel -> presenter.present(responseModel);
+        FilterTasksUseCase filterTasksUseCase = new FilterTasksUseCase(userRepository, taskRepository, filterTasksOutputBoundary);
+
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime deadline = LocalDateTime.now().plusDays(1);
+        AddTaskRequestModel requestModel1 = new AddTaskRequestModel("Task 1", "Description 1", startDate, deadline, "Course 1", "filterUserWithCourse", "Course 1");
+        AddTaskRequestModel requestModel2 = new AddTaskRequestModel("Task 2", "Description 2", startDate, deadline, "Course 2", "filterUserWithCourse", "Course 1");
+
+        addTaskUseCase.execute(requestModel1);
+        addTaskUseCase.execute(requestModel2);
+
+        // Testing the constructor with courseName
+        FilterTasksRequestModel filterRequestModel = new FilterTasksRequestModel(true, "filterUserWithCourse", "Course 1");
+        filterTasksUseCase.execute(filterRequestModel);
+
+        List<TaskData> tasks = viewModel.getTasks();
+        assertNotNull(tasks);
+        assertEquals(2, tasks.size());
+        assertTrue(tasks.stream().anyMatch(task -> task.getTitle().equals("Task 1")));
+        assertTrue(tasks.stream().anyMatch(task -> task.getTitle().equals("Task 2")));
+
+        // Testing the setter for courseName
+        filterRequestModel.setCourseName("Course 2");
+        assertEquals("Course 2", filterRequestModel.getCourseName());
+    }
+
 }

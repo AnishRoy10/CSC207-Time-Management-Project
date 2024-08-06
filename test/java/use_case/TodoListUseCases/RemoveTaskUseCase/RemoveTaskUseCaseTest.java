@@ -280,4 +280,40 @@ class RemoveTaskUseCaseTest {
         assertEquals(tasks, responseModel.getTasks());
         assertNotNull(responseModel.getTasks());
     }
+
+    @Test
+    void testRemoveTaskRequestModelWithCourseName() {
+        User user = new User("testUserWithCourse", "password", new User[]{}, new Course[]{});
+        try {
+            userRepository.WriteToCache(user);
+        } catch (Exception e) {
+            System.out.println("Failed to save user: " + e.getMessage());
+            fail("Exception thrown while saving user: " + e.getMessage());
+        }
+
+        TodoListViewModel viewModel = new TodoListViewModel();
+        TodoListPresenter presenter = new TodoListPresenter(viewModel);
+        AddTaskUseCase addTaskUseCase = new AddTaskUseCase(userRepository, taskRepository, presenter);
+        RemoveTaskUseCase removeTaskUseCase = new RemoveTaskUseCase(userRepository, taskRepository, presenter);
+
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime deadline = LocalDateTime.now().plusDays(1);
+        AddTaskRequestModel addRequestModel = new AddTaskRequestModel("Task to Remove", "Description", startDate, deadline, "Course", "testUserWithCourse", "Course 1");
+
+        addTaskUseCase.execute(addRequestModel);
+
+        assertEquals(1, viewModel.getTasks().size());
+
+        UUID taskId = viewModel.getTasks().get(0).getId();
+        // Testing the constructor with courseName
+        RemoveTaskRequestModel removeRequestModel = new RemoveTaskRequestModel(taskId, "testUserWithCourse", "Course 1");
+        removeTaskUseCase.execute(removeRequestModel);
+
+        assertEquals(0, viewModel.getTasks().size());
+
+        // Testing the setter for courseName
+        removeRequestModel.setCourseName("Course 2");
+        assertEquals("Course 2", removeRequestModel.getCourseName());
+    }
+
 }

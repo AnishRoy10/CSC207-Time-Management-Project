@@ -1,7 +1,7 @@
 package use_case.FriendsListUseCases;
 
-import data_access.FileCacheUserDataAccessObject;
 import data_access.FriendsListDataAccessObject;
+import data_access.SQLDatabaseHelper;
 import entity.Course;
 import entity.User;
 import interface_adapter.presenter.FriendsListPresenter;
@@ -14,28 +14,32 @@ import use_case.FriendsListUseCases.AddFriendUseCase.AddFriendInteractor;
 import use_case.FriendsListUseCases.RemoveFriendUseCase.RemoveFriendInputData;
 import use_case.FriendsListUseCases.RemoveFriendUseCase.RemoveFriendInteractor;
 
-import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RemoveFriendUseCaseTest {
-    private FileCacheUserDataAccessObject fileCacheUserDAO;
-    private final String testFilePath = "friendsusecasetest.json";
+    private SQLDatabaseHelper dbHelper;
     private FriendsListDataAccessObject dao;
 
     @BeforeEach
     void setUp() throws IOException {
-        fileCacheUserDAO = new FileCacheUserDataAccessObject(testFilePath);
-        dao = new FriendsListDataAccessObject(fileCacheUserDAO);
+        dbHelper = new SQLDatabaseHelper("jdbc:sqlite:saves/TestDB.db");
+        dbHelper.initializeDatabase();
+        dao = new FriendsListDataAccessObject(dbHelper);
     }
 
     @AfterEach
     void tearDown() {
-        File testFile = new File(testFilePath);
-        if (testFile.exists()) {
-            testFile.delete();
+        try (Connection conn = dbHelper.connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute("DELETE FROM Users");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -44,8 +48,8 @@ class RemoveFriendUseCaseTest {
         User user = new User("testUser", "password", new User[]{}, new Course[]{});
         User user2 = new User("testUser2", "password", new User[]{}, new Course[]{});
         assertDoesNotThrow(() -> {
-            fileCacheUserDAO.WriteToCache(user);
-            fileCacheUserDAO.WriteToCache(user2);
+            dao.writeUser(user);
+            dao.writeUser(user2);
             FriendsListViewModel viewModel = new FriendsListViewModel();
             FriendsListPresenter presenter = new FriendsListPresenter(viewModel);
             AddFriendInteractor addFriendUseCase = new AddFriendInteractor(presenter, dao, "testUser");
@@ -53,7 +57,7 @@ class RemoveFriendUseCaseTest {
 
             AddFriendInputData inputData = new AddFriendInputData("testUser2");
             addFriendUseCase.execute(inputData);
-            //at this point testUser should have testUser2 as a friend
+            // at this point testUser should have testUser2 as a friend
             assert viewModel.getFriendsList().exportFriendsNames().size() == 1;
 
             RemoveFriendInputData inputData2 = new RemoveFriendInputData("testUser2");
@@ -68,9 +72,9 @@ class RemoveFriendUseCaseTest {
         User user2 = new User("testUser2", "password", new User[]{}, new Course[]{});
         User user3 = new User("testUser3", "password", new User[]{}, new Course[]{});
         assertDoesNotThrow(() -> {
-            fileCacheUserDAO.WriteToCache(user);
-            fileCacheUserDAO.WriteToCache(user2);
-            fileCacheUserDAO.WriteToCache(user3);
+            dao.writeUser(user);
+            dao.writeUser(user2);
+            dao.writeUser(user3);
             FriendsListViewModel viewModel = new FriendsListViewModel();
             FriendsListPresenter presenter = new FriendsListPresenter(viewModel);
             AddFriendInteractor addFriendUseCase = new AddFriendInteractor(presenter, dao, "testUser");
@@ -97,8 +101,8 @@ class RemoveFriendUseCaseTest {
     @Test
     void testRemoveNonexistentFriendUseCase() {
         User user = new User("testUser", "password", new User[]{}, new Course[]{});
-        assertThrows(NullPointerException.class, () -> {
-            fileCacheUserDAO.WriteToCache(user);
+        assertThrows(IOException.class, () -> {
+            dao.writeUser(user);
 
             FriendsListViewModel viewModel = new FriendsListViewModel();
             FriendsListPresenter presenter = new FriendsListPresenter(viewModel);

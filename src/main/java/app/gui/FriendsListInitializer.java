@@ -1,7 +1,7 @@
 package app.gui;
 
-import data_access.FileCacheUserDataAccessObject;
 import data_access.FriendsListDataAccessObject;
+import data_access.SQLDatabaseHelper;
 import framework.view.FriendsListView;
 import interface_adapter.controller.FriendsListController;
 import interface_adapter.presenter.FriendsListPresenter;
@@ -14,15 +14,17 @@ import use_case.FriendsListUseCases.RemoveFriendUseCase.RemoveFriendInputBoundar
 import use_case.FriendsListUseCases.RemoveFriendUseCase.RemoveFriendInteractor;
 
 /**
- *Class to initialize the FriendsList view
+ * Class to initialize the FriendsList view
  */
 public class FriendsListInitializer {
     public static void InitializeFriendsList(String username) {
         try {
-            String activeDir = System.getProperty("user.dir");
-            String filePath = (activeDir + "\\src\\main\\java\\data_access\\userCache.json");
-            FileCacheUserDataAccessObject cacheDao = new FileCacheUserDataAccessObject(filePath);
-            FriendsListDataAccessObject dao = new FriendsListDataAccessObject(cacheDao);
+            // Initialize SQLDatabaseHelper
+            SQLDatabaseHelper dbHelper = new SQLDatabaseHelper("jdbc:sqlite:saves/UserDB.db");
+            dbHelper.initializeDatabase();
+
+            // Initialize FriendsListDataAccessObject with SQLDatabaseHelper
+            FriendsListDataAccessObject dao = new FriendsListDataAccessObject(dbHelper);
 
             FriendsListViewModel viewModel = new FriendsListViewModel();
 

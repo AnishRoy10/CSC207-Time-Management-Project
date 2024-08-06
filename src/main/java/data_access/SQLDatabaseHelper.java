@@ -13,6 +13,7 @@ import java.sql.Statement;
  * The Tasks table stores task information such as title, description, deadline, and other data.
  * The Leaderboard table stores leaderboard information for users.
  * The Course table stores course information such as course name, description, and other data.
+ * The Friends table stores information about friends of users.
  * Running the default method initializes a databse with url "jdbc:sqlite:saves/UserDB.db". This may be overridden for testing.
  */
 public class SQLDatabaseHelper {
@@ -84,10 +85,19 @@ public class SQLDatabaseHelper {
                         + "allTimeLeaderboard TEXT"
                         + ");";
 
+                String createFriendsTable = "CREATE TABLE IF NOT EXISTS Friends ("
+                        + "username TEXT NOT NULL,"
+                        + "friend_username TEXT NOT NULL,"
+                        + "PRIMARY KEY (username, friend_username),"
+                        + "FOREIGN KEY (username) REFERENCES Users(username),"
+                        + "FOREIGN KEY (friend_username) REFERENCES Users(username)"
+                        + ");";
+
                 stmt.execute(createUserTable);
                 stmt.execute(createTasksTable);
                 stmt.execute(createLeaderboardTable);
                 stmt.execute(createCoursesTable);
+                stmt.execute(createFriendsTable);
 
                 System.out.println("Database schema has been initialized.");
             }

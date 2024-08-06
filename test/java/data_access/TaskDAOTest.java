@@ -64,7 +64,7 @@ class TaskDAOTest {
     }
 
     @Test
-    void testDeleteTask() {
+    void testDeleteTask2() {
         UUID taskId = UUID.randomUUID();
         Task task = new Task("testUser", "Task to Delete", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Course");
         task.setId(taskId);
@@ -73,5 +73,86 @@ class TaskDAOTest {
         taskDAO.deleteTask(taskId);
         Task retrievedTask = taskDAO.ReadFromCache(taskId);
         assertNull(retrievedTask);
+    }
+
+
+    @Test
+    void testAddAndRetrieveTask() {
+        Task task = new Task("testUser", "Test Task", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), null);
+        taskDAO.WriteToCache(task, "testUser");
+
+        Task retrievedTask = taskDAO.ReadFromCache(task.getId());
+
+        assertNotNull(retrievedTask);
+        assertEquals("Test Task", retrievedTask.getTitle());
+    }
+
+    @Test
+    void testUpdateTask() {
+        Task task = new Task("testUser", "Test Task", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), null);
+        taskDAO.WriteToCache(task, "testUser");
+
+        // Update the task's title
+        task.setTitle("Updated Task");
+        taskDAO.WriteToCache(task, "testUser");
+
+        Task retrievedTask = taskDAO.ReadFromCache(task.getId());
+
+        assertNotNull(retrievedTask);
+        assertEquals("Updated Task", retrievedTask.getTitle());
+    }
+
+    @Test
+    void testGetAllTasksForUser() {
+        Task task1 = new Task("testUser", "Test Task 1", "Description 1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), null);
+        Task task2 = new Task("testUser", "Test Task 2", "Description 2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), null);
+        taskDAO.WriteToCache(task1, "testUser");
+        taskDAO.WriteToCache(task2, "testUser");
+
+        List<Task> tasks = taskDAO.getAllTasks("testUser");
+
+        assertNotNull(tasks);
+        assertEquals(2, tasks.size());
+        assertTrue(tasks.stream().anyMatch(task -> task.getTitle().equals("Test Task 1")));
+        assertTrue(tasks.stream().anyMatch(task -> task.getTitle().equals("Test Task 2")));
+    }
+
+    @Test
+    void testDeleteTask() {
+        Task task = new Task("testUser", "Test Task", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), null);
+        taskDAO.WriteToCache(task, "testUser");
+
+        taskDAO.deleteTask(task.getId());
+
+        Task retrievedTask = taskDAO.ReadFromCache(task.getId());
+
+        assertNull(retrievedTask);
+    }
+
+    @Test
+    void testAddAndRetrieveTaskWithCourseName() {
+        Task task = new Task("testUser", "Test Task", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Course");
+        taskDAO.WriteToCache(task, "testUser", "CourseName");
+
+        Task retrievedTask = taskDAO.ReadFromCache(task.getId());
+
+        assertNotNull(retrievedTask);
+        assertEquals("Test Task", retrievedTask.getTitle());
+        assertEquals("Course", retrievedTask.getCourse());
+    }
+
+    @Test
+    void testGetAllTasksForCourseName() {
+        Task task1 = new Task("testUser", "Test Task 1", "Description 1", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Course");
+        Task task2 = new Task("testUser", "Test Task 2", "Description 2", LocalDateTime.now(), LocalDateTime.now().plusDays(2), "Course");
+        taskDAO.WriteToCache(task1, "testUser", "CourseName");
+        taskDAO.WriteToCache(task2, "testUser", "CourseName");
+
+        List<Task> tasks = taskDAO.getAllTasks("testUser", "CourseName");
+
+        assertNotNull(tasks);
+        assertEquals(2, tasks.size());
+        assertTrue(tasks.stream().anyMatch(task -> task.getTitle().equals("Test Task 1")));
+        assertTrue(tasks.stream().anyMatch(task -> task.getTitle().equals("Test Task 2")));
     }
 }

@@ -33,12 +33,24 @@ public class TaskDAO implements TaskRepository {
      */
     @Override
     public void WriteToCache(Task task, String username) {
-        String sql = "INSERT INTO Tasks(id, username, title, description, completed, startDate, deadline, course, completionDate, pointsAwarded) " +
-                "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+        WriteToCache(task, username, null);
+    }
+
+    /**
+     * Writes a Task object to the database with a specific course name. If the task already exists, updates the task's data.
+     *
+     * @param task The Task object to write to the database.
+     * @param username The username of the user who owns the task.
+     * @param courseName The course name associated with the task list.
+     */
+    @Override
+    public void WriteToCache(Task task, String username, String courseName) {
+        String sql = "INSERT INTO Tasks(id, username, title, description, completed, startDate, deadline, course, completionDate, pointsAwarded, courseName) " +
+                "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
                 "ON CONFLICT(id) DO UPDATE SET " +
                 "username=excluded.username, title=excluded.title, description=excluded.description, completed=excluded.completed, " +
                 "startDate=excluded.startDate, deadline=excluded.deadline, course=excluded.course, completionDate=excluded.completionDate, " +
-                "pointsAwarded=excluded.pointsAwarded";
+                "pointsAwarded=excluded.pointsAwarded, courseName=excluded.courseName";
 
         try (Connection conn = dbHelper.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -52,40 +64,7 @@ public class TaskDAO implements TaskRepository {
             pstmt.setString(8, task.getCourse());
             pstmt.setString(9, task.getCompletionDate() != null ? task.getCompletionDate().toString() : null);
             pstmt.setBoolean(10, task.isPointsAwarded());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /**
-     * Writes a Task object to the database for a specific course. If the task already exists, updates the task's data.
-     *
-     * @param task The Task object to write to the database.
-     * @param username The username of the user who owns the task.
-     * @param courseName The course name associated with the task.
-     */
-    @Override
-    public void WriteToCache(Task task, String username, String courseName) {
-        String sql = "INSERT INTO Tasks(id, username, title, description, completed, startDate, deadline, course, completionDate, pointsAwarded) " +
-                "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
-                "ON CONFLICT(id) DO UPDATE SET " +
-                "username=excluded.username, title=excluded.title, description=excluded.description, completed=excluded.completed, " +
-                "startDate=excluded.startDate, deadline=excluded.deadline, course=excluded.course, completionDate=excluded.completionDate, " +
-                "pointsAwarded=excluded.pointsAwarded";
-
-        try (Connection conn = dbHelper.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, task.getId().toString());
-            pstmt.setString(2, username);
-            pstmt.setString(3, task.getTitle());
-            pstmt.setString(4, task.getDescription());
-            pstmt.setBoolean(5, task.isCompleted());
-            pstmt.setString(6, task.getStartDate().toString());
-            pstmt.setString(7, task.getDeadline().toString());
-            pstmt.setString(8, courseName);
-            pstmt.setString(9, task.getCompletionDate() != null ? task.getCompletionDate().toString() : null);
-            pstmt.setBoolean(10, task.isPointsAwarded());
+            pstmt.setString(11, courseName); // Add the course name associated with the task list
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -136,51 +115,27 @@ public class TaskDAO implements TaskRepository {
      */
     @Override
     public List<Task> getAllTasks(String username) {
-        String sql = "SELECT * FROM Tasks WHERE username = ?";
-        List<Task> tasks = new ArrayList<>();
-
-        try (Connection conn = dbHelper.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                Task task = new Task(
-                        rs.getString("username"),
-                        rs.getString("title"),
-                        rs.getString("description"),
-                        LocalDateTime.parse(rs.getString("startDate")),
-                        LocalDateTime.parse(rs.getString("deadline")),
-                        rs.getString("course")
-                );
-                task.setId(UUID.fromString(rs.getString("id")));
-                task.setCompleted(rs.getBoolean("completed"));
-                task.setCompletionDate(rs.getString("completionDate") != null ? LocalDateTime.parse(rs.getString("completionDate")) : null);
-                task.setPointsAwarded(rs.getBoolean("pointsAwarded"));
-                tasks.add(task);
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return tasks;
+        return getAllTasks(username, null);
     }
 
     /**
      * Retrieves all tasks for a specific course from the database.
      *
      * @param username The username of the user whose tasks are to be retrieved.
-     * @param course The course associated with the tasks to be retrieved.
+     * @param courseName The course name associated with the tasks to be retrieved.
      * @return A list of Task objects for the specified course.
      */
     @Override
-    public List<Task> getAllTasks(String username, String course) {
-        String sql = "SELECT * FROM Tasks WHERE username = ? AND course = ?";
+    public List<Task> getAllTasks(String username, String courseName) {
+        String sql = courseName == null ? "SELECT * FROM Tasks WHERE username = ? AND courseName IS NULL" : "SELECT * FROM Tasks WHERE username = ? AND courseName = ?";
         List<Task> tasks = new ArrayList<>();
 
         try (Connection conn = dbHelper.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
-            pstmt.setString(2, course);
+            if (courseName != null) {
+                pstmt.setString(2, courseName);
+            }
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {

@@ -14,7 +14,7 @@ import java.sql.Statement;
  * The Leaderboard table stores leaderboard information for users.
  * The Course table stores course information such as course name, description, and other data.
  * The Friends table stores information about friends of users.
- * Running the default method initializes a databse with url "jdbc:sqlite:saves/UserDB.db". This may be overridden for testing.
+ * Running the default method initializes a database with url "jdbc:sqlite:saves/UserDB.db". This may be overridden for testing.
  */
 public class SQLDatabaseHelper {
     private static final String DEFAULT_URL = "jdbc:sqlite:saves/UserDB.db";
@@ -65,7 +65,9 @@ public class SQLDatabaseHelper {
                         + "course TEXT,"
                         + "pointsAwarded BOOLEAN,"
                         + "completionDate TEXT,"
-                        + "FOREIGN KEY(username) REFERENCES Users(username)"
+                        + "courseName TEXT,"
+                        + "FOREIGN KEY(username) REFERENCES Users(username),"
+                        + "FOREIGN KEY(courseName) REFERENCES Courses(name)"
                         + ");";
 
                 String createLeaderboardTable = "CREATE TABLE IF NOT EXISTS Leaderboard ("

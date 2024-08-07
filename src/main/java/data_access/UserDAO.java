@@ -3,12 +3,16 @@ package data_access;
 import entity.User;
 import entity.Course;
 import entity.Timer;
+import entity.Calendar;
+import entity.CalendarEvent;
 import repositories.UserRepository;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * The UserDAO class handles CRUD operations for User objects in an SQLite database.
@@ -58,6 +62,24 @@ public class UserDAO implements UserRepository {
             }
 
             pstmt.executeUpdate();
+
+            // Insert or update Calendar events
+            for (CalendarEvent event : user.getCalendar().getAllEvents()) {
+                String eventSql = "INSERT INTO CalendarEvents(id, username, name, description, status, priorityLevel, startDate, endDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?) " +
+                        "ON CONFLICT(id) DO UPDATE SET username=excluded.username, name=excluded.name, description=excluded.description, status=excluded.status, priorityLevel=excluded.priorityLevel, startDate=excluded.startDate, endDate=excluded.endDate";
+                try (PreparedStatement eventPstmt = conn.prepareStatement(eventSql)) {
+                    String eventId = UUID.randomUUID().toString();  // Generate a UUID for the event
+                    eventPstmt.setString(1, eventId);
+                    eventPstmt.setString(2, user.getUsername());
+                    eventPstmt.setString(3, event.getName());
+                    eventPstmt.setString(4, event.getDescription());
+                    eventPstmt.setString(5, event.getStatus());
+                    eventPstmt.setString(6, event.getPriorityLevel());
+                    eventPstmt.setString(7, event.getStartDate().toString());
+                    eventPstmt.setString(8, event.getEndDate() != null ? event.getEndDate().toString() : null);
+                    eventPstmt.executeUpdate();
+                }
+            }
         } catch (SQLException e) {
             throw new IOException("Failed to write user to cache", e);
         }
@@ -79,6 +101,7 @@ public class UserDAO implements UserRepository {
 
             if (rs.next()) {
                 user = extractUserFromResultSet(rs);
+                loadUserCalendar(user, conn);
             }
         } catch (SQLException e) {
             throw new IOException("Failed to read user from cache", e);
@@ -104,6 +127,7 @@ public class UserDAO implements UserRepository {
 
             if (rs.next()) {
                 user = extractUserFromResultSet(rs);
+                loadUserCalendar(user, conn);
             }
         } catch (SQLException e) {
             throw new IOException("Failed to read user from cache", e);
@@ -140,6 +164,33 @@ public class UserDAO implements UserRepository {
         }
 
         return user;
+    }
+
+    /**
+     * Loads the calendar events for the user from the database.
+     *
+     * @param user The user whose calendar events are to be loaded.
+     * @param conn The database connection.
+     * @throws SQLException If an SQL error occurs while reading from the database.
+     */
+    private void loadUserCalendar(User user, Connection conn) throws SQLException {
+        String sql = "SELECT * FROM CalendarEvents WHERE username = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, user.getUsername());
+            ResultSet rs = pstmt.executeQuery();
+            Calendar calendar = user.getCalendar();
+            while (rs.next()) {
+                CalendarEvent event = new CalendarEvent(
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getString("priorityLevel"),
+                        LocalDateTime.parse(rs.getString("startDate")),
+                        rs.getString("endDate") != null ? LocalDateTime.parse(rs.getString("endDate")) : null
+                );
+                event.setStatus(rs.getString("status"));
+                calendar.addEvent(event);
+            }
+        }
     }
 
     /**
@@ -190,6 +241,7 @@ public class UserDAO implements UserRepository {
 
             while (rs.next()) {
                 User user = extractUserFromResultSet(rs);
+                loadUserCalendar(user, conn);
                 users.add(user);
             }
         } catch (SQLException e) {
@@ -210,6 +262,13 @@ public class UserDAO implements UserRepository {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
             pstmt.executeUpdate();
+
+            // Delete user's calendar events
+            String eventSql = "DELETE FROM CalendarEvents WHERE username = ?";
+            try (PreparedStatement eventPstmt = conn.prepareStatement(eventSql)) {
+                eventPstmt.setString(1, username);
+                eventPstmt.executeUpdate();
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

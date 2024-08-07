@@ -1,50 +1,94 @@
 package data_access;
 
+import entity.Calendar;
 import entity.CalendarEvent;
-import entity.User;
 import use_case.AddEventUseCase.AddEventDataAccessInterface;
 import use_case.ViewEventsUseCase.ViewEventsDataAccessInterface;
 import use_case.RemoveEventUseCase.RemoveEventDataAccessInterface;
-import entity.Calendar;
+
+import java.sql.*;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 /**
- * The CalendarDataAccessObject class is responsible for managing the caching of calendar use case related
- * classes to update the calendar of a user and retrieve information in the calendar of the user who is
- * logged in.
+ * The SQL-based DAO class for managing calendar events.
  */
 public class CalendarDataAccessObject
-        implements ViewEventsDataAccessInterface, AddEventDataAccessInterface, RemoveEventDataAccessInterface
-{
-    private FileCacheUserDataAccessObject fileCacheUserDataAccessObject;
+        implements ViewEventsDataAccessInterface, AddEventDataAccessInterface, RemoveEventDataAccessInterface {
+    private SQLDatabaseHelper dbHelper;
     private String username;
-    private User user;
 
-
-    // Original constructor
-    public CalendarDataAccessObject(String username) throws IOException {
-        this(username, "src/main/java/data_access/userCache.json");
-    }
-
-    // Overloaded constructor for testing
-    public CalendarDataAccessObject(String username, String filePath) throws IOException {
+    public CalendarDataAccessObject(String username, SQLDatabaseHelper dbHelper) {
         this.username = username;
-        this.fileCacheUserDataAccessObject = new FileCacheUserDataAccessObject(filePath);
-        this.user = fileCacheUserDataAccessObject.findByUsername(username);
+        this.dbHelper = dbHelper;
     }
 
-    // Method for getting the logged in user's calendar
+    @Override
     public Calendar getCalendar() throws IOException, ClassNotFoundException {
-        return this.user.getCalendar();
+        Calendar calendar = new Calendar();
+        List<CalendarEvent> events = getAllEvents();
+        for (CalendarEvent event : events) {
+            calendar.addEvent(event);
+        }
+        return calendar;
     }
 
-    // Method for adding an event to the logged in user's calendar.
-    public void addEvent(CalendarEvent event) throws IOException, ClassNotFoundException
-    {this.user.addEvent(event);
-    fileCacheUserDataAccessObject.WriteToCache(user);}
+    public List<CalendarEvent> getAllEvents() throws IOException {
+        List<CalendarEvent> events = new ArrayList<>();
+        String sql = "SELECT * FROM CalendarEvents WHERE username = ?";
+        try (Connection conn = dbHelper.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                CalendarEvent event = new CalendarEvent(
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getString("priorityLevel"),
+                        LocalDateTime.parse(rs.getString("startDate")),
+                        rs.getString("endDate") != null ? LocalDateTime.parse(rs.getString("endDate")) : null
+                );
+                events.add(event);
+            }
+        } catch (SQLException e) {
+            throw new IOException("Failed to retrieve events", e);
+        }
+        return events;
+    }
 
-    // Method for removing an event from the logged in user's calendar
+    @Override
+    public void addEvent(CalendarEvent event) throws IOException {
+        String sql = "INSERT INTO CalendarEvents(id, username, name, description, status, priorityLevel, startDate, endDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = dbHelper.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, UUID.randomUUID().toString()); // Generate UUID
+            pstmt.setString(2, username);
+            pstmt.setString(3, event.getName());
+            pstmt.setString(4, event.getDescription());
+            pstmt.setString(5, event.getStatus());
+            pstmt.setString(6, event.getPriorityLevel());
+            pstmt.setString(7, event.getStartDate().toString());
+            pstmt.setString(8, event.getEndDate() != null ? event.getEndDate().toString() : null);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new IOException("Failed to add event", e);
+        }
+    }
+
+    @Override
     public void removeEvent(CalendarEvent event) throws IOException {
-        this.user.removeEvent(event);
-        fileCacheUserDataAccessObject.WriteToCache(user);
+        String sql = "DELETE FROM CalendarEvents WHERE username = ? AND name = ? AND startDate = ?";
+        try (Connection conn = dbHelper.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, event.getName());
+            pstmt.setString(3, event.getStartDate().toString());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new IOException("Failed to remove event", e);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package app.gui;
 
 import data_access.CalendarDataAccessObject;
+import data_access.SQLDatabaseHelper;
 import framework.view.CalendarView;
 import interface_adapter.AddEvent.AddEventController;
 import interface_adapter.AddEvent.AddEventPresenter;
@@ -25,7 +26,7 @@ public class CalendarInitializer{
             AddEventPresenter addEventPresenter = new AddEventPresenter(addEventViewModel);
 
             // Initialize the use case interactors
-            CalendarDataAccessObject calendarDataAccessObject = new CalendarDataAccessObject(username);
+            CalendarDataAccessObject calendarDataAccessObject = new CalendarDataAccessObject(username, new SQLDatabaseHelper());
             ViewEventsUseCaseInteractor viewEventsUseCaseInteractor =
                     new ViewEventsUseCaseInteractor(calendarDataAccessObject, viewEventsPresenter);
             AddEventUseCaseInteractor addEventUseCaseInteractor =

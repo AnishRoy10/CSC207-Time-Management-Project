@@ -98,11 +98,24 @@ public class SQLDatabaseHelper {
                         + "FOREIGN KEY (friend_username) REFERENCES Users(username)"
                         + ");";
 
+                String createCalendarEventsTable = "CREATE TABLE IF NOT EXISTS CalendarEvents ("
+                        + "id TEXT PRIMARY KEY,"
+                        + "username TEXT NOT NULL,"
+                        + "name TEXT NOT NULL,"
+                        + "description TEXT,"
+                        + "status TEXT,"
+                        + "priorityLevel TEXT,"
+                        + "startDate TEXT NOT NULL,"
+                        + "endDate TEXT,"
+                        + "FOREIGN KEY(username) REFERENCES Users(username)"
+                        + ");";
+
                 stmt.execute(createUserTable);
                 stmt.execute(createTasksTable);
                 stmt.execute(createLeaderboardTable);
                 stmt.execute(createCoursesTable);
                 stmt.execute(createFriendsTable);
+                stmt.execute(createCalendarEventsTable);
 
                 System.out.println("Database schema has been initialized.");
             }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.HashMap;
 import entity.CalendarEvent;
 import java.io.Serializable;
+import java.util.Objects;
 /**
  * The Calendar class represents a user's calendar which contains multiple events.
  * It allows adding, removing, and retrieving events.
@@ -136,5 +137,18 @@ public class Calendar implements Serializable{
             }
         }
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Calendar calendar = (Calendar) o;
+        return Objects.equals(events, calendar.events);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(events);
     }
 }

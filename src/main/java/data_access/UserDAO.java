@@ -65,21 +65,20 @@ public class UserDAO implements UserRepository {
 
             // Insert or update Calendar events
             for (CalendarEvent event : user.getCalendar().getAllEvents()) {
-                String eventSql = "INSERT INTO CalendarEvents(id, username, name, description, status, priorityLevel, startDate, endDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?) " +
-                        "ON CONFLICT(id) DO UPDATE SET username=excluded.username, name=excluded.name, description=excluded.description, status=excluded.status, priorityLevel=excluded.priorityLevel, startDate=excluded.startDate, endDate=excluded.endDate";
+                String eventSql = "INSERT INTO CalendarEvents(username, name, description, status, priorityLevel, startDate, endDate) VALUES(?, ?, ?, ?, ?, ?, ?) " +
+                        "ON CONFLICT(username, name, startDate) DO UPDATE SET description=excluded.description, status=excluded.status, priorityLevel=excluded.priorityLevel, endDate=excluded.endDate";
                 try (PreparedStatement eventPstmt = conn.prepareStatement(eventSql)) {
-                    String eventId = UUID.randomUUID().toString();  // Generate a UUID for the event
-                    eventPstmt.setString(1, eventId);
-                    eventPstmt.setString(2, user.getUsername());
-                    eventPstmt.setString(3, event.getName());
-                    eventPstmt.setString(4, event.getDescription());
-                    eventPstmt.setString(5, event.getStatus());
-                    eventPstmt.setString(6, event.getPriorityLevel());
-                    eventPstmt.setString(7, event.getStartDate().toString());
-                    eventPstmt.setString(8, event.getEndDate() != null ? event.getEndDate().toString() : null);
+                    eventPstmt.setString(1, user.getUsername());
+                    eventPstmt.setString(2, event.getName());
+                    eventPstmt.setString(3, event.getDescription());
+                    eventPstmt.setString(4, event.getStatus());
+                    eventPstmt.setString(5, event.getPriorityLevel());
+                    eventPstmt.setString(6, event.getStartDate().toString());
+                    eventPstmt.setString(7, event.getEndDate() != null ? event.getEndDate().toString() : null);
                     eventPstmt.executeUpdate();
                 }
             }
+
         } catch (SQLException e) {
             throw new IOException("Failed to write user to cache", e);
         }

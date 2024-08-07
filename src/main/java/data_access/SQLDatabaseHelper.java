@@ -99,7 +99,6 @@ public class SQLDatabaseHelper {
                         + ");";
 
                 String createCalendarEventsTable = "CREATE TABLE IF NOT EXISTS CalendarEvents ("
-                        + "id TEXT PRIMARY KEY,"
                         + "username TEXT NOT NULL,"
                         + "name TEXT NOT NULL,"
                         + "description TEXT,"
@@ -107,6 +106,7 @@ public class SQLDatabaseHelper {
                         + "priorityLevel TEXT,"
                         + "startDate TEXT NOT NULL,"
                         + "endDate TEXT,"
+                        + "PRIMARY KEY(username, name, startDate),"
                         + "FOREIGN KEY(username) REFERENCES Users(username)"
                         + ");";
 

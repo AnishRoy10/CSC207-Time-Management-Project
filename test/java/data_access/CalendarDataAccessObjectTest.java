@@ -73,8 +73,9 @@ public class CalendarDataAccessObjectTest {
 
             calendarDAO.addEvent(event);
             Calendar calendar = calendarDAO.getCalendar();
-            assertEquals(1, calendar.getAllEvents().size());
-            assertTrue(calendar.getAllEvents().contains(event));
+            Calendar calendar1 = new Calendar();
+            calendar1.addEvent(event);
+            assertEquals(calendar1, calendar);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             fail("Exception should not have been thrown");
@@ -109,6 +110,7 @@ public class CalendarDataAccessObjectTest {
             calendarDAO.addEvent(eventThree);
 
             Calendar calendar = calendarDAO.getCalendar();
+            System.out.println(calendar.getAllEvents());
             assertEquals(3, calendar.getAllEvents().size());
             assertTrue(calendar.getAllEvents().contains(event));
             assertTrue(calendar.getAllEvents().contains(eventTwo));

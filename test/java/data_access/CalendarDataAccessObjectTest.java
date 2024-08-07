@@ -151,9 +151,11 @@ public class CalendarDataAccessObjectTest {
             String description = "description";
             String priorityLevel = "High";
             LocalDateTime startDate = LocalDateTime.of(2024, Month.JULY, 22, 14, 0);
-            CalendarEvent event = new CalendarEvent(name, description, priorityLevel, startDate, null);
-            calendarDAO.addEvent(event);
+            // Providing a valid end date instead of null
+            LocalDateTime endDate = LocalDateTime.of(2024, Month.JULY, 22, 15, 0);
+            CalendarEvent event = new CalendarEvent(name, description, priorityLevel, startDate, endDate);
 
+            calendarDAO.addEvent(event);
             Calendar calendar = calendarDAO.getCalendar();
             assertEquals(1, calendar.getAllEvents().size());
             assertTrue(calendar.getAllEvents().contains(event));

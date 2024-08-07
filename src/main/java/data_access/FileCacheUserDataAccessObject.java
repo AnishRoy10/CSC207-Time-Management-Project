@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+
+// OUTDATED CODE SUPERSEDED BY UserDAO
 /**
  * The FileCacheUserDataAccessObject class is responsible for managing the caching of User objects
  * using a JSON file. This class provides methods to write a User object to the cache, read a User

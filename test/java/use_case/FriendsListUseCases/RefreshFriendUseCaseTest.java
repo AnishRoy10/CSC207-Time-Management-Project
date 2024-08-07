@@ -1,7 +1,8 @@
 package use_case.FriendsListUseCases;
 
-import data_access.FileCacheUserDataAccessObject;
 import data_access.FriendsListDataAccessObject;
+import data_access.SQLDatabaseHelper;
+import data_access.UserDAO;
 import entity.Course;
 import entity.User;
 import interface_adapter.presenter.FriendsListPresenter;
@@ -16,27 +17,33 @@ import use_case.FriendsListUseCases.RefreshFriendsUseCase.RefreshFriendInteracto
 import use_case.FriendsListUseCases.RemoveFriendUseCase.RemoveFriendInputData;
 import use_case.FriendsListUseCases.RemoveFriendUseCase.RemoveFriendInteractor;
 
-import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class RefreshFriendUseCaseTest {
-    private FileCacheUserDataAccessObject fileCacheUserDAO;
-    private final String testFilePath = "friendsusecasetest.json";
+    private SQLDatabaseHelper dbHelper;
+    private UserDAO userDAO;
     private FriendsListDataAccessObject dao;
 
     @BeforeEach
     void setUp() throws IOException {
-        fileCacheUserDAO = new FileCacheUserDataAccessObject(testFilePath);
-        dao = new FriendsListDataAccessObject(fileCacheUserDAO);
+        dbHelper = new SQLDatabaseHelper("jdbc:sqlite:saves/TestDB.db");
+        dbHelper.initializeDatabase();
+        userDAO = new UserDAO(dbHelper);
+        dao = new FriendsListDataAccessObject(dbHelper);
     }
 
     @AfterEach
     void tearDown() {
-        File testFile = new File(testFilePath);
-        if (testFile.exists()) {
-            testFile.delete();
+        try (Connection conn = dbHelper.connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute("DELETE FROM Users");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -45,8 +52,8 @@ public class RefreshFriendUseCaseTest {
         User user = new User("testUser", "password", new User[]{}, new Course[]{});
         User user2 = new User("testUser2", "password", new User[]{}, new Course[]{});
         assertDoesNotThrow(() -> {
-            fileCacheUserDAO.WriteToCache(user);
-            fileCacheUserDAO.WriteToCache(user2);
+            userDAO.WriteToCache(user);
+            userDAO.WriteToCache(user2);
             FriendsListViewModel viewModel = new FriendsListViewModel();
             FriendsListPresenter presenter = new FriendsListPresenter(viewModel);
             AddFriendInteractor addFriendUseCase = new AddFriendInteractor(presenter, dao, "testUser");
@@ -68,8 +75,8 @@ public class RefreshFriendUseCaseTest {
         User user = new User("testUser", "password", new User[]{}, new Course[]{});
         User user2 = new User("testUser2", "password", new User[]{}, new Course[]{});
         assertDoesNotThrow(() -> {
-            fileCacheUserDAO.WriteToCache(user);
-            fileCacheUserDAO.WriteToCache(user2);
+            userDAO.WriteToCache(user);
+            userDAO.WriteToCache(user2);
             FriendsListViewModel viewModel = new FriendsListViewModel();
             FriendsListPresenter presenter = new FriendsListPresenter(viewModel);
             AddFriendInteractor addFriendUseCase = new AddFriendInteractor(presenter, dao, "testUser");
@@ -93,15 +100,16 @@ public class RefreshFriendUseCaseTest {
 
         });
     }
+
     @Test
     void testAddMultipleFriendUseCase() {
         User user = new User("testUser", "password", new User[]{}, new Course[]{});
         User user2 = new User("testUser2", "password", new User[]{}, new Course[]{});
         User user3 = new User("testUser3", "password", new User[]{}, new Course[]{});
         assertDoesNotThrow(() -> {
-            fileCacheUserDAO.WriteToCache(user);
-            fileCacheUserDAO.WriteToCache(user2);
-            fileCacheUserDAO.WriteToCache(user3);
+            userDAO.WriteToCache(user);
+            userDAO.WriteToCache(user2);
+            userDAO.WriteToCache(user3);
             FriendsListViewModel viewModel = new FriendsListViewModel();
             FriendsListPresenter presenter = new FriendsListPresenter(viewModel);
             AddFriendInteractor addFriendUseCase = new AddFriendInteractor(presenter, dao, "testUser");
@@ -128,7 +136,7 @@ public class RefreshFriendUseCaseTest {
     void testAddSelfToFriendUseCase() {
         User user = new User("testUser", "password", new User[]{}, new Course[]{});
         assertDoesNotThrow(() -> {
-            fileCacheUserDAO.WriteToCache(user);
+            userDAO.WriteToCache(user);
 
             FriendsListViewModel viewModel = new FriendsListViewModel();
             FriendsListPresenter presenter = new FriendsListPresenter(viewModel);
@@ -145,15 +153,16 @@ public class RefreshFriendUseCaseTest {
             assert viewModel.getDisplayedListModel().isEmpty();
         });
     }
+
     @Test
     void RemoveMultipleFriendUseCase() {
         User user = new User("testUser", "password", new User[]{}, new Course[]{});
         User user2 = new User("testUser2", "password", new User[]{}, new Course[]{});
         User user3 = new User("testUser3", "password", new User[]{}, new Course[]{});
         assertDoesNotThrow(() -> {
-            fileCacheUserDAO.WriteToCache(user);
-            fileCacheUserDAO.WriteToCache(user2);
-            fileCacheUserDAO.WriteToCache(user3);
+            userDAO.WriteToCache(user);
+            userDAO.WriteToCache(user2);
+            userDAO.WriteToCache(user3);
             FriendsListViewModel viewModel = new FriendsListViewModel();
             FriendsListPresenter presenter = new FriendsListPresenter(viewModel);
             AddFriendInteractor addFriendUseCase = new AddFriendInteractor(presenter, dao, "testUser");

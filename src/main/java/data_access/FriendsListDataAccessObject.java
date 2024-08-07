@@ -1,6 +1,7 @@
 package data_access;
 
 import entity.User;
+import entity.Course;
 import use_case.FriendsListUseCases.AddFriendUseCase.AddFriendDataAccessInterface;
 import use_case.FriendsListUseCases.RefreshFriendsUseCase.RefreshFriendsDataAccessInterface;
 import use_case.FriendsListUseCases.RemoveFriendUseCase.RemoveFriendDataAccessInterface;

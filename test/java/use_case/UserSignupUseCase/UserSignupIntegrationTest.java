@@ -1,6 +1,7 @@
 package use_case.UserSignupUseCase;
 
 import entity.User;
+
 import data_access.FileCacheLeaderboardDataAccessObject;
 import data_access.FileCacheUserDataAccessObject;
 import interface_adapter.controller.UserSignupController;
@@ -9,6 +10,7 @@ import interface_adapter.viewmodel.UserSignupViewModel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import repositories.LeaderboardRepository;
 import repositories.UserRepository;
 import use_case.UserUseCases.UserSignupUseCase.UserSignupUseCase;

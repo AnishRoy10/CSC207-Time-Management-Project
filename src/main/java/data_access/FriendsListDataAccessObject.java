@@ -1,7 +1,6 @@
 package data_access;
 
 import entity.User;
-import entity.Course;
 import use_case.FriendsListUseCases.AddFriendUseCase.AddFriendDataAccessInterface;
 import use_case.FriendsListUseCases.RefreshFriendsUseCase.RefreshFriendsDataAccessInterface;
 import use_case.FriendsListUseCases.RemoveFriendUseCase.RemoveFriendDataAccessInterface;
@@ -11,6 +10,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data access object for the friendslist use cases
+ */
 public class FriendsListDataAccessObject implements AddFriendDataAccessInterface, RefreshFriendsDataAccessInterface, RemoveFriendDataAccessInterface {
     private final SQLDatabaseHelper dbHelper;
 
@@ -32,6 +34,12 @@ public class FriendsListDataAccessObject implements AddFriendDataAccessInterface
         }
     }
 
+    /**
+     * Reads a file and returns the user with the given username if they exist
+     * @param username
+     * @return
+     * @throws IOException
+     */
     @Override
     public User loadUser(String username) throws IOException {
         String sql = "SELECT username, password, friends FROM Users WHERE username = ?";

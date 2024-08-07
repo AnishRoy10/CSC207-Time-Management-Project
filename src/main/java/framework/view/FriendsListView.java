@@ -15,7 +15,9 @@ public class FriendsListView extends JFrame {
     private final FriendsListController friendsListController;
     private final JList<String>friendsListDisplay;
     private final JTextField usernameField;
-    //constructor
+    /**
+     * constructor
+     */
     public FriendsListView(FriendsListController controller, FriendsListViewModel viewModel, String username) throws IOException, ClassNotFoundException {
         this.viewModel = viewModel;
         this.friendsListController = controller;
@@ -61,18 +63,29 @@ public class FriendsListView extends JFrame {
         mainFrame.add(inputPanel, BorderLayout.SOUTH);
         mainFrame.setVisible(true);
     }
-    //refreshes the friends list
+
+    /**
+     * refreshes the friends list
+     */
     public void refreshFriendsList() throws IOException {
         friendsListController.refreshFriend();
         friendsListDisplay.setModel(viewModel.getDisplayedListModel());
     }
-    //adds a friend to the active users friends list given a username
+
+    /**
+     *  adds a friend to the active users friends list given a username
+     */
     public void addFriend() throws IOException {
         String name = usernameField.getText();
         usernameField.setText("");
         friendsListController.addFriend(name);
     }
-    //removes a friends from the active users friends list given a username
+
+    /**
+     * removes a friends from the active users friends list given a username
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void removeFriend() throws IOException, ClassNotFoundException {
         String name = usernameField.getText();
         usernameField.setText("");

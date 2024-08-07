@@ -27,14 +27,18 @@ public class FriendsList implements Serializable {
         }
     }
 
-    //Add a friend if not already added
+    /**
+     * Add a friend if not already added
+     */
     public void addFriend(User user) {
         if (!this.friends.contains(user)) {
             this.friends.add(user);
         }
     }
 
-    //Remove a friend if in FriendsList
+    /**
+     * Remove a friend if in FriendsList
+     */
     public void removeFriend(User user) {
         this.friends.remove(user);
     }
@@ -48,6 +52,9 @@ public class FriendsList implements Serializable {
         }
     }
 
+    /**
+     * Exports an arraylist of the usernames of a users friends
+     */
     public ArrayList<String> exportFriendsNames() {
         ArrayList<String> friendsnames = new ArrayList<String>();
         for (int i = 0; i < this.friends.size(); i++) {

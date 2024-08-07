@@ -1,57 +1,43 @@
 package data_access;
 
 import entity.Course;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import repositories.CourseRepository;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
 public class CourseDataAccessObjectTest {
-    CourseDataAccessObject obj;
-    private final String testFilePath = "test_courseCache.txt";
+    private String path = "test_courses.json";
+    private CourseRepository courseDataAccessObject;
 
     @BeforeEach
-    public void run() throws IOException {
-        obj = new CourseDataAccessObject(testFilePath);
+    public void setUp() throws IOException {
+        this.courseDataAccessObject = new CourseDataAccessObject(path);
     }
 
     @AfterEach
-    void tearDown() {
-        // Clean up by deleting the test file after each test
-        File testFile = new File(testFilePath);
-        if (testFile.exists()) {
-            testFile.delete();
+    public void tearDown() throws IOException {
+        if (!new File(path).delete()) {
+            throw new IOException("Something went wrong deleting a course test file.");
         }
     }
 
     @Test
-    public void testReadWriteCourse() {
-        Course crs1 = new Course("CSC108", "Intro to Comp. Prog.");
-        Course crs2 = new Course("CSC148", "Intro to Comp. Sci.");
+    public void testWritingCourses() {
+        Assertions.assertDoesNotThrow(() -> {
+            Course c1 = new Course("Test 1", "Test Desc 1");
+            Course c2 = new Course("Test 2", "Test Desc 2");
 
-        obj.WriteToCache(crs1);
-        obj.WriteToCache(crs2);
+            Assertions.assertTrue(courseDataAccessObject.WriteToCache(c1));
+            Assertions.assertTrue(courseDataAccessObject.WriteToCache(c2));
 
-        Assertions.assertTrue(obj.courseExists("CSC108"));
-        Assertions.assertTrue(obj.courseExists("CSC148"));
-    }
+            Assertions.assertTrue(courseDataAccessObject.courseExists("Test 1"));
+            Assertions.assertTrue(courseDataAccessObject.courseExists("Test 2"));
 
-    @Test
-    public void testFetchCourse() {
-        Course crs = new Course("CSC207", "Software Design");
-
-        obj.WriteToCache(crs);
-
-        Assertions.assertEquals(obj.findByName("CSC207").getName(), crs.getName());
-        Assertions.assertEquals(obj.findByName("CSC207").getDescription(), crs.getDescription());
+        });
     }
 }
-

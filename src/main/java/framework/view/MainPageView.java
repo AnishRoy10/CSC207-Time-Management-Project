@@ -1,10 +1,6 @@
 package framework.view;
 
-import app.gui.FriendsListInitializer;
-import app.gui.CalendarInitializer;
-import app.gui.LeaderboardInitializer;
-import app.gui.TimerInitializer;
-import app.gui.TodoListInitializer;
+import app.gui.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +20,7 @@ public class MainPageView extends JFrame {
     public MainPageView(String username) {
         this.username = username;
         setTitle("Time Management Application");
-        setSize(300, 400);
+        setSize(300, 450);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -39,6 +35,7 @@ public class MainPageView extends JFrame {
         addNavigationButton(navigationPanel, "To-do List", e -> openTodoList());
         addNavigationButton(navigationPanel, "Timer", e -> openTimer());
         addNavigationButton(navigationPanel, "Friends", e -> openFriendsList());
+        addNavigationButton(navigationPanel, "Courses", e -> openCourseView());
         // Additional feature buttons can be added here as needed
 
         add(navigationPanel, BorderLayout.CENTER);
@@ -103,6 +100,13 @@ public class MainPageView extends JFrame {
      */
     private void openFriendsList() {
         FriendsListInitializer.InitializeFriendsList(username);
+    }
+
+    /**
+     * Visualize the course view.
+     */
+    private void openCourseView() {
+        CourseInitializer.initializeView(username);
     }
 
 //    /**

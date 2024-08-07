@@ -1,10 +1,13 @@
 package app.gui;
 
+import data_access.FileCacheLeaderboardDataAccessObject;
 import data_access.FileCacheUserDataAccessObject;
+import entity.Leaderboard;
 import framework.view.TodoListView;
 import interface_adapter.controller.TodoListController;
 import interface_adapter.presenter.TodoListPresenter;
 import interface_adapter.viewmodel.TodoListViewModel;
+import repositories.LeaderboardRepository;
 import repositories.UserRepository;
 import use_case.TodoListUseCases.AddTaskUseCase.AddTaskUseCase;
 import use_case.TodoListUseCases.CompleteTaskUseCase.CompleteTaskUseCase;
@@ -26,10 +29,14 @@ public class TodoListInitializer {
             // Initialize the presenter
             TodoListPresenter presenter = new TodoListPresenter(viewModel);
 
+            // Initialize the leaderboard repository with the file path
+            String leaderboardFilePath = "src/main/java/data_access/leaderboards.json";
+            LeaderboardRepository leaderboardRepository = new FileCacheLeaderboardDataAccessObject(leaderboardFilePath);
+
             // Initialize use cases
             AddTaskUseCase addTaskUseCase = new AddTaskUseCase(userRepository, presenter);
             RemoveTaskUseCase removeTaskUseCase = new RemoveTaskUseCase(userRepository, presenter);
-            CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase(userRepository, presenter);
+            CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase(userRepository, presenter, leaderboardRepository);
             SortTasksUseCase sortTasksUseCase = new SortTasksUseCase(userRepository, presenter);
             FilterTasksUseCase filterTasksUseCase = new FilterTasksUseCase(userRepository, presenter);
             LoadTodoListUseCase loadTodoListUseCase = new LoadTodoListUseCase(userRepository, presenter);

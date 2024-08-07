@@ -74,7 +74,7 @@ class FileCacheUserDataAccessObjectTest {
 
             assertEquals(user.getUsername(), readUser.getUsername());
             assertEquals(user.getFriends().exportFriendsNames(), readUser.getFriends().exportFriendsNames());
-            assertEquals(user.getCourses().get(0).getName(), readUser.getCourses().get(0).getName());
+            assertEquals(user.getCourses().get(0), readUser.getCourses().get(0));
             assertEquals(user.getTodoList().getTasks().get(0).getTitle(), readUser.getTodoList().getTasks().get(0).getTitle());
         } catch (IOException e) {
             e.printStackTrace();

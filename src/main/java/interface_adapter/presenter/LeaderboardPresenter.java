@@ -11,7 +11,10 @@ import use_case.LeaderboardUseCases.update_score.UpdateScoreOutputData;
 import use_case.LeaderboardUseCases.clear_scores.ClearScoresOutputBoundary;
 
 import javax.swing.*;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * LeaderboardPresenter presents the leaderboard data.
@@ -31,8 +34,13 @@ public class LeaderboardPresenter implements
      * Displays the leaderboard.
      */
     public void displayLeaderboard(JPanel panel) {
+        List<Map.Entry<String, Integer>> sortedScores = leaderboard.getScores().entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toList());
+
         int rank = 1;
-        for (Map.Entry<String, Integer> entry : leaderboard.getScores().entrySet()) {
+        for (Map.Entry<String, Integer> entry : sortedScores) {
             panel.add(new JLabel(rank + ". " + entry.getKey() + ": " + entry.getValue()));
             rank++;
         }

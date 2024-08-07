@@ -17,6 +17,13 @@ public class MonthlyLeaderboard extends Leaderboard {
         this.month = month;
     }
 
+
+    @Override
+    public String getType() {
+        return "MonthlyLeaderboard";
+    }
+
+
     @Override
     public void displayLeaderboard() {
         System.out.println("Monthly Leaderboard");
@@ -33,4 +40,6 @@ public class MonthlyLeaderboard extends Leaderboard {
     public void setCurrentMonth(LocalDate month) {
         this.month = month;
     }
+
+
 }

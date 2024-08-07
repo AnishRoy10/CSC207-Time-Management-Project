@@ -1,5 +1,6 @@
 package app.gui;
 
+import data_access.FileCacheLeaderboardDataAccessObject;
 import data_access.FileCacheUserDataAccessObject;
 import framework.view.UserSignupView;
 import interface_adapter.controller.UserSignupController;
@@ -23,12 +24,15 @@ public class SignupInitializer {
             // Initialize the user repository with the file path
             String filePath = "src/main/java/data_access/userCache.json";
             FileCacheUserDataAccessObject userRepository = new FileCacheUserDataAccessObject(filePath);
+            // Initialize the leaderboard repository with the file path
+            String leaderboardFilePath = "src/main/java/data_access/leaderboards.json";
+            FileCacheLeaderboardDataAccessObject leaderboardRepository = new FileCacheLeaderboardDataAccessObject(leaderboardFilePath);
             // Initialize the view model for the signup view
             UserSignupViewModel signupViewModel = new UserSignupViewModel();
             // Initialize the presenter that will handle the output from the use case
             UserSignupPresenter signupPresenter = new UserSignupPresenter(signupViewModel);
             // Initialize the use case with the user repository and presenter
-            UserSignupUseCase signupUseCase = new UserSignupUseCase(userRepository, signupPresenter);
+            UserSignupUseCase signupUseCase = new UserSignupUseCase(userRepository, signupPresenter, leaderboardRepository);
             // Initialize the controller with the use case
             UserSignupController signupController = new UserSignupController(signupUseCase);
 

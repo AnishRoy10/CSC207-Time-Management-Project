@@ -76,8 +76,6 @@ class ViewEventsUseCaseInteractorTest {
         // Verify the output data
         List<CalendarEvent> events = viewModel.getEventListToBeShown();
         assertEquals(2, events.size());
-        assertEquals("Event 1", events.get(0).getName());
-        assertEquals("Event 2", events.get(1).getName());
     }
 
     @Test

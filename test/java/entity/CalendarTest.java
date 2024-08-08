@@ -1,97 +1,132 @@
 package entity;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-public class CalendarTest {
 
-    // Creating three events
-    String name = "Name";
-    String description = "This is a description for this event";
-    String priorityLevel = "Low";
-    LocalDateTime startDate = LocalDateTime.of(2024, Month.JULY, 30, 22, 0);
-    LocalDateTime endDate = LocalDateTime.of(2024, Month.JULY, 30, 23, 30);
-    CalendarEvent event = new CalendarEvent(name, description, priorityLevel, startDate, endDate);
+class CalendarTest {
+    private Calendar calendar;
+    private CalendarEvent event1;
+    private CalendarEvent event2;
+    private CalendarEvent event3;
 
-    String nameTwo = "Name Two";
-    String descriptionTwo = "This is a description for this event number Two";
-    String priorityLevelTwo = "High";
-    LocalDateTime startDateTwo = LocalDateTime.of(2024, Month.JULY, 30, 16, 0);
-    LocalDateTime endDateTwo = LocalDateTime.of(2024, Month.JULY, 30, 16, 30);
-    CalendarEvent eventTwo = new CalendarEvent(nameTwo, descriptionTwo, priorityLevelTwo, startDateTwo, endDateTwo);
-
-    String nameThree = "Name three";
-    String descriptionThree = "This is a description for this event number three";
-    String priorityLevelThree = "Normal";
-    LocalDateTime startDateThree = LocalDateTime.of(2024, Month.JULY, 31, 23, 45);
-    LocalDateTime endDateThree = LocalDateTime.of(2024, Month.JULY, 31, 23, 50);
-    CalendarEvent eventThree = new CalendarEvent(nameThree, descriptionThree, priorityLevelThree, startDateThree, endDateThree);
-
-    @Test
-    void AddEventGetAllEventsTest() {
-        Calendar calendar = new Calendar();
-        assertTrue(calendar.getAllEvents().isEmpty());
-
-        calendar.addEvent(event);
-        assertTrue(calendar.getAllEvents().size() == 1);
-        assertTrue(calendar.getAllEvents().contains(event));
-
-        calendar.addEvent(eventTwo);
-        assertTrue(calendar.getAllEvents().size() == 2);
-        assertTrue(calendar.getAllEvents().contains(event));
-        assertTrue(calendar.getAllEvents().contains(eventTwo));
-
-        calendar.addEvent(eventThree);
-        assertTrue(calendar.getAllEvents().size() == 3);
-        assertTrue(calendar.getAllEvents().contains(event));
-        assertTrue(calendar.getAllEvents().contains(eventTwo));
-        assertTrue(calendar.getAllEvents().contains(eventThree));
+    @BeforeEach
+    void setUp() {
+        calendar = new Calendar();
+        event1 = new CalendarEvent("Event 1", "Description 1", "High",
+                LocalDateTime.of(2024, Month.AUGUST, 8, 10, 0),
+                LocalDateTime.of(2024, Month.AUGUST, 8, 11, 0));
+        event2 = new CalendarEvent("Event 2", "Description 2", "Medium",
+                LocalDateTime.of(2024, Month.AUGUST, 9, 12, 0),
+                LocalDateTime.of(2024, Month.AUGUST, 9, 13, 0));
+        event3 = new CalendarEvent("Event 3", "Description 3", "Low",
+                LocalDateTime.of(2024, Month.AUGUST, 10, 14, 0),
+                LocalDateTime.of(2024, Month.AUGUST, 10, 15, 0));
     }
 
     @Test
-    void removeEventsTest() {
-        Calendar calendar = new Calendar();
-        calendar.addEvent(event);
-        calendar.addEvent(eventTwo);
-        calendar.addEvent(eventThree);
-
-        calendar.removeEvent(eventThree);
-        assertTrue(calendar.getAllEvents().size() == 2);
-        assertTrue(calendar.getAllEvents().contains(event));
-        assertTrue(calendar.getAllEvents().contains(eventTwo));
-
-        calendar.removeEvent(eventTwo);
-        assertTrue(calendar.getAllEvents().size() == 1);
-        assertTrue(calendar.getAllEvents().contains(event));
-
-        calendar.removeEvent(event);
-        assertTrue(calendar.getAllEvents().isEmpty());
+    void testAddEvent() {
+        calendar.addEvent(event1);
+        assertTrue(calendar.hasEventsOnDate(event1.getStartDate()));
+        assertEquals(1, calendar.getEventsForDate(event1.getStartDate()).size());
+        assertEquals(event1, calendar.getEventsForDate(event1.getStartDate()).get(0));
     }
 
     @Test
-    void eventsBetweenDatesTest() {
-        Calendar calendar = new Calendar();
-        calendar.addEvent(event);
-        calendar.addEvent(eventTwo);
-        calendar.addEvent(eventThree);
+    void testRemoveEvent() {
+        calendar.addEvent(event1);
+        calendar.removeEvent(event1);
+        assertFalse(calendar.hasEventsOnDate(event1.getStartDate()));
+        assertTrue(calendar.getEventsForDate(event1.getStartDate()).isEmpty());
+    }
 
-        LocalDateTime testStartDate = LocalDateTime.of(2024, Month.JULY, 30, 15, 59);
-        LocalDateTime testEndDate = LocalDateTime.of(2024, Month.JULY, 30, 16, 31);
-        assertTrue(calendar.eventsBetweenDates(testStartDate, testEndDate).size() == 1);
-        assertTrue(calendar.eventsBetweenDates(testStartDate, testEndDate).contains(eventTwo));
+    @Test
+    void testGetEventsForDate() {
+        calendar.addEvent(event1);
+        calendar.addEvent(event2);
+        List<CalendarEvent> events = calendar.getEventsForDate(event1.getStartDate());
+        assertEquals(1, events.size());
+        assertEquals(event1, events.get(0));
+    }
 
-        LocalDateTime testStartDateTwo = LocalDateTime.of(2024, Month.JULY, 29, 0, 59);
-        LocalDateTime testEndDateTwo = LocalDateTime.of(2024, Month.JULY, 31, 23, 59);
-        assertTrue(calendar.eventsBetweenDates(testStartDateTwo, testEndDateTwo).size() == 3);
-        assertTrue(calendar.eventsBetweenDates(testStartDateTwo, testEndDateTwo).contains(eventTwo));
-        assertTrue(calendar.eventsBetweenDates(testStartDateTwo, testEndDateTwo).contains(event));
-        assertTrue(calendar.eventsBetweenDates(testStartDateTwo, testEndDateTwo).contains(eventThree));
+    @Test
+    void testGetAllEvents() {
+        calendar.addEvent(event1);
+        calendar.addEvent(event2);
+        calendar.addEvent(event3);
+        List<CalendarEvent> allEvents = calendar.getAllEvents();
+        assertEquals(3, allEvents.size());
+        assertTrue(allEvents.contains(event1));
+        assertTrue(allEvents.contains(event2));
+        assertTrue(allEvents.contains(event3));
+    }
 
-        LocalDateTime testStartDateThree = LocalDateTime.of(2024, Month.JUNE, 29, 0, 59);
-        LocalDateTime testEndDateThree = LocalDateTime.of(2024, Month.JUNE, 30, 23, 59);
-        assertTrue(calendar.eventsBetweenDates(testStartDateThree, testEndDateThree).isEmpty());
+    @Test
+    void testHasEventsOnDate() {
+        assertFalse(calendar.hasEventsOnDate(event1.getStartDate()));
+        calendar.addEvent(event1);
+        assertTrue(calendar.hasEventsOnDate(event1.getStartDate()));
+    }
+
+    @Test
+    void testEventsBetweenDates() {
+        calendar.addEvent(event1);
+        calendar.addEvent(event2);
+        calendar.addEvent(event3);
+        List<CalendarEvent> events = calendar.eventsBetweenDates(
+                LocalDateTime.of(2024, Month.AUGUST, 8, 0, 0),
+                LocalDateTime.of(2024, Month.AUGUST, 9, 23, 59));
+        assertEquals(2, events.size());
+        assertTrue(events.contains(event1));
+        assertTrue(events.contains(event2));
+        assertFalse(events.contains(event3));
+    }
+
+    @Test
+    void testHasEventsBetweenDates() {
+        calendar.addEvent(event1);
+        calendar.addEvent(event2);
+        assertTrue(calendar.hasEventsBetweenDates(
+                LocalDateTime.of(2024, Month.AUGUST, 8, 0, 0),
+                LocalDateTime.of(2024, Month.AUGUST, 9, 23, 59)));
+        assertFalse(calendar.hasEventsBetweenDates(
+                LocalDateTime.of(2024, Month.AUGUST, 11, 0, 0),
+                LocalDateTime.of(2024, Month.AUGUST, 12, 23, 59)));
+    }
+
+    @Test
+    void testToString() {
+        calendar.addEvent(event1);
+        calendar.addEvent(event2);
+        String calendarString = calendar.toString();
+        assertTrue(calendarString.contains("Date: " + event1.getStartDate().toString()));
+        assertTrue(calendarString.contains(event1.toString()));
+        assertTrue(calendarString.contains("Date: " + event2.getStartDate().toString()));
+        assertTrue(calendarString.contains(event2.toString()));
+    }
+
+    @Test
+    void testEquals() {
+        Calendar anotherCalendar = new Calendar();
+        assertTrue(calendar.equals(anotherCalendar));
+        calendar.addEvent(event1);
+        assertFalse(calendar.equals(anotherCalendar));
+        anotherCalendar.addEvent(event1);
+        assertTrue(calendar.equals(anotherCalendar));
+    }
+
+    @Test
+    void testHashCode() {
+        Calendar anotherCalendar = new Calendar();
+        assertEquals(calendar.hashCode(), anotherCalendar.hashCode());
+        calendar.addEvent(event1);
+        anotherCalendar.addEvent(event1);
+        assertEquals(calendar.hashCode(), anotherCalendar.hashCode());
     }
 }

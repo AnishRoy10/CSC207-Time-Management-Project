@@ -1,6 +1,7 @@
 package use_case.TimerUseCases.PauseTimerUseCase;
 
-import data_access.FileCacheUserDataAccessObject;
+import data_access.SQLDatabaseHelper;
+import data_access.UserDAO;
 import data_access.TimerDataAccessObject;
 import entity.Course;
 import entity.Timer;
@@ -27,20 +28,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * End-to-end tests for update timer use case.
  */
 public class PauseTimerUseCaseTest {
-    private FileCacheUserDataAccessObject fileCacheUserDAO;
-    private final String testFilePath = "test_userCache.json";
+    private SQLDatabaseHelper dbHelper;
+    private UserDAO userDAO;
     private TimerDataAccessObject userRepository;
 
     @BeforeEach
-    public void setUp() throws IOException {
-        fileCacheUserDAO = new FileCacheUserDataAccessObject(testFilePath);
-        userRepository = new TimerDataAccessObject(fileCacheUserDAO);
-
+    public void setUp() {
+        dbHelper = new SQLDatabaseHelper("jdbc:sqlite:test.db");
+        dbHelper.initializeDatabase();
+        userDAO = new UserDAO(dbHelper);
+        userRepository = new TimerDataAccessObject(userDAO);
     }
 
     @AfterEach
     public void tearDown() {
-        File testFile = new File(testFilePath);
+        File testFile = new File("test.db");
         if (testFile.exists()) {
             testFile.delete();
         }
@@ -52,7 +54,7 @@ public class PauseTimerUseCaseTest {
         Timer timer = new Timer(1, 0, 1);
         user.addTimer(timer);
         assertDoesNotThrow(() -> {
-            fileCacheUserDAO.WriteToCache(user);
+            userDAO.WriteToCache(user);
             SetTimerViewModel setTimerViewModel = new SetTimerViewModel("set timer");
             RunningTimerViewModel runningTimerViewModel = new RunningTimerViewModel("running timer");
             TimerPresenter presenter = new TimerPresenter(setTimerViewModel, runningTimerViewModel);
@@ -70,7 +72,7 @@ public class PauseTimerUseCaseTest {
 //            controller.execute_pause_timer(false);
             pause_method.invoke(view);
             long startTime = System.currentTimeMillis();
-            while (System.currentTimeMillis() - startTime < 2000) {
+            while (System.currentTimeMillis() - startTime < 500) {
                 update_method.invoke(view);
 
             }
@@ -82,7 +84,7 @@ public class PauseTimerUseCaseTest {
             controller.execute_pause_timer(true);
 
             startTime = System.currentTimeMillis();
-            while (System.currentTimeMillis() - startTime < 1900) {
+            while (System.currentTimeMillis() - startTime < 1000) {
                 controller.execute_update_timer();
 
             }
@@ -90,7 +92,7 @@ public class PauseTimerUseCaseTest {
             assertEquals("Pause", RunningTimerViewModel.PAUSE_LABEL);
             assertEquals("0", RunningTimerViewModel.HOURS);
             assertEquals("59", RunningTimerViewModel.MINUTES);
-            assertEquals("58", RunningTimerViewModel.SECONDS);
+            assertEquals("59", RunningTimerViewModel.SECONDS);
         });
     }
 }

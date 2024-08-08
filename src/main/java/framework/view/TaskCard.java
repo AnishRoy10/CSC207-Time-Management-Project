@@ -1,13 +1,11 @@
 package framework.view;
 
-import use_case.TaskData;
+import use_case.TodoListUseCases.TaskData;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
-
-import java.util.UUID;
 
 /**
  * TaskCard represents the UI component for displaying a task's details.
@@ -131,7 +129,7 @@ public class TaskCard extends JPanel {
     /**
      * Updates the completion date label based on the task's completion status.
      */
-    private void updateCompletionDateLabel() {
+    public void updateCompletionDateLabel() {
         if (task.isCompleted()) {
             completionDateLabel.setText("Completion Date: " + task.getCompletionDate().toString());
             completedCheckBox.setSelected(true);
@@ -143,5 +141,18 @@ public class TaskCard extends JPanel {
 
     public void setCompleted(boolean isCompleted) {
         completedCheckBox.setSelected(isCompleted);
+    }
+
+    // Public getters for testing purposes
+    public JCheckBox getCompletedCheckBox() {
+        return completedCheckBox;
+    }
+
+    public JPanel getDetailsPanel() {
+        return detailsPanel;
+    }
+
+    public JLabel getCompletionDateLabel() {
+        return completionDateLabel;
     }
 }

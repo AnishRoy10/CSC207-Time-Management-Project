@@ -32,7 +32,7 @@ public class LeaveCoursePrompt {
         this.viewModel = viewModel;
 
         frame = new JFrame("Leave Course");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(450, 200);
         frame.setResizable(false);
 

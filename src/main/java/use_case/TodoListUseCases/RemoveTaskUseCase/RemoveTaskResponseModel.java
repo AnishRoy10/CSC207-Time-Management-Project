@@ -1,6 +1,6 @@
 package use_case.TodoListUseCases.RemoveTaskUseCase;
 
-import use_case.TaskData;
+import use_case.TodoListUseCases.TaskData;
 
 import java.util.List;
 import java.util.UUID;

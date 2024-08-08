@@ -5,6 +5,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The CalendarEvent class represents an event in the calendar of the user.
@@ -205,5 +206,24 @@ public class CalendarEvent implements Serializable{
                 ", Priority Level: " + priorityLevel +
                 ", Start Date: " + startDate.toString() +
                 ", End Date: " + (endDate != null ? endDate.toString() : "N/A");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CalendarEvent that = (CalendarEvent) o;
+        return hasEndDate == that.hasEndDate &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(status, that.status) &&
+                Objects.equals(priorityLevel, that.priorityLevel) &&
+                Objects.equals(startDate, that.startDate) &&
+                Objects.equals(endDate, that.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, status, priorityLevel, startDate, endDate, hasEndDate);
     }
 }

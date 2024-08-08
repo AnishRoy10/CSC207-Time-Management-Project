@@ -1,9 +1,9 @@
 package interface_adapter.AddEvent;
 
 import entity.CalendarEvent;
-import use_case.AddEventUseCase.AddEventInputBoundary;
-import use_case.AddEventUseCase.AddEventInputData;
-import use_case.AddEventUseCase.AddEventUseCaseInteractor;
+import use_case.CalendarUseCases.AddEventUseCase.AddEventInputBoundary;
+import use_case.CalendarUseCases.AddEventUseCase.AddEventInputData;
+import use_case.CalendarUseCases.AddEventUseCase.AddEventUseCaseInteractor;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

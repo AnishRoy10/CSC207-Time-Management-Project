@@ -1,6 +1,6 @@
 package use_case.TodoListUseCases.CompleteTaskUseCase;
 
-import use_case.TaskData;
+import use_case.TodoListUseCases.TaskData;
 import java.util.UUID;
 
 /**

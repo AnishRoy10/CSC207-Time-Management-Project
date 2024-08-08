@@ -3,7 +3,7 @@ package framework.view;
 import com.github.lgooddatepicker.components.DateTimePicker;
 import interface_adapter.viewmodel.TodoListViewModel;
 import interface_adapter.controller.TodoListController;
-import use_case.TaskData;
+import use_case.TodoListUseCases.TaskData;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -29,22 +29,38 @@ public class TodoListView extends JFrame {
     private final JCheckBox showCompletedCheckBox;
     private final JComboBox<String> sortCriteriaComboBox;
     private final JCheckBox ascendingCheckBox;
-    private final String username; // Add this line
+    private final String username;
+    private final String courseName;
     private JFrame parentFrame;
 
     /**
-     * Constructs the TodoListView with the specified controller and viewModel.
+     * Constructs the TodoListView with the specified controller, viewModel, and username.
+     * This constructor is used for personal to-do lists.
      *
      * @param controller the controller to handle user actions
      * @param viewModel  the view model to provide data to the view
      * @param username   the username of the logged-in user
      */
     public TodoListView(TodoListController controller, TodoListViewModel viewModel, String username) {
+        this(controller, viewModel, username, null);
+    }
+
+    /**
+     * Constructs the TodoListView with the specified controller, viewModel, username, and courseName.
+     * This constructor is used for course-specific to-do lists.
+     *
+     * @param controller the controller to handle user actions
+     * @param viewModel  the view model to provide data to the view
+     * @param username   the username of the logged-in user
+     * @param courseName the course name, if applicable
+     */
+    public TodoListView(TodoListController controller, TodoListViewModel viewModel, String username, String courseName) {
         this.controller = controller;
         this.viewModel = viewModel;
-        this.username = username; // Add this line
+        this.username = username;
+        this.courseName = courseName;
 
-        setTitle("Todo List");
+        setTitle(courseName == null ? "Todo List" : courseName + " Todo List");
         setSize(1200, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -123,7 +139,11 @@ public class TodoListView extends JFrame {
         add(filterSortPanel, BorderLayout.NORTH);
 
         // Ensure tasks are loaded initially
-        controller.loadTodoList(username); // Updated to pass username
+        if (courseName == null) {
+            controller.loadTodoList(username); // Load user's personal to-do list
+        } else {
+            controller.loadTodoList(username, courseName); // Load course-specific to-do list
+        }
         loadTasks();
     }
 
@@ -152,7 +172,11 @@ public class TodoListView extends JFrame {
         LocalDateTime startDate = startDatePicker.getDateTimeStrict();
         LocalDateTime deadline = deadlinePicker.getDateTimeStrict();
         String course = courseField.getText();
-        controller.addTask(title, description, startDate, deadline, course, username); // Updated to pass username
+        if (courseName == null) {
+            controller.addTask(title, description, startDate, deadline, course, username); // User's personal to-do list
+        } else {
+            controller.addTask(title, description, startDate, deadline, course, username, courseName); // Course-specific to-do list
+        }
         clearInputFields();
         loadTasks();
     }
@@ -174,7 +198,11 @@ public class TodoListView extends JFrame {
      * @param taskId the ID of the task to complete
      */
     private void completeTask(UUID taskId) {
-        controller.toggleTaskCompletion(taskId, username); // Updated to pass username
+        if (courseName == null) {
+            controller.toggleTaskCompletion(taskId, username); // User's personal to-do list
+        } else {
+            controller.toggleTaskCompletion(taskId, username, courseName); // Course-specific to-do list
+        }
         updateTaskCardCompletion(taskId, true); // Update the task card's checkbox
         taskListPanel.revalidate(); // Refresh the task list panel
         taskListPanel.repaint(); // Refresh the task list panel
@@ -193,14 +221,17 @@ public class TodoListView extends JFrame {
         }
     }
 
-
     /**
      * Removes a task by its ID.
      *
      * @param taskId the ID of the task to remove
      */
     private void removeTask(UUID taskId) {
-        controller.removeTask(taskId, username); // Updated to pass username
+        if (courseName == null) {
+            controller.removeTask(taskId, username); // User's personal to-do list
+        } else {
+            controller.removeTask(taskId, username, courseName); // Course-specific to-do list
+        }
         loadTasks();
     }
 
@@ -210,7 +241,7 @@ public class TodoListView extends JFrame {
     private void removeSelectedTask() {
         TaskCard selectedTaskCard = getSelectedTaskCard();
         if (selectedTaskCard != null) {
-            int confirmed = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete the selected task?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+            int confirmed = showConfirmDialog("Are you sure you want to delete the selected task?");
             if (confirmed == JOptionPane.YES_OPTION) {
                 removeTask(selectedTaskCard.getTask().getId());
             }
@@ -241,7 +272,11 @@ public class TodoListView extends JFrame {
      */
     private void filterTasks() {
         boolean showCompleted = showCompletedCheckBox.isSelected();
-        controller.filterTasks(showCompleted, username); // Updated to pass username
+        if (courseName == null) {
+            controller.filterTasks(showCompleted, username); // User's personal to-do list
+        } else {
+            controller.filterTasks(showCompleted, username, courseName); // Course-specific to-do list
+        }
         loadTasks();
     }
 
@@ -251,11 +286,15 @@ public class TodoListView extends JFrame {
     private void sortTasks() {
         String criterion = (String) sortCriteriaComboBox.getSelectedItem();
         boolean ascending = ascendingCheckBox.isSelected();
-        controller.sortTasks(criterion, ascending, username); // Updated to pass username
+        if (courseName == null) {
+            controller.sortTasks(criterion, ascending, username); // User's personal to-do list
+        } else {
+            controller.sortTasks(criterion, ascending, username, courseName); // Course-specific to-do list
+        }
         loadTasks();
     }
 
-    private void loadTasks() {
+    public void loadTasks() {
         taskListPanel.removeAll();
         List<TaskData> tasks = viewModel.getTasks();
         GridBagConstraints gbc = new GridBagConstraints();
@@ -294,11 +333,94 @@ public class TodoListView extends JFrame {
     /**
      * Deselects all task cards in the task list panel.
      */
-    private void deselectAllTaskCards() {
+    public void deselectAllTaskCards() {
         for (Component component : taskListPanel.getComponents()) {
             if (component instanceof TaskCard) {
                 ((TaskCard) component).setSelected(false);
             }
         }
+    }
+
+    // Getter methods for testing
+    public JTextField getTitleField() {
+        return titleField;
+    }
+
+    public JTextArea getDescriptionArea() {
+        return descriptionArea;
+    }
+
+    public DateTimePicker getStartDatePicker() {
+        return startDatePicker;
+    }
+
+    public DateTimePicker getDeadlinePicker() {
+        return deadlinePicker;
+    }
+
+    public JTextField getCourseField() {
+        return courseField;
+    }
+
+    public JCheckBox getShowCompletedCheckBox() {
+        return showCompletedCheckBox;
+    }
+
+    public JComboBox<String> getSortCriteriaComboBox() {
+        return sortCriteriaComboBox;
+    }
+
+    public JCheckBox getAscendingCheckBox() {
+        return ascendingCheckBox;
+    }
+
+    public JPanel getTaskListPanel() {
+        return taskListPanel;
+    }
+
+    public void callAddTask() {
+        addTask();
+    }
+
+    public void callRemoveSelectedTask() {
+        removeSelectedTask();
+    }
+
+    public void callFilterTasks() {
+        filterTasks();
+    }
+
+    public void callSortTasks() {
+        sortTasks();
+    }
+
+    public void callLoadTasks() {
+        loadTasks();
+    }
+
+    public void callDeselectAllTaskCards() {
+        deselectAllTaskCards();
+    }
+
+
+    /**
+     * Shows a confirmation dialog for removing a task.
+     *
+     * @param message the message to display
+     * @return the user's response
+     */
+    protected int showConfirmDialog(String message) {
+        return JOptionPane.showConfirmDialog(this, message, "Confirm Delete", JOptionPane.YES_NO_OPTION);
+    }
+}
+
+class TestableTodoListView extends TodoListView {
+    public TestableTodoListView(TodoListController controller, TodoListViewModel viewModel, String username) {
+        super(controller, viewModel, username);
+    }
+
+    @Override
+    protected int showConfirmDialog(String message) {
+        return JOptionPane.YES_OPTION; // Simulate user clicking "Yes"
     }
 }

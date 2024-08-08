@@ -1,7 +1,8 @@
-package java.use_case.CourseUseCases.JoinCourseUseCase;
+package use_case.CourseUseCases.JoinCourseUseCase;
 
 import data_access.CourseDataAccessObject;
-import data_access.FileCacheUserDataAccessObject;
+import data_access.SQLDatabaseHelper;
+import data_access.UserDAO;
 import entity.Course;
 import entity.User;
 import interface_adapter.presenter.CoursePromptPresenter;
@@ -17,25 +18,33 @@ import use_case.CourseUseCases.JoinCourseUseCase.JoinCourseInputData;
 import use_case.CourseUseCases.JoinCourseUseCase.JoinCourseOutputBoundary;
 import use_case.CourseUseCases.JoinCourseUseCase.JoinCourseUseCase;
 
-import java.io.File;
-import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class JoinCourseUseCaseTest {
-    private String userpath = "test_userCache.json";
-    private String coursepath = "test_courses.json";
     private UserRepository userDataAccessObject;
     private CourseRepository courseDataAccessObject;
+    private SQLDatabaseHelper dbHelper;
+    private static final String DB_URL = "jdbc:sqlite:Saves/TestDB.db";
 
     @BeforeEach
-    public void setUp() throws IOException {
-        userDataAccessObject = new FileCacheUserDataAccessObject(userpath);
-        courseDataAccessObject = new CourseDataAccessObject(coursepath);
+    public void setUp() {
+        dbHelper = new SQLDatabaseHelper(DB_URL);
+        dbHelper.initializeDatabase();
+        userDataAccessObject = new UserDAO(dbHelper);
+        courseDataAccessObject = new CourseDataAccessObject(dbHelper);
     }
 
     @AfterEach
-    public void tearDown() throws IOException {
-        new File(userpath).delete();
-        new File(coursepath).delete();
+    public void tearDown() {
+        try (Connection conn = dbHelper.connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute("DELETE FROM Users");
+            stmt.execute("DELETE FROM Courses");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test

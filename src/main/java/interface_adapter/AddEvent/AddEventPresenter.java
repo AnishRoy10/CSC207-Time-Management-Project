@@ -1,7 +1,7 @@
 package interface_adapter.AddEvent;
 
-import use_case.AddEventUseCase.AddEventOutputBoundaryInterface;
-import use_case.AddEventUseCase.AddEventOutputData;
+import use_case.CalendarUseCases.AddEventUseCase.AddEventOutputBoundaryInterface;
+import use_case.CalendarUseCases.AddEventUseCase.AddEventOutputData;
 
 public class AddEventPresenter implements AddEventOutputBoundaryInterface {
     private AddEventViewModel addEventViewModel;

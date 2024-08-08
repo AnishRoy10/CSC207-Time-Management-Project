@@ -1,7 +1,8 @@
 package use_case.TimerUseCases.SetTimerUseCase;
 
-import data_access.FileCacheUserDataAccessObject;
+import data_access.SQLDatabaseHelper;
 import data_access.TimerDataAccessObject;
+import data_access.UserDAO;
 import entity.Course;
 import entity.User;
 import interface_adapter.controller.TimerController;
@@ -15,7 +16,6 @@ import use_case.TimerUseCases.PauseTimerUseCase.PauseTimerInteractor;
 import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerInteractor;
 
 import java.io.File;
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,20 +23,21 @@ import static org.junit.jupiter.api.Assertions.*;
  * End-to-end tests for set timer use case.
  */
 public class SetTimerUseCaseTest {
-    private FileCacheUserDataAccessObject fileCacheUserDAO;
-    private final String testFilePath = "test_userCache.json";
+    private SQLDatabaseHelper dbHelper;
+    private UserDAO userDAO;
     private TimerDataAccessObject userRepository;
 
     @BeforeEach
-    public void setUp() throws IOException {
-        fileCacheUserDAO = new FileCacheUserDataAccessObject(testFilePath);
-        userRepository = new TimerDataAccessObject(fileCacheUserDAO);
-
+    public void setUp() {
+        dbHelper = new SQLDatabaseHelper("jdbc:sqlite:Saves/TestDB.db");
+        dbHelper.initializeDatabase();
+        userDAO = new UserDAO(dbHelper);
+        userRepository = new TimerDataAccessObject(userDAO);
     }
 
     @AfterEach
     public void tearDown() {
-        File testFile = new File(testFilePath);
+        File testFile = new File("jdbc:sqlite:Saves/TestDB.db");
         if (testFile.exists()) {
             testFile.delete();
         }
@@ -47,7 +48,7 @@ public class SetTimerUseCaseTest {
         // Test successful initialization of the timer.
         User user = new User("testUser", "password", new User[]{}, new Course[]{});
         assertDoesNotThrow(() -> {
-            fileCacheUserDAO.WriteToCache(user);
+            userDAO.WriteToCache(user);
             SetTimerViewModel setTimerViewModel = new SetTimerViewModel("set timer");
             RunningTimerViewModel runningTimerViewModel = new RunningTimerViewModel("running timer");
             TimerPresenter presenter = new TimerPresenter(setTimerViewModel, runningTimerViewModel);
@@ -68,7 +69,7 @@ public class SetTimerUseCaseTest {
         // Test when inputs are all zero.
         User user = new User("testUser", "password", new User[]{}, new Course[]{});
         assertDoesNotThrow(() -> {
-            fileCacheUserDAO.WriteToCache(user);
+            userDAO.WriteToCache(user);
             SetTimerViewModel setTimerViewModel = new SetTimerViewModel("set timer");
             RunningTimerViewModel runningTimerViewModel = new RunningTimerViewModel("running timer");
             TimerPresenter presenter = new TimerPresenter(setTimerViewModel, runningTimerViewModel);
@@ -88,7 +89,7 @@ public class SetTimerUseCaseTest {
     public void testSetTimerOverSixtyInput(){
         User user = new User("testUser", "password", new User[]{}, new Course[]{});
         assertDoesNotThrow(() -> {
-            fileCacheUserDAO.WriteToCache(user);
+            userDAO.WriteToCache(user);
             SetTimerViewModel setTimerViewModel = new SetTimerViewModel("set timer");
             RunningTimerViewModel runningTimerViewModel = new RunningTimerViewModel("running timer");
             TimerPresenter presenter = new TimerPresenter(setTimerViewModel, runningTimerViewModel);
@@ -109,7 +110,7 @@ public class SetTimerUseCaseTest {
         // Test when inputs are all zero.
         User user = new User("testUser", "password", new User[]{}, new Course[]{});
         assertDoesNotThrow(() -> {
-            fileCacheUserDAO.WriteToCache(user);
+            userDAO.WriteToCache(user);
             SetTimerViewModel setTimerViewModel = new SetTimerViewModel("set timer");
             RunningTimerViewModel runningTimerViewModel = new RunningTimerViewModel("running timer");
             TimerPresenter presenter = new TimerPresenter(setTimerViewModel, runningTimerViewModel);

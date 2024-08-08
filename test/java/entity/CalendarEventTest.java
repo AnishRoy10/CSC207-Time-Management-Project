@@ -1,5 +1,6 @@
 package entity;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -9,52 +10,157 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CalendarEventTest {
+class CalendarEventTest {
+    private CalendarEvent event1;
+    private CalendarEvent event2;
+    private CalendarEvent event3;
+
+    @BeforeEach
+    void setUp() {
+        event1 = new CalendarEvent("Event 1", "Description 1", "High",
+                LocalDateTime.of(2024, Month.AUGUST, 8, 10, 0),
+                LocalDateTime.of(2024, Month.AUGUST, 8, 11, 0));
+        event2 = new CalendarEvent("Event 2", null, "Medium",
+                LocalDateTime.of(2024, Month.AUGUST, 9, 12, 0),
+                LocalDateTime.of(2024, Month.AUGUST, 9, 13, 0));
+        event3 = new CalendarEvent("Event 3", "Description 3", null,
+                LocalDateTime.of(2024, Month.AUGUST, 10, 14, 0),
+                null);
+    }
+
     @Test
-    void TestEventsBetweenDatesMethod(){
-        String name = "Name";
-        String description = "This is a description for this event";
-        String priorityLevel = "Low";
-        LocalDateTime startDate = LocalDateTime.of(2024, Month.JULY, 30, 22, 0);
-        LocalDateTime endDate = LocalDateTime.of(2024, Month.JULY, 30, 23, 30);
-        CalendarEvent event = new CalendarEvent(name, description, priorityLevel, startDate, endDate);
+    void testGetters() {
+        assertEquals("Event 1", event1.getName());
+        assertEquals("Description 1", event1.getDescription());
+        assertEquals("High", event1.getPriorityLevel());
+        assertEquals(LocalDateTime.of(2024, Month.AUGUST, 8, 10, 0), event1.getStartDate());
+        assertEquals(LocalDateTime.of(2024, Month.AUGUST, 8, 11, 0), event1.getEndDate());
+        assertEquals("Finished", event1.getStatus());
+        assertTrue(event1.getHasEndDate());
 
-        String nameTwo = "Name Two";
-        String descriptionTwo = "This is a description for this event number Two";
-        String priorityLevelTwo = "High";
-        LocalDateTime startDateTwo = LocalDateTime.of(2024, Month.JULY, 30, 16, 0);
-        LocalDateTime endDateTwo = LocalDateTime.of(2024, Month.JULY, 30, 16, 30);
-        CalendarEvent eventTwo = new CalendarEvent(nameTwo, descriptionTwo, priorityLevelTwo, startDateTwo, endDateTwo);
+        assertEquals("Event 2", event2.getName());
+        assertEquals("No description specified for this Event", event2.getDescription());
+        assertEquals("Medium", event2.getPriorityLevel());
+        assertEquals(LocalDateTime.of(2024, Month.AUGUST, 9, 12, 0), event2.getStartDate());
+        assertEquals(LocalDateTime.of(2024, Month.AUGUST, 9, 13, 0), event2.getEndDate());
+        assertEquals("Upcoming", event2.getStatus());
+        assertTrue(event2.getHasEndDate());
 
-        String nameThree = "Name three";
-        String descriptionThree = "This is a description for this event number three";
-        String priorityLevelThree = "Normal";
-        LocalDateTime startDateThree = LocalDateTime.of(2024, Month.JULY, 30, 23, 45);
-        LocalDateTime endDateThree = LocalDateTime.of(2024, Month.JULY, 30, 23, 50);
-        CalendarEvent eventThree = new CalendarEvent(nameThree, descriptionThree, priorityLevelThree, startDateThree, endDateThree);
+        assertEquals("Event 3", event3.getName());
+        assertEquals("Description 3", event3.getDescription());
+        assertEquals("Normal", event3.getPriorityLevel());
+        assertEquals(LocalDateTime.of(2024, Month.AUGUST, 10, 14, 0), event3.getStartDate());
+        assertNull(event3.getEndDate());
+        assertEquals("Upcoming", event3.getStatus());
+        assertFalse(event3.getHasEndDate());
+    }
 
+    @Test
+    void testSetters() {
+        event1.setName("New Event 1");
+        event1.setDescription("New Description 1");
+        event1.setPriorityLevel("Low");
+        event1.setStartDate(LocalDateTime.of(2024, Month.AUGUST, 8, 9, 0));
+        event1.setEndDate(LocalDateTime.of(2024, Month.AUGUST, 8, 10, 0));
+        event1.setStatus("In Progress");
+
+        assertEquals("New Event 1", event1.getName());
+        assertEquals("New Description 1", event1.getDescription());
+        assertEquals("Low", event1.getPriorityLevel());
+        assertEquals(LocalDateTime.of(2024, Month.AUGUST, 8, 9, 0), event1.getStartDate());
+        assertEquals(LocalDateTime.of(2024, Month.AUGUST, 8, 10, 0), event1.getEndDate());
+        assertEquals("In Progress", event1.getStatus());
+    }
+
+    @Test
+    void testUpdateStatus() {
+        event1.updateStatus();
+        assertEquals("Finished", event1.getStatus());
+
+        CalendarEvent ongoingEvent = new CalendarEvent("Ongoing Event", "Ongoing Description", "High",
+                LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1));
+        ongoingEvent.updateStatus();
+        assertEquals("In Progress", ongoingEvent.getStatus());
+
+        CalendarEvent finishedEvent = new CalendarEvent("Finished Event", "Finished Description", "High",
+                LocalDateTime.now().minusHours(2), LocalDateTime.now().minusHours(1));
+        finishedEvent.updateStatus();
+        assertEquals("Finished", finishedEvent.getStatus());
+    }
+
+    @Test
+    void testEventsBetweenDates() {
         List<CalendarEvent> eventList = new ArrayList<>();
-        eventList.add(event);
-        eventList.add(eventTwo);
-        eventList.add(eventThree);
+        eventList.add(event1);
+        eventList.add(event2);
+        eventList.add(event3);
 
-        LocalDateTime testStart = LocalDateTime.of(2024, Month.JULY, 30, 15, 30);
-        LocalDateTime testEnd = LocalDateTime.of(2024, Month.JULY, 30, 16, 50);
-        assertTrue(CalendarEvent.eventsBetweenDates(testStart, testEnd, eventList).contains(eventTwo));
-        assertTrue(CalendarEvent.eventsBetweenDates(testStart, testEnd, eventList).size() == 1);
+        List<CalendarEvent> result = CalendarEvent.eventsBetweenDates(
+                LocalDateTime.of(2024, Month.AUGUST, 8, 0, 0),
+                LocalDateTime.of(2024, Month.AUGUST, 9, 23, 59),
+                eventList);
 
-        LocalDateTime testStartTwo = LocalDateTime.of(2024, Month.JULY, 29, 15, 59);
-        LocalDateTime testEndTwo = LocalDateTime.of(2024, Month.JULY, 31, 16, 45);
-        assertTrue(CalendarEvent.eventsBetweenDates(testStartTwo, testEndTwo, eventList).size() == 3);
+        assertEquals(2, result.size());
+        assertTrue(result.contains(event1));
+        assertTrue(result.contains(event2));
+        assertFalse(result.contains(event3));
+    }
 
-        LocalDateTime testStartThree = LocalDateTime.of(2024, Month.JULY, 29, 15, 59);
-        LocalDateTime testEndThree = LocalDateTime.of(2024, Month.JULY, 29, 16, 45);
-        assertTrue(CalendarEvent.eventsBetweenDates(testStartThree, testEndThree, eventList).isEmpty());
+    @Test
+    void testStartEndOnSameDay() {
+        assertTrue(event1.startEndOnSameDay());
+        assertTrue(event2.startEndOnSameDay());
+        assertFalse(event3.getHasEndDate());
 
+        CalendarEvent differentDayEvent = new CalendarEvent("Different Day Event", "Description", "High",
+                LocalDateTime.of(2024, Month.AUGUST, 8, 10, 0),
+                LocalDateTime.of(2024, Month.AUGUST, 9, 10, 0));
+        assertFalse(differentDayEvent.startEndOnSameDay());
+    }
 
+    @Test
+    void testPriorityLevelIsValid() {
+        assertTrue(event1.priorityLevelIsValid());
+        assertFalse(event2.priorityLevelIsValid());
 
+        CalendarEvent invalidPriorityEvent = new CalendarEvent("Invalid Priority Event", "Description", "Very High",
+                LocalDateTime.of(2024, Month.AUGUST, 8, 10, 0),
+                LocalDateTime.of(2024, Month.AUGUST, 8, 11, 0));
+        assertFalse(invalidPriorityEvent.priorityLevelIsValid());
+    }
 
+    @Test
+    void testStartBeforeEnd() {
+        assertTrue(event1.startBeforeEnd());
+        assertTrue(event2.startBeforeEnd());
+        assertFalse(event3.getHasEndDate());
 
+        CalendarEvent invalidEvent = new CalendarEvent("Invalid Event", "Description", "High",
+                LocalDateTime.of(2024, Month.AUGUST, 8, 12, 0),
+                LocalDateTime.of(2024, Month.AUGUST, 8, 10, 0));
+        assertFalse(invalidEvent.startBeforeEnd());
+    }
 
+    @Test
+    void testToString() {
+        String eventString = event1.toString();
+        assertTrue(eventString.contains("Event 1"));
+        assertTrue(eventString.contains("Description 1"));
+        assertTrue(eventString.contains("High"));
+        assertTrue(eventString.contains(event1.getStartDate().toString()));
+        assertTrue(eventString.contains(event1.getEndDate().toString()));
+    }
+
+    @Test
+    void testEqualsAndHashCode() {
+        CalendarEvent anotherEvent = new CalendarEvent("Event 1", "Description 1", "High",
+                LocalDateTime.of(2024, Month.AUGUST, 8, 10, 0),
+                LocalDateTime.of(2024, Month.AUGUST, 8, 11, 0));
+        assertTrue(event1.equals(anotherEvent));
+        assertEquals(event1.hashCode(), anotherEvent.hashCode());
+
+        anotherEvent.setName("Different Event");
+        assertFalse(event1.equals(anotherEvent));
+        assertNotEquals(event1.hashCode(), anotherEvent.hashCode());
     }
 }

@@ -1,11 +1,7 @@
 package framework.view;
 
 import entity.CalendarEvent;
-import entity.Task;
-import use_case.TaskData;
 
-import java.time.LocalDateTime;
-import java.time.Month;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;

@@ -1,7 +1,8 @@
 package app.gui;
 
-import data_access.FileCacheLeaderboardDataAccessObject;
-import data_access.FileCacheUserDataAccessObject;
+import data_access.SQLDatabaseHelper;
+import data_access.UserDAO;
+import data_access.SQLLeaderboardDAO;
 import framework.view.UserSignupView;
 import interface_adapter.controller.UserSignupController;
 import interface_adapter.presenter.UserSignupPresenter;
@@ -21,17 +22,18 @@ public class SignupInitializer {
      */
     public static void initializeSignup() {
         try {
-            // Initialize the user repository with the file path
-            String filePath = "src/main/java/data_access/userCache.json";
-            FileCacheUserDataAccessObject userRepository = new FileCacheUserDataAccessObject(filePath);
-            // Initialize the leaderboard repository with the file path
-            String leaderboardFilePath = "src/main/java/data_access/leaderboards.json";
-            FileCacheLeaderboardDataAccessObject leaderboardRepository = new FileCacheLeaderboardDataAccessObject(leaderboardFilePath);
+            // Initialize the database helper
+            SQLDatabaseHelper dbHelper = new SQLDatabaseHelper();
+            dbHelper.initializeDatabase();
+            // Initialize the user repository with the database helper
+            UserDAO userRepository = new UserDAO(dbHelper);
+            // Initialize the leaderboard repository with the database helper
+            SQLLeaderboardDAO leaderboardRepository = new SQLLeaderboardDAO(dbHelper);
             // Initialize the view model for the signup view
             UserSignupViewModel signupViewModel = new UserSignupViewModel();
             // Initialize the presenter that will handle the output from the use case
             UserSignupPresenter signupPresenter = new UserSignupPresenter(signupViewModel);
-            // Initialize the use case with the user repository and presenter
+            // Initialize the use case with the user repository, presenter, and leaderboard repository
             UserSignupUseCase signupUseCase = new UserSignupUseCase(userRepository, signupPresenter, leaderboardRepository);
             // Initialize the controller with the use case
             UserSignupController signupController = new UserSignupController(signupUseCase);

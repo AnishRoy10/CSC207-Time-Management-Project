@@ -1,6 +1,6 @@
 package use_case.TodoListUseCases.SortTasksUseCase;
 
-import use_case.TaskData;
+import use_case.TodoListUseCases.TaskData;
 
 import java.util.List;
 

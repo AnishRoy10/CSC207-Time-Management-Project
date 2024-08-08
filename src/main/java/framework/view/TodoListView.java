@@ -3,7 +3,7 @@ package framework.view;
 import com.github.lgooddatepicker.components.DateTimePicker;
 import interface_adapter.viewmodel.TodoListViewModel;
 import interface_adapter.controller.TodoListController;
-import use_case.TaskData;
+import use_case.TodoListUseCases.TaskData;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -241,7 +241,7 @@ public class TodoListView extends JFrame {
     private void removeSelectedTask() {
         TaskCard selectedTaskCard = getSelectedTaskCard();
         if (selectedTaskCard != null) {
-            int confirmed = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete the selected task?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+            int confirmed = showConfirmDialog("Are you sure you want to delete the selected task?");
             if (confirmed == JOptionPane.YES_OPTION) {
                 removeTask(selectedTaskCard.getTask().getId());
             }
@@ -294,7 +294,7 @@ public class TodoListView extends JFrame {
         loadTasks();
     }
 
-    private void loadTasks() {
+    public void loadTasks() {
         taskListPanel.removeAll();
         List<TaskData> tasks = viewModel.getTasks();
         GridBagConstraints gbc = new GridBagConstraints();
@@ -333,11 +333,94 @@ public class TodoListView extends JFrame {
     /**
      * Deselects all task cards in the task list panel.
      */
-    private void deselectAllTaskCards() {
+    public void deselectAllTaskCards() {
         for (Component component : taskListPanel.getComponents()) {
             if (component instanceof TaskCard) {
                 ((TaskCard) component).setSelected(false);
             }
         }
+    }
+
+    // Getter methods for testing
+    public JTextField getTitleField() {
+        return titleField;
+    }
+
+    public JTextArea getDescriptionArea() {
+        return descriptionArea;
+    }
+
+    public DateTimePicker getStartDatePicker() {
+        return startDatePicker;
+    }
+
+    public DateTimePicker getDeadlinePicker() {
+        return deadlinePicker;
+    }
+
+    public JTextField getCourseField() {
+        return courseField;
+    }
+
+    public JCheckBox getShowCompletedCheckBox() {
+        return showCompletedCheckBox;
+    }
+
+    public JComboBox<String> getSortCriteriaComboBox() {
+        return sortCriteriaComboBox;
+    }
+
+    public JCheckBox getAscendingCheckBox() {
+        return ascendingCheckBox;
+    }
+
+    public JPanel getTaskListPanel() {
+        return taskListPanel;
+    }
+
+    public void callAddTask() {
+        addTask();
+    }
+
+    public void callRemoveSelectedTask() {
+        removeSelectedTask();
+    }
+
+    public void callFilterTasks() {
+        filterTasks();
+    }
+
+    public void callSortTasks() {
+        sortTasks();
+    }
+
+    public void callLoadTasks() {
+        loadTasks();
+    }
+
+    public void callDeselectAllTaskCards() {
+        deselectAllTaskCards();
+    }
+
+
+    /**
+     * Shows a confirmation dialog for removing a task.
+     *
+     * @param message the message to display
+     * @return the user's response
+     */
+    protected int showConfirmDialog(String message) {
+        return JOptionPane.showConfirmDialog(this, message, "Confirm Delete", JOptionPane.YES_NO_OPTION);
+    }
+}
+
+class TestableTodoListView extends TodoListView {
+    public TestableTodoListView(TodoListController controller, TodoListViewModel viewModel, String username) {
+        super(controller, viewModel, username);
+    }
+
+    @Override
+    protected int showConfirmDialog(String message) {
+        return JOptionPane.YES_OPTION; // Simulate user clicking "Yes"
     }
 }

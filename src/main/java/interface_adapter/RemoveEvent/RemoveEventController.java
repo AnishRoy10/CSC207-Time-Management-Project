@@ -1,8 +1,8 @@
 package interface_adapter.RemoveEvent;
 
 import entity.CalendarEvent;
-import use_case.RemoveEventUseCase.RemoveEventInputBoundary;
-import use_case.RemoveEventUseCase.RemoveEventInputData;
+import use_case.CalendarUseCases.RemoveEventUseCase.RemoveEventInputBoundary;
+import use_case.CalendarUseCases.RemoveEventUseCase.RemoveEventInputData;
 
 import java.io.IOException;
 

@@ -4,7 +4,7 @@ import entity.Task;
 import entity.User;
 import repositories.TaskRepository;
 import repositories.UserRepository;
-import use_case.TaskData;
+import use_case.TodoListUseCases.TaskData;
 
 import java.io.IOException;
 import java.util.Comparator;

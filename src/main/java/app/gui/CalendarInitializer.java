@@ -11,9 +11,9 @@ import interface_adapter.RemoveEvent.RemoveEventController;
 import interface_adapter.ViewEvents.ViewEventsController;
 import interface_adapter.ViewEvents.ViewEventsPresenter;
 import interface_adapter.ViewEvents.ViewEventsViewModel;
-import use_case.AddEventUseCase.AddEventUseCaseInteractor;
-import use_case.RemoveEventUseCase.RemoveEventUseCaseInteractor;
-import use_case.ViewEventsUseCase.ViewEventsUseCaseInteractor;
+import use_case.CalendarUseCases.AddEventUseCase.AddEventUseCaseInteractor;
+import use_case.CalendarUseCases.RemoveEventUseCase.RemoveEventUseCaseInteractor;
+import use_case.CalendarUseCases.ViewEventsUseCase.ViewEventsUseCaseInteractor;
 
 import java.io.IOException;
 

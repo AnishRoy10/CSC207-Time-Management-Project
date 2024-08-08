@@ -3,9 +3,9 @@ package data_access;
 import entity.Calendar;
 import entity.CalendarEvent;
 import entity.User;
-import use_case.AddEventUseCase.AddEventDataAccessInterface;
-import use_case.ViewEventsUseCase.ViewEventsDataAccessInterface;
-import use_case.RemoveEventUseCase.RemoveEventDataAccessInterface;
+import use_case.CalendarUseCases.AddEventUseCase.AddEventDataAccessInterface;
+import use_case.CalendarUseCases.ViewEventsUseCase.ViewEventsDataAccessInterface;
+import use_case.CalendarUseCases.RemoveEventUseCase.RemoveEventDataAccessInterface;
 
 import java.io.IOException;
 import java.sql.*;

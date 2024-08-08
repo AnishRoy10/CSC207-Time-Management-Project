@@ -13,14 +13,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repositories.TaskRepository;
 import repositories.UserRepository;
-import use_case.TaskData;
+import use_case.TodoListUseCases.TaskData;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;

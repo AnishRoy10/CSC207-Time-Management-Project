@@ -16,7 +16,6 @@ import use_case.TimerUseCases.PauseTimerUseCase.PauseTimerInteractor;
 import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerInteractor;
 
 import java.io.File;
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 

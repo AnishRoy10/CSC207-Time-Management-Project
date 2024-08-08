@@ -13,12 +13,15 @@ import app.gui.SignupInitializer;
  * This view serves as the entry point for users, guiding them to the authentication process.
  */
 public class WelcomeView extends JFrame {
+    private JButton loginButton;
+    private JButton signupButton;
+
     /**
      * Constructor for WelcomeView. Sets up the UI components and layout for the welcome screen.
      */
     public WelcomeView() {
         setTitle("Welcome");
-        setSize(450, 350);
+        setSize(550, 450);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         initComponents();
         setLocationRelativeTo(null); // Center the window
@@ -35,8 +38,8 @@ public class WelcomeView extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Welcome message
-        JLabel welcomeLabel = new JLabel("Welcome to the Application!", JLabel.CENTER);
-        welcomeLabel.setFont(new Font("Helvetica Neue", Font.BOLD, 24));
+        JLabel welcomeLabel = new JLabel("Welcome to the Time-Management Application!", JLabel.CENTER);
+        welcomeLabel.setFont(new Font("Helvetica Neue", Font.BOLD, 21));
         welcomeLabel.setForeground(new Color(210, 210, 210)); // Light text color
         panel.add(welcomeLabel, BorderLayout.NORTH);
 
@@ -44,7 +47,7 @@ public class WelcomeView extends JFrame {
         JPanel buttonsPanel = new JPanel(new GridLayout(2, 1, 20, 20));
         buttonsPanel.setOpaque(false);
 
-        JButton loginButton = new JButton("Login");
+        loginButton = new JButton("Login");
         styleButton(loginButton, new Color(60, 63, 65));
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -54,7 +57,7 @@ public class WelcomeView extends JFrame {
             }
         });
 
-        JButton signupButton = new JButton("Sign Up");
+        signupButton = new JButton("Sign Up");
         styleButton(signupButton, new Color(60, 63, 65));
         signupButton.addActionListener(new ActionListener() {
             @Override
@@ -93,15 +96,20 @@ public class WelcomeView extends JFrame {
     }
 
     /**
-     * The main method serves as the entry point for the application.
-     * It creates and displays the WelcomeView window, guiding the user to either log in or sign up.
+     * Getter for the login button.
      *
-     * @param args Command line arguments (not used in this application).
+     * @return the login button.
      */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            WelcomeView welcomeView = new WelcomeView();
-            welcomeView.setVisible(true);
-        });
+    public JButton getLoginButton() {
+        return loginButton;
+    }
+
+    /**
+     * Getter for the signup button.
+     *
+     * @return the signup button.
+     */
+    public JButton getSignupButton() {
+        return signupButton;
     }
 }

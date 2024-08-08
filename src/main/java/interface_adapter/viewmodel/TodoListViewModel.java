@@ -1,6 +1,6 @@
 package interface_adapter.viewmodel;
 
-import use_case.TaskData;
+import use_case.TodoListUseCases.TaskData;
 
 import java.util.ArrayList;
 import java.util.List;

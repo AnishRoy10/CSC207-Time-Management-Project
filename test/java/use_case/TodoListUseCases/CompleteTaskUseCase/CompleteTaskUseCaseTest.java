@@ -17,7 +17,7 @@ import repositories.TaskRepository;
 import repositories.UserRepository;
 import use_case.TodoListUseCases.AddTaskUseCase.AddTaskRequestModel;
 import use_case.TodoListUseCases.AddTaskUseCase.AddTaskUseCase;
-import use_case.TaskData;
+import use_case.TodoListUseCases.TaskData;
 
 import java.sql.Connection;
 import java.sql.SQLException;

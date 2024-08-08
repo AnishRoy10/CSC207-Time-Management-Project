@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repositories.TaskRepository;
 import repositories.UserRepository;
-import use_case.TaskData;
+import use_case.TodoListUseCases.TaskData;
 import use_case.TodoListUseCases.AddTaskUseCase.*;
 
 import java.sql.Connection;
@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 class SortTasksUseCaseTest {
     private SQLDatabaseHelper dbHelper;

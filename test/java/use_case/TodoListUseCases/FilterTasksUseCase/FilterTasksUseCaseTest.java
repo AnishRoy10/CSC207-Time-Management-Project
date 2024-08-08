@@ -21,7 +21,7 @@ import use_case.TodoListUseCases.CompleteTaskUseCase.CompleteTaskRequestModel;
 import use_case.TodoListUseCases.SortTasksUseCase.SortTasksOutputBoundary;
 import use_case.TodoListUseCases.SortTasksUseCase.SortTasksRequestModel;
 import use_case.TodoListUseCases.SortTasksUseCase.SortTasksUseCase;
-import use_case.TaskData;
+import use_case.TodoListUseCases.TaskData;
 
 import java.io.IOException;
 import java.sql.Connection;

@@ -35,6 +35,8 @@ public class CourseView extends JFrame {
     private JButton viewTodoListButton;
     private JButton viewLeaderboardsButton;
 
+    private String currentCourseName; // Add this field
+
     /**
      * Instantiate a new course view frame.
      * @param username The username of the current user.
@@ -48,7 +50,7 @@ public class CourseView extends JFrame {
 
         /// instantiate the main frame
         this.setTitle("Course View");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLayout(new BorderLayout());
         this.setSize(750, 600);
 
@@ -62,7 +64,7 @@ public class CourseView extends JFrame {
 
     /**
      * Visualizes a course on the course view page.
-     *`
+     *
      * @param courseName the name of the course to visualize
      */
     private void visualize(String courseName) {
@@ -77,6 +79,7 @@ public class CourseView extends JFrame {
             return;
         }
 
+        this.currentCourseName = courseName; // Update the current course name
         this.setTitle(courseName);
         DefaultListModel<String> model = viewModel.getUsernames();
 
@@ -84,7 +87,7 @@ public class CourseView extends JFrame {
         userList.setModel(model);
         memberCountLabel.setText("Members - " + model.size());
         descriptionLabel.setText(viewModel.getCourseDescription());
-        if  (viewModel.getCourseDescription().isEmpty()) {
+        if (viewModel.getCourseDescription().isEmpty()) {
             descriptionLabel.setText("No description was set.");
         }
         viewTodoListButton.setText("View " + courseName + " Todo List");
@@ -249,7 +252,13 @@ public class CourseView extends JFrame {
 
     /// Invokes the todolist view initializer.
     private void openTodoListView() {
-        TodoListInitializer.initializeTodoList(username);
+        if (currentCourseName != null) {
+            TodoListInitializer.initializeTodoList(username, currentCourseName);
+            System.out.println("Opening todolist for course: " + currentCourseName);
+        } else {
+            TodoListInitializer.initializeTodoList(username);
+            System.out.println("Opening todolist for user: " + username);
+        }
     }
 
     /// Invokes the leaderboard view initializer.

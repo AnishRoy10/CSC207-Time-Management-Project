@@ -1,6 +1,5 @@
 package use_case.AddEventUseCase;
 
-import data_access.FileCacheUserDataAccessObject;
 import entity.Calendar;
 import entity.CalendarEvent;
 import entity.User;

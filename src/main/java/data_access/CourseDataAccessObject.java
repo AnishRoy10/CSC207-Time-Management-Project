@@ -1,36 +1,26 @@
 package data_access;
 
-import java.io.*;
-import java.lang.reflect.Type;
+import java.io.IOException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.Arrays;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import entity.*;
 import repositories.CourseRepository;
+import data_access.serializers.*;
 
 public class CourseDataAccessObject implements CourseRepository {
-    public static ArrayList<Course> courses = new ArrayList<>();
-
-    private final File fileCache;
+    private final SQLDatabaseHelper dbHelper;
     private final Gson gson;
 
-    public CourseDataAccessObject(String path) throws IOException {
-        this.fileCache = new File(path);
-        if (!fileCache.exists()) {
-            if (!fileCache.createNewFile()) {
-                throw new IOException("Something went wrong creating a course cache file.");
-            }
-            try (Writer writer = new FileWriter(fileCache)) {
-                writer.write("{}");
-            }
-        }
+    public CourseDataAccessObject(SQLDatabaseHelper dbHelper) {
+        this.dbHelper = dbHelper;
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateSerializer())
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer())
@@ -44,70 +34,108 @@ public class CourseDataAccessObject implements CourseRepository {
 
     @Override
     public Map<String, Course> ReadFromCache() throws IOException {
-        if (fileCache.length() == 0) {
-            return new HashMap<>();
+        Map<String, Course> courses = new HashMap<>();
+        String sql = "SELECT * FROM Courses";
+
+        try (Connection conn = dbHelper.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                String usernames = rs.getString("usernames");
+                String todoListJson = rs.getString("todoList");
+                String dailyLeaderboardJson = rs.getString("dailyLeaderboard");
+                String monthlyLeaderboardJson = rs.getString("monthlyLeaderboard");
+                String allTimeLeaderboardJson = rs.getString("allTimeLeaderboard");
+
+                Course course = new Course(name, description);
+                if (!usernames.isEmpty()) {
+                    course.setUsernames(Arrays.asList(usernames.split(",")));
+                }
+                course.setTodoList(gson.fromJson(todoListJson, TodoList.class));
+                course.setDailyLeaderboard(gson.fromJson(dailyLeaderboardJson, DailyLeaderboard.class));
+                course.setMonthlyLeaderboard(gson.fromJson(monthlyLeaderboardJson, MonthlyLeaderboard.class));
+                course.setAllTimeLeaderboard(gson.fromJson(allTimeLeaderboardJson, AllTimeLeaderboard.class));
+
+                courses.put(name, course);
+            }
+        } catch (SQLException e) {
+            throw new IOException("Database error", e);
         }
 
-        try (Reader reader = new FileReader(fileCache)) {
-            Type courseType = new TypeToken<Map<String, JsonObject>>() {
-            }.getType();
-            Map<String, JsonObject> jsonMap = gson.fromJson(reader, courseType);
-            Map<String, Course> courses = new HashMap<>();
-            for (Map.Entry<String, JsonObject> entry : jsonMap.entrySet()) {
-                JsonObject courseJson = entry.getValue();
-                Course course = gson.fromJson(courseJson, Course.class);
-                courses.put(entry.getKey(), course);
-            }
-            System.out.println("Courses read from cache: " + courses);
-            return courses;
-        }
+        System.out.println("Courses read from cache: " + courses);
+        return courses;
     }
 
     @Override
     public boolean WriteToCache(Course course) {
-        Map<String, Course> read;
-        try {
-            read = ReadFromCache();
-        } catch (IOException e) {
-            return false;
-        }
+        String sql = "INSERT OR REPLACE INTO Courses (name, description, usernames, todoList, dailyLeaderboard, monthlyLeaderboard, allTimeLeaderboard) VALUES(?, ?, ?, ?, ?, ?, ?)";
 
-        read.put(course.getName(), course);
+        try (Connection conn = dbHelper.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, course.getName());
+            pstmt.setString(2, course.getDescription());
+            pstmt.setString(3, String.join(",", course.getUserNames()));
+            pstmt.setString(4, gson.toJson(course.getTodoList()));
+            pstmt.setString(5, gson.toJson(course.getDailyLeaderboard()));
+            pstmt.setString(6, gson.toJson(course.getMonthlyLeaderboard()));
+            pstmt.setString(7, gson.toJson(course.getAllTimeLeaderboard()));
 
-        try (Writer writer = new FileWriter(fileCache)) {
-            JsonObject json = new JsonObject();
-
-            for (Map.Entry<String, Course> coursePair : read.entrySet()) {
-                JsonObject courseJson = gson.toJsonTree(coursePair.getValue()).getAsJsonObject();
-                json.add(coursePair.getKey(), courseJson);
-            }
-
-
-            gson.toJson(json, writer);
-            System.out.println("Courses written to cache: " + json);
+            pstmt.executeUpdate();
+            System.out.println("Courses written to cache: " + course.getName());
             return true;
-        } catch (IOException e) {
+        } catch (SQLException e) {
             return false;
         }
     }
 
     @Override
     public boolean courseExists(String courseName) {
-        try {
-            return ReadFromCache().containsKey(courseName);
-        } catch (IOException e) {
+        String sql = "SELECT name FROM Courses WHERE name = ?";
+
+        try (Connection conn = dbHelper.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, courseName);
+            ResultSet rs = pstmt.executeQuery();
+
+            return rs.next();
+        } catch (SQLException e) {
             return false;
         }
     }
 
     @Override
     public Course findByName(String courseName) {
-        try {
-            Map<String, Course> courses = ReadFromCache();
-            if (courses.containsKey(courseName)) {
-                return courses.get(courseName);
+        String sql = "SELECT * FROM Courses WHERE name = ?";
+
+        try (Connection conn = dbHelper.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, courseName);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                String usernames = rs.getString("usernames");
+                String todoListJson = rs.getString("todoList");
+                String dailyLeaderboardJson = rs.getString("dailyLeaderboard");
+                String monthlyLeaderboardJson = rs.getString("monthlyLeaderboard");
+                String allTimeLeaderboardJson = rs.getString("allTimeLeaderboard");
+
+                Course course = new Course(name, description);
+                if (!usernames.isEmpty()) {
+                    course.setUsernames(Arrays.asList(usernames.split(",")));
+                }
+                course.setTodoList(gson.fromJson(todoListJson, TodoList.class));
+                course.setDailyLeaderboard(gson.fromJson(dailyLeaderboardJson, DailyLeaderboard.class));
+                course.setMonthlyLeaderboard(gson.fromJson(monthlyLeaderboardJson, MonthlyLeaderboard.class));
+                course.setAllTimeLeaderboard(gson.fromJson(allTimeLeaderboardJson, AllTimeLeaderboard.class));
+
+                return course;
             }
-        } catch (IOException e) {
+        } catch (SQLException e) {
             return null;
         }
         return null;
@@ -121,8 +149,7 @@ public class CourseDataAccessObject implements CourseRepository {
         }
 
         course.addUser(user);
-        WriteToCache(course);
-        return true;
+        return WriteToCache(course);
     }
 
     @Override
@@ -133,7 +160,6 @@ public class CourseDataAccessObject implements CourseRepository {
         }
 
         course.getTodoList().addTask(task);
-        WriteToCache(course);
-        return true;
+        return WriteToCache(course);
     }
 }

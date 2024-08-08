@@ -1,6 +1,7 @@
 package use_case.LeaderboardUseCases.clear_scores;
 
-import data_access.FileCacheLeaderboardDataAccessObject;
+import data_access.SQLDatabaseHelper;
+import data_access.SQLLeaderboardDAO;
 import entity.AllTimeLeaderboard;
 import entity.Leaderboard;
 import interface_adapter.presenter.LeaderboardPresenter;
@@ -10,28 +11,34 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClearScoresUseCaseTest {
-    private FileCacheLeaderboardDataAccessObject fileCacheLeaderboardDAO;
-    private final String testFilePath = "test_leaderboardCache.json";
+    private SQLDatabaseHelper dbHelper;
+    private SQLLeaderboardDAO leaderboardDAO;
     private LeaderboardPresenter presenter;
 
     @BeforeEach
-    void setUp() throws IOException {
-        fileCacheLeaderboardDAO = new FileCacheLeaderboardDataAccessObject(testFilePath);
+    void setUp() {
+        dbHelper = new SQLDatabaseHelper("jdbc:sqlite:saves/TestDB.db");
+        dbHelper.initializeDatabase();
+        leaderboardDAO = new SQLLeaderboardDAO(dbHelper);
         presenter = new LeaderboardPresenter(new AllTimeLeaderboard("All-Time Leaderboard"));
     }
 
     @AfterEach
     void tearDown() {
-        // Clean up by deleting the test file after each test
-        File testFile = new File(testFilePath);
-        if (testFile.exists()) {
-            testFile.delete();
+        try (Connection conn = dbHelper.connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute("DELETE FROM Leaderboard");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -40,8 +47,8 @@ class ClearScoresUseCaseTest {
         Leaderboard leaderboard = new AllTimeLeaderboard("All-Time Leaderboard");
         leaderboard.addScore("testUser", 100);
         assertDoesNotThrow(() -> {
-            fileCacheLeaderboardDAO.writeToCache(Map.of("allTime", leaderboard));
-            ClearScoresUseCase clearScoresUseCase = new ClearScoresUseCase(leaderboard, presenter, fileCacheLeaderboardDAO);
+            leaderboardDAO.writeToCache(Map.of("allTime", leaderboard));
+            ClearScoresUseCase clearScoresUseCase = new ClearScoresUseCase(leaderboard, presenter, leaderboardDAO);
 
             ClearScoresInputData inputData = new ClearScoresInputData();
             clearScoresUseCase.clearScores(inputData);

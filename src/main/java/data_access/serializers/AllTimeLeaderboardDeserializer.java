@@ -1,9 +1,8 @@
-package data_access;
+package data_access.serializers;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import entity.AllTimeLeaderboard;
-import entity.Leaderboard;
 
 import java.lang.reflect.Type;
 import java.util.Map;

@@ -1,9 +1,9 @@
 package use_case.UserSignupUseCase;
 
 import entity.User;
-
-import data_access.FileCacheLeaderboardDataAccessObject;
-import data_access.FileCacheUserDataAccessObject;
+import data_access.SQLDatabaseHelper;
+import data_access.SQLLeaderboardDAO;
+import data_access.UserDAO;
 import interface_adapter.controller.UserSignupController;
 import interface_adapter.presenter.UserSignupPresenter;
 import interface_adapter.viewmodel.UserSignupViewModel;
@@ -15,30 +15,29 @@ import repositories.LeaderboardRepository;
 import repositories.UserRepository;
 import use_case.UserUseCases.UserSignupUseCase.UserSignupUseCase;
 
-import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 // Integration test for the UserSignupUseCase to test the interaction between the controller, use case, and presenter.
 class UserSignupIntegrationTest {
-    private FileCacheUserDataAccessObject userRepository;
-    private FileCacheLeaderboardDataAccessObject leaderboardRepository;
+    private SQLDatabaseHelper dbHelper;
+    private UserRepository userRepository;
+    private LeaderboardRepository leaderboardRepository;
     private UserSignupPresenter userSignupPresenter;
     private UserSignupViewModel userSignupViewModel;
     private UserSignupController userSignupController;
-    private File testUserFile;
-    private File testLeaderboardFile;
+    private static final String DB_URL = "jdbc:sqlite:Saves/TestDB.db";
 
     @BeforeEach
-    void setUp() throws IOException {
-        // Create temporary files for testing
-        testUserFile = File.createTempFile("userCacheTest", ".txt");
-        testLeaderboardFile = File.createTempFile("leaderboardCacheTest", ".txt");
-
-        // Initialize the repositories with the test file paths
-        userRepository = new FileCacheUserDataAccessObject(testUserFile.getAbsolutePath());
-        leaderboardRepository = new FileCacheLeaderboardDataAccessObject(testLeaderboardFile.getAbsolutePath());
+    void setUp() {
+        dbHelper = new SQLDatabaseHelper(DB_URL);
+        dbHelper.initializeDatabase();
+        userRepository = new UserDAO(dbHelper);
+        leaderboardRepository = new SQLLeaderboardDAO(dbHelper);
 
         userSignupViewModel = new UserSignupViewModel();
         userSignupPresenter = new UserSignupPresenter(userSignupViewModel);
@@ -48,23 +47,23 @@ class UserSignupIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        // Delete the test files after each test
-        if (testUserFile.exists()) {
-            testUserFile.delete();
-        }
-        if (testLeaderboardFile.exists()) {
-            testLeaderboardFile.delete();
+        try (Connection conn = dbHelper.connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute("DELETE FROM Users");
+            stmt.execute("DELETE FROM Leaderboard");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
     }
 
     @Test
-    void signupUserSuccessfully() throws IOException, ClassNotFoundException {
+    void signupUserSuccessfully() {
         userSignupController.signup("username", "Password1", "Password1");
         assertEquals("User signed up successfully.", userSignupViewModel.getMessage());
     }
 
     @Test
-    void signupUserFailsUserExists() throws IOException, ClassNotFoundException {
+    void signupUserFailsUserExists() {
         userSignupController.signup("username", "Password1", "Password1");
         userSignupController.signup("username", "Password1", "Password1");
         assertEquals("Username already exists.", userSignupViewModel.getMessage());
@@ -80,25 +79,5 @@ class UserSignupIntegrationTest {
     void signupUserWithEmptyPassword() {
         userSignupController.signup("username", "", "");
         assertEquals("Invalid username or password.", userSignupViewModel.getMessage());
-    }
-
-    @Test
-    void signupUserFailsOnRepositoryError() throws IOException, ClassNotFoundException {
-        // Simulate repository error by using a corrupted file
-        File corruptedFile = File.createTempFile("userCacheCorruptTest", ".txt");
-        userRepository = new FileCacheUserDataAccessObject(corruptedFile.getAbsolutePath()) {
-            @Override
-            public void WriteToCache(User user) throws IOException {
-                throw new IOException("Test exception");
-            }
-        };
-
-        UserSignupUseCase userSignupUseCase = new UserSignupUseCase(userRepository, userSignupPresenter, leaderboardRepository);
-        userSignupController = new UserSignupController(userSignupUseCase);
-        userSignupController.signup("username", "Password1", "Password1");
-        assertEquals("An error occurred during sign up.", userSignupViewModel.getMessage());
-
-        // Delete the corrupted file
-        corruptedFile.delete();
     }
 }

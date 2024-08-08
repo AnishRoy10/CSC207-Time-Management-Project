@@ -1,0 +1,29 @@
+{
+  "csc207": {
+    "name": "csc207",
+    "description": "compooter science",
+    "usernames": [
+      "TestUser"
+    ],
+    "todoList": {
+      "tasks": []
+    },
+    "dailyLeaderboard": {
+      "currentDate": "2024-08-03",
+      "name": "csc207 Daily",
+      "scores": {},
+      "sortedScores": []
+    },
+    "monthlyLeaderboard": {
+      "month": "2024-08-03",
+      "name": "csc207 Monthly",
+      "scores": {},
+      "sortedScores": []
+    },
+    "allTimeLeaderboard": {
+      "name": "csc207 All-time",
+      "scores": {},
+      "sortedScores": []
+    }
+  }
+}

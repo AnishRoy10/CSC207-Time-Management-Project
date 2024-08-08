@@ -1,117 +1,110 @@
 package use_case.TodoListUseCases.CompleteTaskUseCase;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import data_access.LocalDateSerializer;
-import data_access.LocalDateTimeSerializer;
+import data_access.SQLLeaderboardDAO;
+import data_access.SQLDatabaseHelper;
+import data_access.TaskDAO;
+import data_access.UserDAO;
 import entity.*;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import repositories.LeaderboardRepository;
+import repositories.TaskRepository;
 import repositories.UserRepository;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.time.LocalDate;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
-import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 public class CompleteTaskFilePersistenceTest {
+    private SQLDatabaseHelper dbHelper;
     private UserRepository userRepository;
+    private TaskRepository taskRepository;
     private LeaderboardRepository leaderboardRepository;
     private CompleteTaskOutputBoundary completeTaskOutputBoundary;
     private CompleteTaskUseCase completeTaskUseCase;
     private User user;
     private Task task;
-    private Gson gson;
-    private File userCacheFile;
-    private File leaderboardCacheFile;
+    private static final String DB_URL = "jdbc:sqlite:Saves/TestDB.db";
 
     @BeforeEach
-    public void setUp() throws IOException {
-        userRepository = mock(UserRepository.class);
-        leaderboardRepository = mock(LeaderboardRepository.class);
-        completeTaskOutputBoundary = mock(CompleteTaskOutputBoundary.class);
-        completeTaskUseCase = new CompleteTaskUseCase(userRepository, completeTaskOutputBoundary, leaderboardRepository);
+    public void setUp() {
+        dbHelper = new SQLDatabaseHelper(DB_URL);
+        dbHelper.initializeDatabase();
+        userRepository = new UserDAO(dbHelper);
+        taskRepository = new TaskDAO(dbHelper);
+        leaderboardRepository = new SQLLeaderboardDAO(dbHelper);
+
+        completeTaskOutputBoundary = responseModel -> {
+            // No-op implementation for testing
+        };
+        completeTaskUseCase = new CompleteTaskUseCase(userRepository, taskRepository, completeTaskOutputBoundary, leaderboardRepository);
 
         user = new User("testUser", "password", new User[0], new Course[0]);
-        task = new Task(UUID.randomUUID(), "Test Task", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Test Course");
+        task = new Task("testUser", "Test Task", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Test Course");
         user.getTodoList().addTask(task);
-
-        gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDate.class, new LocalDateSerializer())
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer())
-                .setPrettyPrinting()
-                .create();
-
-        // Create temporary files for user and leaderboard cache
-        userCacheFile = Files.createTempFile("userCache", ".json").toFile();
-        leaderboardCacheFile = Files.createTempFile("leaderboardCache", ".json").toFile();
-
-        // Mock user repository behavior
-        when(userRepository.findByUsername("testUser")).thenReturn(user);
-        doAnswer(invocation -> {
-            try (Writer writer = new FileWriter(userCacheFile)) {
-                gson.toJson(user, writer);
-            }
-            return null;
-        }).when(userRepository).WriteToCache(any(User.class));
-
-        // Initialize leaderboard data
-        Map<String, Leaderboard> leaderboards = new HashMap<>();
-        leaderboards.put("daily", new DailyLeaderboard("Daily Leaderboard", LocalDate.now()));
-        leaderboards.put("monthly", new MonthlyLeaderboard("Monthly Leaderboard", LocalDate.now().withDayOfMonth(1)));
-        leaderboards.put("allTime", new AllTimeLeaderboard("All-Time Leaderboard"));
-
-        // Mock leaderboard repository behavior
-        when(leaderboardRepository.readFromCache()).thenReturn(leaderboards);
-        doAnswer(invocation -> {
-            try (Writer writer = new FileWriter(leaderboardCacheFile)) {
-                gson.toJson(leaderboards, writer);
-            }
-            return null;
-        }).when(leaderboardRepository).writeToCache(anyMap());
+        try {
+            userRepository.WriteToCache(user);
+        } catch (Exception e) {
+            System.out.println("Failed to save user: " + e.getMessage());
+            fail("Exception thrown while saving user: " + e.getMessage());
+        }
+        try {
+            taskRepository.WriteToCache(task, user.getUsername());
+        } catch (Exception e) {
+            System.out.println("Failed to save task: " + e.getMessage());
+            fail("Exception thrown while saving task: " + e.getMessage());
+        }
     }
 
     @AfterEach
     public void tearDown() {
-        if (userCacheFile != null && userCacheFile.exists()) {
-            userCacheFile.delete();
-        }
-        if (leaderboardCacheFile != null && leaderboardCacheFile.exists()) {
-            leaderboardCacheFile.delete();
+        try (Connection conn = dbHelper.connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute("DELETE FROM Tasks");
+            stmt.execute("DELETE FROM Users");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
     }
 
     @Test
-    public void testTaskPointsAwardedPersistence() throws IOException {
+    public void testTaskPointsAwardedPersistence() {
         CompleteTaskRequestModel requestModel = new CompleteTaskRequestModel(task.getId(), "testUser");
 
-        assertEquals(task.isPointsAwarded(), false);
+        assertFalse(task.isPointsAwarded());
+        assertFalse(task.isCompleted());
+
+        // Reload task from the database to verify persistence
+        Task savedTask2;
+        try {
+            savedTask2 = taskRepository.ReadFromCache(task.getId());
+        } catch (Exception e) {
+            System.out.println("Failed to retrieve task: " + e.getMessage());
+            fail("Exception thrown while retrieving task: " + e.getMessage());
+            return;
+        }
+
+        assertFalse(savedTask2.isCompleted());
+        assertFalse(savedTask2.isPointsAwarded());
 
         // Complete the task
         completeTaskUseCase.execute(requestModel);
-        assertTrue(task.isCompleted());
-        assertTrue(task.isPointsAwarded());
 
-        // Save to file
-        userRepository.WriteToCache(user);
-
-        // Read from file
-        User savedUser;
-        try (Reader reader = new FileReader(userCacheFile)) {
-            savedUser = gson.fromJson(reader, User.class);
+        // Reload task from the database to verify persistence
+        Task savedTask1;
+        try {
+            savedTask1 = taskRepository.ReadFromCache(task.getId());
+        } catch (Exception e) {
+            System.out.println("Failed to retrieve task: " + e.getMessage());
+            fail("Exception thrown while retrieving task: " + e.getMessage());
+            return;
         }
 
-        Optional<Task> savedTaskOptional = savedUser.getTodoList().getTasks().stream()
-                .filter(t -> t.getId().equals(task.getId()))
-                .findFirst();
-
-        assertTrue(savedTaskOptional.isPresent());
-        Task savedTask = savedTaskOptional.get();
-        assertTrue(savedTask.isCompleted());
-        assertTrue(savedTask.isPointsAwarded());
+        assertTrue(savedTask1.isCompleted());
+        assertTrue(savedTask1.isPointsAwarded());
     }
 }

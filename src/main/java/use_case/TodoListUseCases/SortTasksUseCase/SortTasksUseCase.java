@@ -2,6 +2,7 @@ package use_case.TodoListUseCases.SortTasksUseCase;
 
 import entity.Task;
 import entity.User;
+import repositories.TaskRepository;
 import repositories.UserRepository;
 import use_case.TaskData;
 
@@ -15,10 +16,12 @@ import java.util.stream.Collectors;
  */
 public class SortTasksUseCase implements SortTasksInputBoundary {
     private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
     private final SortTasksOutputBoundary sortTasksOutputBoundary;
 
-    public SortTasksUseCase(UserRepository userRepository, SortTasksOutputBoundary sortTasksOutputBoundary) {
+    public SortTasksUseCase(UserRepository userRepository, TaskRepository taskRepository, SortTasksOutputBoundary sortTasksOutputBoundary) {
         this.userRepository = userRepository;
+        this.taskRepository = taskRepository;
         this.sortTasksOutputBoundary = sortTasksOutputBoundary;
     }
 
@@ -31,7 +34,14 @@ public class SortTasksUseCase implements SortTasksInputBoundary {
                 throw new RuntimeException("User not found");
             }
 
-            // Get the user's to-do list
+            // Get the user's tasks from the repository
+            List<Task> tasks;
+            if (requestModel.getCourseName() != null) {
+                tasks = taskRepository.getAllTasks(user.getUsername(), requestModel.getCourseName());
+            } else {
+                tasks = taskRepository.getAllTasks(user.getUsername());
+            }
+
             Comparator<Task> comparator;
 
             switch (requestModel.getCriteria().toLowerCase()) {
@@ -45,7 +55,7 @@ public class SortTasksUseCase implements SortTasksInputBoundary {
                     comparator = Comparator.comparing(Task::getCourse);
                     break;
                 case "completion":
-                    comparator = Comparator.comparing(Task::isCompleted);
+                    comparator = Comparator.comparing(Task::isCompleted).reversed(); // Modified to sort by completion status
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown sorting criteria: " + requestModel.getCriteria());
@@ -55,10 +65,11 @@ public class SortTasksUseCase implements SortTasksInputBoundary {
                 comparator = comparator.reversed();
             }
 
-            List<TaskData> sortedTasks = user.getTodoList().getTasks().stream()
+            List<TaskData> sortedTasks = tasks.stream()
                     .sorted(comparator)
                     .map(task -> new TaskData(
                             task.getId(),
+                            task.getUsername(),
                             task.getTitle(),
                             task.getDescription(),
                             task.getStartDate(),
@@ -73,7 +84,7 @@ public class SortTasksUseCase implements SortTasksInputBoundary {
             sortTasksOutputBoundary.present(responseModel);
         } catch (IOException e) {
             e.printStackTrace();
-            // Handle the error appropriately
+            throw new RuntimeException("Database error", e);
         }
     }
 }

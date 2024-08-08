@@ -1,4 +1,4 @@
-package data_access;
+package data_access.serializers;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;

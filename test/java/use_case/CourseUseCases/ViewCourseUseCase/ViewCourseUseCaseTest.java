@@ -1,38 +1,44 @@
-package java.use_case.CourseUseCases.ViewCourseUseCase;
+package use_case.CourseUseCases.ViewCourseUseCase;
 
-import com.sun.source.tree.AssertTree;
 import data_access.CourseDataAccessObject;
-import data_access.FileCacheUserDataAccessObject;
+import data_access.SQLDatabaseHelper;
 import entity.Course;
 import interface_adapter.presenter.CourseViewPresenter;
 import interface_adapter.viewmodel.CourseViewModel;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repositories.CourseRepository;
-import repositories.UserRepository;
 import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseInputBoundary;
 import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseInputData;
 import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseOutputBoundary;
 import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseUseCase;
 
-import java.io.File;
-import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class ViewCourseUseCaseTest {
-    private String coursepath = "test_courses.json";
     private CourseRepository courseDataAccessObject;
+    private SQLDatabaseHelper dbHelper;
+    private static final String DB_URL = "jdbc:sqlite:Saves/TestDB.db";
 
     @BeforeEach
-    public void setUp() throws IOException {
-        courseDataAccessObject = new CourseDataAccessObject(coursepath);
+    public void setUp() {
+        dbHelper = new SQLDatabaseHelper(DB_URL);
+        dbHelper.initializeDatabase();
+        courseDataAccessObject = new CourseDataAccessObject(dbHelper);
     }
 
     @AfterEach
-    public void tearDown() throws IOException {
-        new File(coursepath).delete();
+    public void tearDown() {
+        try (Connection conn = dbHelper.connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute("DELETE FROM Courses");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test

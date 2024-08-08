@@ -32,7 +32,7 @@ public class CreateCoursePrompt {
         this.viewModel = viewModel;
 
         frame = new JFrame("Add Course");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setResizable(false);
         frame.setSize(500, 300);
 

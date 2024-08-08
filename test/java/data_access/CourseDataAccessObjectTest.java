@@ -7,22 +7,29 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repositories.CourseRepository;
 
-import java.io.File;
-import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class CourseDataAccessObjectTest {
-    private String path = "test_courses.json";
     private CourseRepository courseDataAccessObject;
+    private SQLDatabaseHelper dbHelper;
+    private static final String DB_URL = "jdbc:sqlite:Saves/TestDB.db";
 
     @BeforeEach
-    public void setUp() throws IOException {
-        this.courseDataAccessObject = new CourseDataAccessObject(path);
+    public void setUp() {
+        dbHelper = new SQLDatabaseHelper(DB_URL);
+        dbHelper.initializeDatabase();
+        courseDataAccessObject = new CourseDataAccessObject(dbHelper);
     }
 
     @AfterEach
-    public void tearDown() throws IOException {
-        if (!new File(path).delete()) {
-            throw new IOException("Something went wrong deleting a course test file.");
+    public void tearDown() {
+        try (Connection conn = dbHelper.connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute("DELETE FROM Courses");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -37,7 +44,6 @@ public class CourseDataAccessObjectTest {
 
             Assertions.assertTrue(courseDataAccessObject.courseExists("Test 1"));
             Assertions.assertTrue(courseDataAccessObject.courseExists("Test 2"));
-
         });
     }
 }

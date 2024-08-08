@@ -1,15 +1,13 @@
 package use_case.TodoListUseCases.CompleteTaskUseCase;
 
-import entity.Task;
-import entity.TodoList;
 import entity.Course;
+import entity.Task;
 import entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import repositories.LeaderboardRepository;
+import repositories.TaskRepository;
 import repositories.UserRepository;
-import use_case.TaskData;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -20,6 +18,7 @@ import static org.mockito.Mockito.*;
 
 public class CompleteTaskUseCaseTest2 {
     private UserRepository userRepository;
+    private TaskRepository taskRepository;
     private CompleteTaskOutputBoundary completeTaskOutputBoundary;
     private LeaderboardRepository leaderboardRepository;
     private CompleteTaskUseCase completeTaskUseCase;
@@ -29,22 +28,28 @@ public class CompleteTaskUseCaseTest2 {
     @BeforeEach
     public void setUp() throws IOException {
         userRepository = mock(UserRepository.class);
+        taskRepository = mock(TaskRepository.class);
         completeTaskOutputBoundary = mock(CompleteTaskOutputBoundary.class);
         leaderboardRepository = mock(LeaderboardRepository.class);
-        completeTaskUseCase = new CompleteTaskUseCase(userRepository, completeTaskOutputBoundary, leaderboardRepository);
+        completeTaskUseCase = new CompleteTaskUseCase(userRepository, taskRepository, completeTaskOutputBoundary, leaderboardRepository);
 
         user = new User("testUser", "password", new User[0], new Course[0]);
-        task = new Task(UUID.randomUUID(), "Test Task", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Test Course");
+        task = new Task("testUser", "Test Task", "Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Test Course");
+        task.setUsername(user.getUsername());
         user.getTodoList().addTask(task);
 
         when(userRepository.findByUsername("testUser")).thenReturn(user);
+        when(taskRepository.ReadFromCache(task.getId())).thenReturn(task);
     }
 
+    /**
+     * Tests the points awarded property of a task.
+     */
     @Test
     public void testToggleTaskCompletion() {
         CompleteTaskRequestModel requestModel = new CompleteTaskRequestModel(task.getId(), "testUser");
 
-        assert(!task.isPointsAwarded());
+        assert (!task.isPointsAwarded());
         // Toggle task to completed
         completeTaskUseCase.execute(requestModel);
         assertTrue(task.isCompleted());

@@ -7,11 +7,20 @@ public class SortTasksRequestModel {
     private String criteria;
     private boolean ascending;
     private String username;
+    private String courseName;
 
     public SortTasksRequestModel(String criteria, boolean ascending, String username) {
         this.criteria = criteria;
         this.ascending = ascending;
         this.username = username;
+        this.courseName = null; // default to null
+    }
+
+    public SortTasksRequestModel(String criteria, boolean ascending, String username, String courseName) {
+        this.criteria = criteria;
+        this.ascending = ascending;
+        this.username = username;
+        this.courseName = courseName;
     }
 
     // Getters and setters
@@ -38,5 +47,13 @@ public class SortTasksRequestModel {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
     }
 }

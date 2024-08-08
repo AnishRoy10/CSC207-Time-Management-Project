@@ -8,6 +8,7 @@ import java.util.UUID;
  */
 public class TaskData {
     private UUID id;
+    private String username;
     private String title;
     private String description;
     private LocalDateTime startDate;
@@ -16,8 +17,9 @@ public class TaskData {
     private String course;
     private LocalDateTime completionDate;
 
-    public TaskData(UUID id, String title, String description, LocalDateTime startDate, LocalDateTime deadline, boolean completed, String course, LocalDateTime completionDate) {
+    public TaskData(UUID id, String username, String title, String description, LocalDateTime startDate, LocalDateTime deadline, boolean completed, String course, LocalDateTime completionDate) {
         this.id = id;
+        this.username = username;
         this.title = title;
         this.description = description;
         this.startDate = startDate;
@@ -35,6 +37,14 @@ public class TaskData {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getTitle() {

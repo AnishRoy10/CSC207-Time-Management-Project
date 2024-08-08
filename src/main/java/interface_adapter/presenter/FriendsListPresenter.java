@@ -13,21 +13,37 @@ import use_case.FriendsListUseCases.RemoveFriendUseCase.RemoveFriendOutputData;
 public class FriendsListPresenter implements AddFriendOutputBoundary, RefreshFriendsOutputBoundary, RemoveFriendOutputBoundary {
     private final FriendsListViewModel viewModel;
 
+    /**
+     * Constructor method
+     * @param viewModel
+     */
     public FriendsListPresenter(FriendsListViewModel viewModel) {
         this.viewModel = viewModel;
     }
 
+    /**
+     * sends the friendslist from the add friend use cases output data to the viewmodel
+     * @param outputData
+     */
     @Override
     public void present(AddFriendOutputData outputData) {
         viewModel.setFriendsList(outputData.getFriendsList());
     }
 
+    /**
+     * sends the friendslist and display model from the refresh friends use cases output data to the viewmodel
+     * @param outputData
+     */
     @Override
     public void present(RefreshFriendOutputData outputData) {
         viewModel.setFriendsList(outputData.getFriendsList());
         viewModel.setDisplayedListModel(outputData.getModel());
     }
 
+    /**
+     * sends the friendslist from the remove friend use cases output data to the viewmodel
+     * @param outputData
+     */
     @Override
     public void present(RemoveFriendOutputData outputData) {
         viewModel.setFriendsList(outputData.getFriendsList());

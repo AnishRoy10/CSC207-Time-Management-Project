@@ -1,7 +1,8 @@
 package app.gui;
 
 import data_access.CourseDataAccessObject;
-import data_access.FileCacheUserDataAccessObject;
+import data_access.SQLDatabaseHelper;
+import data_access.UserDAO;
 import framework.view.CourseView;
 import framework.view.CreateCoursePrompt;
 import framework.view.JoinCoursePrompt;
@@ -31,71 +32,65 @@ import use_case.CourseUseCases.ViewCourseUseCase.ViewCourseUseCase;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Initialize the course view and its necessary use case objects.
  */
 public class CourseInitializer {
+    private static final String DB_URL = "jdbc:sqlite:saves/UserDB.db";
+
     /**
      * Initialize the main course view.
      */
     public static void initializeView(String username) {
-        try {
-            String usersPath = "src/main/java/data_access/userCache.json";
-            String coursesPath = "src/main/java/data_access/courseCache.json";
+        SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(DB_URL);
+        dbHelper.initializeDatabase();
 
-            UserRepository userDataAccessObject = new FileCacheUserDataAccessObject(usersPath);
-            CourseRepository courseDataAccessObject = new CourseDataAccessObject(coursesPath);
+        UserRepository userDataAccessObject = new UserDAO(dbHelper);
+        CourseRepository courseDataAccessObject = new CourseDataAccessObject(dbHelper);
 
-            CourseViewModel viewModel = new CourseViewModel();
-            CourseListViewModel listViewModel = new CourseListViewModel();
+        CourseViewModel viewModel = new CourseViewModel();
+        CourseListViewModel listViewModel = new CourseListViewModel();
 
-            ViewCourseOutputBoundary courseViewPresenter = new CourseViewPresenter(viewModel);
-            LoadCoursesOutputBoundary courseListPresenter = new CourseListPresenter(listViewModel);
+        ViewCourseOutputBoundary courseViewPresenter = new CourseViewPresenter(viewModel);
+        LoadCoursesOutputBoundary courseListPresenter = new CourseListPresenter(listViewModel);
 
-            ViewCourseInputBoundary courseViewInteractor = new ViewCourseUseCase(
-                    courseViewPresenter, courseDataAccessObject
-            );
+        ViewCourseInputBoundary courseViewInteractor = new ViewCourseUseCase(
+                courseViewPresenter, courseDataAccessObject
+        );
 
-            LoadCoursesInputBoundary courseListInteractor = new LoadCoursesUseCase(
-                    courseListPresenter, userDataAccessObject
-            );
+        LoadCoursesInputBoundary courseListInteractor = new LoadCoursesUseCase(
+                courseListPresenter, userDataAccessObject
+        );
 
-            CourseViewController courseViewController = new CourseViewController(
-                    courseViewInteractor, courseListInteractor
-            );
+        CourseViewController courseViewController = new CourseViewController(
+                courseViewInteractor, courseListInteractor
+        );
 
-            CourseView view = new CourseView(
-                    username, courseViewController, viewModel, listViewModel
-            );
-            view.setVisible(true);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        CourseView view = new CourseView(
+                username, courseViewController, viewModel, listViewModel
+        );
+        view.setVisible(true);
     }
 
     /**
      * Initialize the course creation prompt.
      */
     public static void initializeCreatePrompt(String username) {
-        try {
-            String usersPath = "src/main/java/data_access/userCache.json";
-            String coursesPath = "src/main/java/data_access/courseCache.json";
+        SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(DB_URL);
+        dbHelper.initializeDatabase();
 
-            UserRepository userDataAccessObject = new FileCacheUserDataAccessObject(usersPath);
-            CourseRepository courseDataAccessObject = new CourseDataAccessObject(coursesPath);
-            CoursePromptViewModel viewModel = new CoursePromptViewModel();
-            CoursePromptPresenter presenter = new CoursePromptPresenter(
-                    viewModel, null, null);
-            CreateCourseInputBoundary createCourseInteractor = new CreateCourseUseCase(
-                    presenter, courseDataAccessObject, userDataAccessObject);
-            CoursePromptController controller = new CoursePromptController(createCourseInteractor);
+        UserRepository userDataAccessObject = new UserDAO(dbHelper);
+        CourseRepository courseDataAccessObject = new CourseDataAccessObject(dbHelper);
 
-            new CreateCoursePrompt(username, controller, viewModel);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        CoursePromptViewModel viewModel = new CoursePromptViewModel();
+        CoursePromptPresenter presenter = new CoursePromptPresenter(
+                viewModel, null, null);
+        CreateCourseInputBoundary createCourseInteractor = new CreateCourseUseCase(
+                presenter, courseDataAccessObject, userDataAccessObject);
+        CoursePromptController controller = new CoursePromptController(createCourseInteractor);
+
+        new CreateCoursePrompt(username, controller, viewModel);
     }
 
     /**
@@ -103,23 +98,20 @@ public class CourseInitializer {
      * @param username The username of the current user.
      */
     public static void initializeJoinPrompt(String username) {
-        try {
-            String usersPath = "src/main/java/data_access/userCache.json";
-            String coursesPath = "src/main/java/data_access/courseCache.json";
+        SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(DB_URL);
+        dbHelper.initializeDatabase();
 
-            UserRepository userDataAccessObject = new FileCacheUserDataAccessObject(usersPath);
-            CourseRepository courseDataAccessObject = new CourseDataAccessObject(coursesPath);
-            CoursePromptViewModel viewModel = new CoursePromptViewModel();
-            CoursePromptPresenter presenter = new CoursePromptPresenter(
-                    null, viewModel, null);
-            JoinCourseInputBoundary joinCourseInteractor = new JoinCourseUseCase(
-                    presenter, userDataAccessObject, courseDataAccessObject);
-            CoursePromptController controller = new CoursePromptController(joinCourseInteractor);
+        UserRepository userDataAccessObject = new UserDAO(dbHelper);
+        CourseRepository courseDataAccessObject = new CourseDataAccessObject(dbHelper);
 
-            new JoinCoursePrompt(username, controller, viewModel);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        CoursePromptViewModel viewModel = new CoursePromptViewModel();
+        CoursePromptPresenter presenter = new CoursePromptPresenter(
+                null, viewModel, null);
+        JoinCourseInputBoundary joinCourseInteractor = new JoinCourseUseCase(
+                presenter, userDataAccessObject, courseDataAccessObject);
+        CoursePromptController controller = new CoursePromptController(joinCourseInteractor);
+
+        new JoinCoursePrompt(username, controller, viewModel);
     }
 
     /**
@@ -127,22 +119,19 @@ public class CourseInitializer {
      * @param username The username of the current user.
      */
     public static void initializeLeavePrompt(String username) {
-        try {
-            String usersPath = "src/main/java/data_access/userCache.json";
-            String coursesPath = "src/main/java/data_access/courseCache.json";
+        SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(DB_URL);
+        dbHelper.initializeDatabase();
 
-            UserRepository userDataAccessObject = new FileCacheUserDataAccessObject(usersPath);
-            CourseRepository courseDataAccessObject = new CourseDataAccessObject(coursesPath);
-            CoursePromptViewModel viewModel = new CoursePromptViewModel();
-            CoursePromptPresenter presenter = new CoursePromptPresenter(
-                    null, null, viewModel);
-            LeaveCourseInputBoundary leaveCourseInteractor = new LeaveCourseUseCase(
-                    presenter, userDataAccessObject, courseDataAccessObject);
-            CoursePromptController controller = new CoursePromptController(leaveCourseInteractor);
+        UserRepository userDataAccessObject = new UserDAO(dbHelper);
+        CourseRepository courseDataAccessObject = new CourseDataAccessObject(dbHelper);
 
-            new LeaveCoursePrompt(username, controller, viewModel);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        CoursePromptViewModel viewModel = new CoursePromptViewModel();
+        CoursePromptPresenter presenter = new CoursePromptPresenter(
+                null, null, viewModel);
+        LeaveCourseInputBoundary leaveCourseInteractor = new LeaveCourseUseCase(
+                presenter, userDataAccessObject, courseDataAccessObject);
+        CoursePromptController controller = new CoursePromptController(leaveCourseInteractor);
+
+        new LeaveCoursePrompt(username, controller, viewModel);
     }
 }

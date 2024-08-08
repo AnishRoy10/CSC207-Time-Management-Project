@@ -1,6 +1,7 @@
 package use_case.TimerUseCases.UpdateTimerUseCase;
 
-import data_access.FileCacheUserDataAccessObject;
+import data_access.SQLDatabaseHelper;
+import data_access.UserDAO;
 import data_access.TimerDataAccessObject;
 import entity.Course;
 import entity.Timer;
@@ -25,20 +26,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * End-to-end tests for update timer use case.
  */
 public class UpdateTimerUseCaseTest {
-    private FileCacheUserDataAccessObject fileCacheUserDAO;
-    private final String testFilePath = "test_userCache.json";
+    private SQLDatabaseHelper dbHelper;
+    private UserDAO userDAO;
     private TimerDataAccessObject userRepository;
 
     @BeforeEach
-    public void setUp() throws IOException {
-        fileCacheUserDAO = new FileCacheUserDataAccessObject(testFilePath);
-        userRepository = new TimerDataAccessObject(fileCacheUserDAO);
-
+    public void setUp() {
+        dbHelper = new SQLDatabaseHelper("jdbc:sqlite:test.db");
+        dbHelper.initializeDatabase();
+        userDAO = new UserDAO(dbHelper);
+        userRepository = new TimerDataAccessObject(userDAO);
     }
 
     @AfterEach
     public void tearDown() {
-        File testFile = new File(testFilePath);
+        File testFile = new File("test.db");
         if (testFile.exists()) {
             testFile.delete();
         }
@@ -50,7 +52,7 @@ public class UpdateTimerUseCaseTest {
         Timer timer = new Timer(1, 0, 0);
         user.addTimer(timer);
         assertDoesNotThrow(() -> {
-            fileCacheUserDAO.WriteToCache(user);
+            userDAO.WriteToCache(user);
             SetTimerViewModel setTimerViewModel = new SetTimerViewModel("set timer");
             RunningTimerViewModel runningTimerViewModel = new RunningTimerViewModel("running timer");
             TimerPresenter presenter = new TimerPresenter(setTimerViewModel, runningTimerViewModel);
@@ -64,10 +66,9 @@ public class UpdateTimerUseCaseTest {
             while (System.currentTimeMillis() - startTime < seconds) {
                 controller.execute_update_timer();
             }
-            assertEquals("0",RunningTimerViewModel.HOURS);
-            assertEquals("59",RunningTimerViewModel.MINUTES);
-            assertEquals("58",RunningTimerViewModel.SECONDS);
-
+            assertEquals("0", RunningTimerViewModel.HOURS);
+            assertEquals("59", RunningTimerViewModel.MINUTES);
+            assertEquals("58", RunningTimerViewModel.SECONDS);
         });
     }
 }

@@ -1,38 +1,46 @@
-package java.use_case.CourseUseCases.LoadCoursesUseCase;
+package use_case.CourseUseCases.LoadCoursesUseCase;
 
-import data_access.CourseDataAccessObject;
-import data_access.FileCacheUserDataAccessObject;
+import data_access.SQLDatabaseHelper;
+import data_access.UserDAO;
 import entity.Course;
 import entity.User;
 import interface_adapter.presenter.CourseListPresenter;
 import interface_adapter.viewmodel.CourseListViewModel;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import repositories.CourseRepository;
 import repositories.UserRepository;
 import use_case.CourseUseCases.LoadCoursesUseCase.LoadCoursesInputBoundary;
 import use_case.CourseUseCases.LoadCoursesUseCase.LoadCoursesInputData;
 import use_case.CourseUseCases.LoadCoursesUseCase.LoadCoursesOutputBoundary;
 import use_case.CourseUseCases.LoadCoursesUseCase.LoadCoursesUseCase;
 
-import java.io.File;
-import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class LoadCourseUseCaseTest {
-    private String userpath = "test_userCache.json";
     private UserRepository userDataAccessObject;
+    private SQLDatabaseHelper dbHelper;
+    private static final String DB_URL = "jdbc:sqlite:Saves/TestDB.db";
 
     @BeforeEach
-    public void setUp() throws IOException {
-        userDataAccessObject = new FileCacheUserDataAccessObject(userpath);
+    public void setUp() {
+        dbHelper = new SQLDatabaseHelper(DB_URL);
+        dbHelper.initializeDatabase();
+        userDataAccessObject = new UserDAO(dbHelper);
     }
 
     @AfterEach
-    public void tearDown() throws IOException {
-        new File(userpath).delete();
+    public void tearDown() {
+        try (Connection conn = dbHelper.connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute("DELETE FROM Users");
+            stmt.execute("DELETE FROM Courses");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test

@@ -1,11 +1,10 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
-Represents a timer.
- Each timer has a start time, end time and elasped time.
+ * Represents a timer.
+ * Each timer has a start time, end time and elapsed time.
  */
 public class Timer implements Serializable {
     private static final long serialVersionUID = 9L;
@@ -29,6 +28,20 @@ public class Timer implements Serializable {
     }
 
     /**
+     * Creates a timer with specified start, end, elapsed, and pause times.
+     * @param start_time The start time of the timer
+     * @param end_time The end time of the timer
+     * @param elapsed_time The elapsed time of the timer
+     * @param pause_time The pause time of the timer
+     */
+    public Timer(long start_time, long end_time, long elapsed_time, long pause_time) {
+        this.start_time = start_time;
+        this.end_time = end_time;
+        this.elapsed_time = elapsed_time;
+        this.pause_time = pause_time;
+    }
+
+    /**
      * Gets the elapsed time since timer has started.
      * @return A long type representing elapsed time.
      */
@@ -45,6 +58,22 @@ public class Timer implements Serializable {
     }
 
     /**
+     * Gets the end time of the timer.
+     * @return A long type representing end time
+     */
+    public long getEnd_time() {
+        return end_time;
+    }
+
+    /**
+     * Gets the pause time of the timer.
+     * @return A long type representing pause time
+     */
+    public long getPause_time() {
+        return pause_time;
+    }
+
+    /**
      * Updates the elapsed time since timer has started.
      * Elapsed time cannot be greater than the timer length.
      */
@@ -53,6 +82,22 @@ public class Timer implements Serializable {
         if (elapsed_time + start_time > end_time) {
             elapsed_time = end_time - start_time;
         }
+    }
+
+    /**
+     * Updates the elapsed time with a specific value.
+     * @param elapsed_time The elapsed time to set
+     */
+    public void updateElapsed_time(long elapsed_time) {
+        this.elapsed_time = elapsed_time;
+    }
+
+    /**
+     * Updates the pause time with a specific value.
+     * @param pause_time The pause time to set
+     */
+    public void pause(long pause_time) {
+        this.pause_time = pause_time;
     }
 
     /**
@@ -68,7 +113,7 @@ public class Timer implements Serializable {
      * @return total length of timer
      */
     public long timerLength() {
-        return end_time-start_time;
+        return end_time - start_time;
     }
 
     /**

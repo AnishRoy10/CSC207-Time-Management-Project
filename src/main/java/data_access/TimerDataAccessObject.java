@@ -10,13 +10,13 @@ import use_case.TimerUseCases.UpdateTimerUseCase.UpdateTimerDataAccessInterface;
  */
 public class TimerDataAccessObject implements SetTimerDataAccessInterface,
         UpdateTimerDataAccessInterface, PauseTimerDataAccessInterface {
-    FileCacheUserDataAccessObject userDataAccessObject;
+    UserDAO userDataAccessObject;
 
     /**
      * Constructor for TimerDataAccessObject.
      * @param userDataAccessObject data access object to get the user entity for current user
      */
-    public TimerDataAccessObject(FileCacheUserDataAccessObject userDataAccessObject) {
+    public TimerDataAccessObject(UserDAO userDataAccessObject) {
         this.userDataAccessObject = userDataAccessObject;
     }
 

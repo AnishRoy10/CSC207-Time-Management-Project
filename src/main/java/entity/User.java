@@ -44,28 +44,28 @@ public class User implements Serializable {
     }
 
     /**
-    * Get this users username.
-    *
-    * @return the username of this user
-    */
+     * Get this users username.
+     *
+     * @return the username of this user
+     */
     public String getUsername() {
         return username;
     }
 
     /**
-    * Change this users username.
-    *
-    * @param username the new username for this user
-    */
+     * Change this users username.
+     *
+     * @param username the new username for this user
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
     /**
-    * Add a friend to this user.
-    *
-    * @param user the new friend for this user
-    */
+     * Add a friend to this user.
+     *
+     * @param user the new friend for this user
+     */
     public void addFriend(User user) {
         if(!(user.getUsername().equals(username))) {
             this.friends.addFriend(user);
@@ -93,37 +93,37 @@ public class User implements Serializable {
     }
 
     /**
-    * Attempt to remove a friend from this user.
-    *
-    * @param user the friend to remove
-    */
+     * Attempt to remove a friend from this user.
+     *
+     * @param user the friend to remove
+     */
     public void removeFriend(User user) {
         this.friends.removeFriend(user);
     }
 
     /**
-    * Add a task to this users todolist.
-    *
-    * @param task the task to add
-    */
+     * Add a task to this users todolist.
+     *
+     * @param task the task to add
+     */
     public void addTask(Task task) {
         this.todo.addTask(task);
     }
 
     /**
-    * Remove a task from this users todolist.
-    *
-    * @param task the task to remove
-    */
+     * Remove a task from this users todolist.
+     *
+     * @param task the task to remove
+     */
     public void removeTask(Task task) {
         this.todo.removeTask(task);
     }
 
     /**
-    * Place this user in a new course.
-    *
-    * @param course the course to put this user in
-    */
+     * Place this user in a new course.
+     *
+     * @param course the course to put this user in
+     */
     public void addCourse(Course course) {
         course.addUser(this);
         if (!this.courses.contains(course.getName())) {
@@ -190,19 +190,14 @@ public class User implements Serializable {
     }
 
     /**
-    * Attempts to remove this user from the target course.
-    * Returns whether the removal was successful.
-    *
-    * @param courseName the name of the course to remove this user from
-    * @return           success value of the method
-    */
+     * Attempts to remove this user from the target course.
+     * Returns whether the removal was successful.
+     *
+     * @param courseName the name of the course to remove this user from
+     * @return           success value of the method
+     */
     public boolean removeCourse(String courseName) {
-        for (String course : courses) {
-            if (course.equals(courseName)) {
-                return this.courses.remove(course);
-            }
-        }
-        return false;
+        return this.courses.remove(courseName);
     }
 
     // Getter and Setter for aNumber
@@ -214,4 +209,3 @@ public class User implements Serializable {
         this.aNumber = aNumber;
     }
 }
-

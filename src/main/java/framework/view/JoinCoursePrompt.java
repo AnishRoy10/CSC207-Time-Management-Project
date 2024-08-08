@@ -35,7 +35,7 @@ public class JoinCoursePrompt {
         this.viewModel = viewModel;
 
         frame = new JFrame("Join Course");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         frame.setSize(450, 200);
 

@@ -1,6 +1,7 @@
 package app.gui;
 
-import data_access.FileCacheUserDataAccessObject;
+import data_access.SQLDatabaseHelper;
+import data_access.UserDAO;
 import framework.view.UserLoginView;
 import interface_adapter.controller.UserLoginController;
 import interface_adapter.presenter.UserLoginPresenter;
@@ -22,9 +23,11 @@ public class LoginInitializer {
      */
     public static void initializeLogin() {
         try {
-            // Initialize the user repository with the file path
-            String filePath = "src/main/java/data_access/userCache.json";
-            FileCacheUserDataAccessObject userRepository = new FileCacheUserDataAccessObject(filePath);
+            // Initialize the database helper
+            SQLDatabaseHelper dbHelper = new SQLDatabaseHelper();
+            dbHelper.initializeDatabase();
+            // Initialize the user repository with the database helper
+            UserDAO userRepository = new UserDAO(dbHelper);
             // Initialize the view model for the login view
             UserLoginViewModel userLoginViewModel = new UserLoginViewModel();
             // Initialize the presenter that will handle the output from the use case

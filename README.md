@@ -42,7 +42,7 @@ The To-do List feature allows users to manage their tasks efficiently. Below are
 The Leaderboard feature allows users to see a leaderboard for time studied and tasks completed. Users can compete with friends and view leaderboards categorized by friends or other users. The leaderboards can be filtered to show daily, monthly, or all-time progress, providing a comprehensive overview of users' achievements and encouraging healthy competition.
 
 ## Timer Feature. 
-The Timer feature allows users to manage their task completion time efficiently. Users can set a timer for a specific duration to complete their tasks. When the timer finishes, a sound chosen by the user plays. This feature helps users stay focused and complete their tasks within the set time, enhancing productivity.
+The Timer feature allows users to manage their task completion time efficiently. Users can set a timer for a specific duration to complete their tasks. While the timer is running, music will play in the background. The user also has the ability to pause/resume the timer. When the timer finishes, an alarm plays. This feature helps users stay focused and complete their tasks within the set time, enhancing productivity.
 
 ## Calendar Feature
 The Calendar feature currenty allows users to add and view events in the calendar, the days of the calendar which have events being shown in green. One can only add events which start and end on the same day. The events support an optional priority level, contian a status (whether the event has passed or not, or is curently active), start date, end date, and optional description. The calendar provides an organized system for keeping track of a user's events and schedule.

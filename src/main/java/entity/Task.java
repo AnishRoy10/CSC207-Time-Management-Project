@@ -13,6 +13,7 @@ public class Task implements Serializable {
     private static final long serialVersionUID = 3L; // Add a serial version UID
 
     private UUID id; // Unique identifier for the task
+    private String username; // Username of the user to whom the task belongs
     private String title; // Title of the task (required)
     private String description; // Description of the task (optional)
     private boolean completed; // Indicates whether the task is completed or not
@@ -31,21 +32,9 @@ public class Task implements Serializable {
      * @param deadline    The deadline date and time for the task
      * @param course      The course associated with the task (nullable)
      */
-    public Task(String title, String description, LocalDateTime startDate, LocalDateTime deadline, String course) {
+    public Task(String username, String title, String description, LocalDateTime startDate, LocalDateTime deadline, String course) {
         this.id = UUID.randomUUID(); // Increment the counter and assign it as the ID
-        this.title = title;
-        this.description = description != null ? description : "";
-        this.completed = false; // By default, a new task is not completed
-        this.startDate = startDate;
-        this.deadline = deadline;
-        this.course = course;
-        this.completionDate = null;
-        this.pointsAwarded = false; // By default, points are not awarded for a new task
-    }
-
-    // Overridden constructor for testing.
-    public Task(UUID id, String title, String description, LocalDateTime startDate, LocalDateTime deadline, String course) {
-        this.id = id; // Use the provided UUID
+        this.username = username;
         this.title = title;
         this.description = description != null ? description : "";
         this.completed = false; // By default, a new task is not completed
@@ -61,7 +50,18 @@ public class Task implements Serializable {
         return id;
     }
 
+    // Setter for the ID
     public void setId(UUID id) { this.id = id; }
+
+    // Getter for the username
+    public String getUsername() {
+        return username;
+    }
+
+    // Setter for the username
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     // Getter for the title
     public String getTitle() {

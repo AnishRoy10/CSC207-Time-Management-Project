@@ -136,11 +136,12 @@ public class CalendarView {
         public HighlightInformation getHighlightInformationOrNull(LocalDate date) {
             try {
                 viewEventsController.execute(date);
-                if (!viewEventsViewModel.getEventListToBeShown().isEmpty()) {
-                    return new HighlightInformation(Color.green, (Color) null, "This day has an event");
-                } else if (!CheckConflictsUseCase.showConflicts(
+                if (!CheckConflictsUseCase.showConflicts(
                         (ArrayList<CalendarEvent>) viewEventsViewModel.getEventListToBeShown()).isEmpty()) {
                     return new HighlightInformation(Color.red, (Color) null, "This day has events with conflicting times");
+                }
+                else if (!viewEventsViewModel.getEventListToBeShown().isEmpty()) {
+                    return new HighlightInformation(Color.green, (Color) null, "This day has an event");
                 } else {
                     return null;
                 }

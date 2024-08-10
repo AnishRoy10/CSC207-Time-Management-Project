@@ -5,7 +5,6 @@ import data_access.TaskDAO;
 import data_access.UserDAO;
 import entity.Course;
 import entity.User;
-import entity.Task;
 import interface_adapter.presenter.TodoListPresenter;
 import interface_adapter.viewmodel.TodoListViewModel;
 import org.junit.jupiter.api.AfterEach;
@@ -15,7 +14,7 @@ import repositories.TaskRepository;
 import repositories.UserRepository;
 import use_case.TodoListUseCases.AddTaskUseCase.AddTaskRequestModel;
 import use_case.TodoListUseCases.AddTaskUseCase.AddTaskUseCase;
-import use_case.TaskData;
+import use_case.TodoListUseCases.TaskData;
 
 import java.io.IOException;
 import java.sql.Connection;

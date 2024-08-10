@@ -6,7 +6,7 @@ import entity.User;
 import repositories.LeaderboardRepository;
 import repositories.UserRepository;
 import repositories.TaskRepository;
-import use_case.TaskData;
+import use_case.TodoListUseCases.TaskData;
 
 import java.io.IOException;
 import java.util.Map;

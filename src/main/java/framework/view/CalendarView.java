@@ -2,7 +2,6 @@ package framework.view;
 import com.github.lgooddatepicker.components.*;
 import com.github.lgooddatepicker.optionalusertools.DateHighlightPolicy;
 import com.github.lgooddatepicker.zinternaltools.HighlightInformation;
-import entity.Calendar;
 import entity.CalendarEvent;
 import interface_adapter.AddEvent.AddEventController;
 import interface_adapter.AddEvent.AddEventViewModel;
@@ -14,11 +13,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.awt.*;
 import java.time.*;
-import java.time.Month;
-import use_case.CheckConflictsUseCase;
+
+import use_case.CalendarUseCases.CheckConflictsUseCase;
 
 import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 

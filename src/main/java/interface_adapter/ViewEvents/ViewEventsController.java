@@ -1,6 +1,6 @@
 package interface_adapter.ViewEvents;
-import use_case.ViewEventsUseCase.ViewEventsInputData;
-import use_case.ViewEventsUseCase.ViewEventsUseCaseInteractor;
+import use_case.CalendarUseCases.ViewEventsUseCase.ViewEventsInputData;
+import use_case.CalendarUseCases.ViewEventsUseCase.ViewEventsUseCaseInteractor;
 
 import java.io.IOException;
 import java.time.*;

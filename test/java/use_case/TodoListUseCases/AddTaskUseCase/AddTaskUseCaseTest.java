@@ -13,13 +13,12 @@ import repositories.TaskRepository;
 import repositories.UserRepository;
 import entity.Course;
 import entity.User;
-import use_case.TaskData;
+import use_case.TodoListUseCases.TaskData;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 

@@ -285,4 +285,26 @@ class AddTaskUseCaseTest {
         assertEquals("Course 2", requestModel.getCourseName());
     }
 
+    @Test
+    void testAddTaskWithMissingFields() {
+        // Create and save the user
+        User user = new User("testUser", "password", new User[]{}, new Course[]{});
+        try {
+            userRepository.WriteToCache(user);
+        } catch (Exception e) {
+            System.out.println("Failed to save user: " + e.getMessage());
+            fail("Exception thrown while saving user: " + e.getMessage());
+        }
+
+        // Mock the presenter to verify if the error message is triggered
+        TodoListPresenter mockPresenter = mock(TodoListPresenter.class);
+        AddTaskUseCase addTaskUseCase = new AddTaskUseCase(userRepository, taskRepository, mockPresenter);
+
+        // Test case where title is missing
+        AddTaskRequestModel requestModel1 = new AddTaskRequestModel("", "Test Description", LocalDateTime.now(), LocalDateTime.now().plusDays(1), "Test Course", "testUser");
+        addTaskUseCase.execute(requestModel1);
+        verify(mockPresenter).presentError("All fields (title, description, start date, deadline, course) must be provided.");
+
+        // Other tests are redundant...
+    }
 }

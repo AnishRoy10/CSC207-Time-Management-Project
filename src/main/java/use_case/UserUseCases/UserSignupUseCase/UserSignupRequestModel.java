@@ -1,7 +1,8 @@
 package use_case.UserUseCases.UserSignupUseCase;
 
 /**
- * Request model for user sign-up use case.
+ * Request model for the user signup use case.
+ * This model encapsulates the data required for a user to sign up, including the username, password, and confirmation password.
  */
 public class UserSignupRequestModel {
     private final String username;
@@ -9,11 +10,11 @@ public class UserSignupRequestModel {
     private final String confirmPassword;
 
     /**
-     * Constructs a UserSignupRequestModel with the specified username and password.
+     * Constructs a {@code UserSignupRequestModel} with the specified username, password, and confirmation password.
      *
-     * @param username  The username of the user.
-     * @param password  The password of the user.
-     * @param confirmPassword The password of the user again, to confirm if the input is the same.
+     * @param username        The username of the user.
+     * @param password        The password of the user.
+     * @param confirmPassword The confirmation of the user's password.
      */
     public UserSignupRequestModel(String username, String password, String confirmPassword) {
         this.username = username;
@@ -21,14 +22,29 @@ public class UserSignupRequestModel {
         this.confirmPassword = confirmPassword;
     }
 
+    /**
+     * Returns the username of the user.
+     *
+     * @return The username.
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Returns the password of the user.
+     *
+     * @return The password.
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Returns the confirmation password of the user.
+     *
+     * @return The confirmation password.
+     */
     public String getConfirmPassword() {
         return confirmPassword;
     }

@@ -12,29 +12,31 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
-import java.util.UUID;
 
 /**
- * The UserDAO class handles CRUD operations for User objects in an SQLite database.
- * It implements the UserRepository interface.
+ * The {@code UserDAO} class handles CRUD operations for {@link User} objects in an SQLite database.
+ * It implements the {@link UserRepository} interface and provides methods to create, read, update,
+ * and delete user data, as well as manage the user's associated {@link Calendar} and {@link Timer} objects.
  */
 public class UserDAO implements UserRepository {
 
     private final SQLDatabaseHelper dbHelper;
 
     /**
-     * Constructor for UserDAO.
+     * Constructs a {@code UserDAO} object.
      *
-     * @param dbHelper An instance of SQLDatabaseHelper for managing database connections.
+     * @param dbHelper An instance of {@link SQLDatabaseHelper} for managing database connections.
      */
     public UserDAO(SQLDatabaseHelper dbHelper) {
         this.dbHelper = dbHelper;
     }
 
     /**
-     * Writes a User object to the database. If the user already exists, updates the user's data.
+     * Writes a {@link User} object to the database. If the user already exists, updates the user's data.
+     * This method also handles the persistence of the user's {@link Timer} and {@link CalendarEvent}s.
      *
-     * @param user The User object to write to the database.
+     * @param user The {@link User} object to write to the database.
+     * @throws IOException If an error occurs while writing to the database.
      */
     @Override
     public void WriteToCache(User user) throws IOException {
@@ -43,6 +45,8 @@ public class UserDAO implements UserRepository {
 
         try (Connection conn = dbHelper.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // Set user data in the prepared statement
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getPassword());
             pstmt.setInt(3, user.getScore());
@@ -85,9 +89,10 @@ public class UserDAO implements UserRepository {
     }
 
     /**
-     * Reads the first User object from the database.
+     * Reads the first {@link User} object from the database.
      *
-     * @return The first User object from the database, or null if the database is empty.
+     * @return The first {@link User} object from the database, or {@code null} if the database is empty.
+     * @throws IOException If an error occurs while reading from the database.
      */
     @Override
     public User ReadFromCache() throws IOException {
@@ -109,10 +114,11 @@ public class UserDAO implements UserRepository {
     }
 
     /**
-     * Reads a User object from the database by username.
+     * Reads a {@link User} object from the database by username.
      *
      * @param username The username of the user to read.
-     * @return The User object with the specified username, or null if not found.
+     * @return The {@link User} object with the specified username, or {@code null} if not found.
+     * @throws IOException If an error occurs while reading from the database.
      */
     @Override
     public User ReadFromCache(String username) throws IOException {
@@ -135,11 +141,11 @@ public class UserDAO implements UserRepository {
     }
 
     /**
-     * Extracts a User object from the current row of the given ResultSet.
+     * Extracts a {@link User} object from the current row of the given {@link ResultSet}.
      *
-     * @param rs The ResultSet containing the user data.
-     * @return The User object extracted from the ResultSet.
-     * @throws SQLException If an SQL error occurs while reading from the ResultSet.
+     * @param rs The {@link ResultSet} containing the user data.
+     * @return The {@link User} object extracted from the {@link ResultSet}.
+     * @throws SQLException If an SQL error occurs while reading from the {@link ResultSet}.
      */
     private User extractUserFromResultSet(ResultSet rs) throws SQLException {
         User user = new User(rs.getString("username"), rs.getString("password"), new User[]{}, new Course[]{});
@@ -196,7 +202,7 @@ public class UserDAO implements UserRepository {
      * Checks if a user exists in the database by username.
      *
      * @param username The username to check.
-     * @return True if the user exists, false otherwise.
+     * @return {@code true} if the user exists, {@code false} otherwise.
      */
     @Override
     public boolean UserExists(String username) {
@@ -218,7 +224,8 @@ public class UserDAO implements UserRepository {
      * Finds a user by username in the database.
      *
      * @param username The username to find.
-     * @return The User object with the specified username, or null if not found.
+     * @return The {@link User} object with the specified username, or {@code null} if not found.
+     * @throws IOException If an error occurs while accessing the database.
      */
     @Override
     public User findByUsername(String username) throws IOException {
@@ -228,7 +235,7 @@ public class UserDAO implements UserRepository {
     /**
      * Retrieves all users from the database.
      *
-     * @return A list of all User objects in the database.
+     * @return A list of all {@link User} objects in the database.
      */
     public List<User> getAllUsers() {
         String sql = "SELECT * FROM Users";
@@ -250,7 +257,7 @@ public class UserDAO implements UserRepository {
     }
 
     /**
-     * Deletes a user by username from the database.
+     * Deletes a user by username from the database. This method also deletes the user's associated calendar events.
      *
      * @param username The username of the user to delete.
      */

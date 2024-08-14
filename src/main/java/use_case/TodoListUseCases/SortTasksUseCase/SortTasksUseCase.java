@@ -12,19 +12,33 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Use case for sorting tasks in the to-do list.
+ * The {@code SortTasksUseCase} class implements the use case for sorting tasks in the to-do list.
+ * It handles the logic for sorting tasks based on various criteria, updating the repository, and presenting the sorted task list.
  */
 public class SortTasksUseCase implements SortTasksInputBoundary {
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
     private final SortTasksOutputBoundary sortTasksOutputBoundary;
 
+    /**
+     * Constructs a new {@code SortTasksUseCase} with the specified repositories and output boundary.
+     *
+     * @param userRepository         The repository for user data.
+     * @param taskRepository         The repository for task data.
+     * @param sortTasksOutputBoundary The output boundary for presenting the result of the use case.
+     */
     public SortTasksUseCase(UserRepository userRepository, TaskRepository taskRepository, SortTasksOutputBoundary sortTasksOutputBoundary) {
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
         this.sortTasksOutputBoundary = sortTasksOutputBoundary;
     }
 
+    /**
+     * Executes the sort tasks use case by sorting the specified user's tasks based on the given criteria
+     * and presenting the sorted list to the output boundary.
+     *
+     * @param requestModel The {@link SortTasksRequestModel} containing the data needed to sort the tasks.
+     */
     @Override
     public void execute(SortTasksRequestModel requestModel) {
         try {
@@ -42,8 +56,8 @@ public class SortTasksUseCase implements SortTasksInputBoundary {
                 tasks = taskRepository.getAllTasks(user.getUsername());
             }
 
+            // Determine the comparator based on the sorting criteria
             Comparator<Task> comparator;
-
             switch (requestModel.getCriteria().toLowerCase()) {
                 case "title":
                     comparator = Comparator.comparing(Task::getTitle);
@@ -61,10 +75,12 @@ public class SortTasksUseCase implements SortTasksInputBoundary {
                     throw new IllegalArgumentException("Unknown sorting criteria: " + requestModel.getCriteria());
             }
 
+            // Reverse the order if not ascending
             if (!requestModel.isAscending()) {
                 comparator = comparator.reversed();
             }
 
+            // Sort the tasks and convert to TaskData for response
             List<TaskData> sortedTasks = tasks.stream()
                     .sorted(comparator)
                     .map(task -> new TaskData(
@@ -80,6 +96,7 @@ public class SortTasksUseCase implements SortTasksInputBoundary {
                     ))
                     .collect(Collectors.toList());
 
+            // Present the sorted tasks to the output boundary
             SortTasksResponseModel responseModel = new SortTasksResponseModel(sortedTasks);
             sortTasksOutputBoundary.present(responseModel);
         } catch (IOException e) {

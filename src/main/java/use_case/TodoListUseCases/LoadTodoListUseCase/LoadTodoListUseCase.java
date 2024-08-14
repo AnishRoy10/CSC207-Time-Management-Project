@@ -11,19 +11,33 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Use case for loading the to-do list.
+ * The {@code LoadTodoListUseCase} class implements the use case for loading a user's to-do list.
+ * It retrieves tasks from the repository and presents them to the output boundary.
  */
 public class LoadTodoListUseCase implements LoadTodoListInputBoundary {
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
     private final LoadTodoListOutputBoundary loadTodoListOutputBoundary;
 
+    /**
+     * Constructs a new {@code LoadTodoListUseCase} with the specified repositories and output boundary.
+     *
+     * @param userRepository            The repository for user data.
+     * @param taskRepository            The repository for task data.
+     * @param loadTodoListOutputBoundary The output boundary for presenting the result of the use case.
+     */
     public LoadTodoListUseCase(UserRepository userRepository, TaskRepository taskRepository, LoadTodoListOutputBoundary loadTodoListOutputBoundary) {
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
         this.loadTodoListOutputBoundary = loadTodoListOutputBoundary;
     }
 
+    /**
+     * Executes the load to-do list use case by retrieving tasks for the specified user and course (if any),
+     * and presenting them to the output boundary.
+     *
+     * @param requestModel The {@link LoadTodoListRequestModel} containing the data needed to load the to-do list.
+     */
     @Override
     public void execute(LoadTodoListRequestModel requestModel) {
         try {
@@ -44,6 +58,7 @@ public class LoadTodoListUseCase implements LoadTodoListInputBoundary {
                 tasks = taskRepository.getAllTasks(user.getUsername());
             }
 
+            // Convert tasks to TaskData for response
             List<TaskData> taskDataList = tasks.stream()
                     .map(task -> new TaskData(
                             task.getId(),
@@ -58,6 +73,7 @@ public class LoadTodoListUseCase implements LoadTodoListInputBoundary {
                     ))
                     .collect(Collectors.toList());
 
+            // Present the response model
             loadTodoListOutputBoundary.present(new LoadTodoListResponseModel(taskDataList));
         } catch (IOException e) {
             e.printStackTrace();

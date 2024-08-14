@@ -11,19 +11,33 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Use case for removing a task.
+ * The {@code RemoveTaskUseCase} class implements the use case for removing a task from the to-do list.
+ * It handles the logic for removing a task, updating the repository, and presenting the updated task list.
  */
 public class RemoveTaskUseCase implements RemoveTaskInputBoundary {
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
     private final RemoveTaskOutputBoundary removeTaskOutputBoundary;
 
+    /**
+     * Constructs a new {@code RemoveTaskUseCase} with the specified repositories and output boundary.
+     *
+     * @param userRepository           The repository for user data.
+     * @param taskRepository           The repository for task data.
+     * @param removeTaskOutputBoundary The output boundary for presenting the result of the use case.
+     */
     public RemoveTaskUseCase(UserRepository userRepository, TaskRepository taskRepository, RemoveTaskOutputBoundary removeTaskOutputBoundary) {
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
         this.removeTaskOutputBoundary = removeTaskOutputBoundary;
     }
 
+    /**
+     * Executes the remove task use case by removing the specified task from the repository,
+     * updating the user's or course's task list, and presenting the updated list to the output boundary.
+     *
+     * @param requestModel The {@link RemoveTaskRequestModel} containing the data needed to remove the task.
+     */
     @Override
     public void execute(RemoveTaskRequestModel requestModel) {
         try {
@@ -50,6 +64,7 @@ public class RemoveTaskUseCase implements RemoveTaskInputBoundary {
                 tasks = taskRepository.getAllTasks(user.getUsername());
             }
 
+            // Convert tasks to TaskData for response
             List<TaskData> taskDataList = tasks.stream()
                     .map(t -> new TaskData(
                             t.getId(),
@@ -64,6 +79,7 @@ public class RemoveTaskUseCase implements RemoveTaskInputBoundary {
                     ))
                     .collect(Collectors.toList());
 
+            // Present the response model
             RemoveTaskResponseModel responseModel = new RemoveTaskResponseModel(taskDataList, task.getId());
             removeTaskOutputBoundary.present(responseModel);
         } catch (IOException e) {

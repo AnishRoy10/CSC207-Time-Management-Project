@@ -15,11 +15,31 @@ import use_case.TodoListUseCases.LoadTodoListUseCase.LoadTodoListUseCase;
 import use_case.TodoListUseCases.RemoveTaskUseCase.RemoveTaskUseCase;
 import use_case.TodoListUseCases.SortTasksUseCase.SortTasksUseCase;
 
+/**
+ * The {@code TodoListInitializer} class is responsible for initializing and configuring
+ * the to-do list system, including the database, repositories, use cases, controller, and view.
+ * This class provides methods to initialize the to-do list either for a personal user or a course-specific list.
+ */
 public class TodoListInitializer {
+
+    /**
+     * Initializes the to-do list system for a personal user.
+     *
+     * @param username the username of the user for whom the to-do list is being initialized.
+     */
     public static void initializeTodoList(String username) {
         initializeTodoList(username, null);
     }
 
+    /**
+     * Initializes the to-do list system for either a personal user or a course-specific list.
+     * This method sets up the necessary components, including the database helper, repositories,
+     * use cases, controller, and view, and makes the view visible.
+     *
+     * @param username   the username of the user for whom the to-do list is being initialized.
+     * @param courseName the name of the course, if applicable, for which the to-do list is being initialized;
+     *                   if {@code null}, the to-do list will be for the user's personal tasks.
+     */
     public static void initializeTodoList(String username, String courseName) {
         try {
             // Initialize the database helper

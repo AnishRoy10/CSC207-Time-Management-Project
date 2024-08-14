@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * Use case for toggling the completion status of a task.
+ * The {@code CompleteTaskUseCase} class implements the use case for toggling the completion status of a task.
+ * It updates the task's status, awards points to the user if the task is completed for the first time,
+ * and saves the updated task data to the repository.
  */
 public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
     private final UserRepository userRepository;
@@ -20,6 +22,14 @@ public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
     private final CompleteTaskOutputBoundary completeTaskOutputBoundary;
     private final LeaderboardRepository leaderboardRepository;
 
+    /**
+     * Constructs a new {@code CompleteTaskUseCase} with the specified repositories and output boundary.
+     *
+     * @param userRepository            The repository for user data.
+     * @param taskRepository            The repository for task data.
+     * @param completeTaskOutputBoundary The output boundary for presenting the result of the use case.
+     * @param leaderboardRepository     The repository for leaderboard data.
+     */
     public CompleteTaskUseCase(UserRepository userRepository, TaskRepository taskRepository, CompleteTaskOutputBoundary completeTaskOutputBoundary, LeaderboardRepository leaderboardRepository) {
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
@@ -27,6 +37,12 @@ public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
         this.leaderboardRepository = leaderboardRepository;
     }
 
+    /**
+     * Executes the complete task use case by toggling the completion status of the task,
+     * awarding points if applicable, and saving the updated task data.
+     *
+     * @param requestModel The {@link CompleteTaskRequestModel} containing the data needed to complete a task.
+     */
     @Override
     public void execute(CompleteTaskRequestModel requestModel) {
         try {
@@ -64,6 +80,7 @@ public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
                 taskRepository.WriteToCache(task, user.getUsername());
             }
 
+            // Prepare task data for the response model
             TaskData taskData = new TaskData(
                     task.getId(),
                     task.getUsername(),
@@ -76,6 +93,7 @@ public class CompleteTaskUseCase implements CompleteTaskInputBoundary {
                     task.getCompletionDate()
             );
 
+            // Prepare and present the response model
             CompleteTaskResponseModel responseModel = new CompleteTaskResponseModel(taskData, task.getId());
             completeTaskOutputBoundary.present(responseModel);
         } catch (IOException e) {

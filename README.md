@@ -45,7 +45,7 @@ The Leaderboard feature allows users to see a leaderboard for time studied and t
 The Timer feature allows users to manage their task completion time efficiently. Users can set a timer for a specific duration to complete their tasks. When the timer finishes, a sound chosen by the user plays. This feature helps users stay focused and complete their tasks within the set time, enhancing productivity.
 
 ## Calendar Feature
-The Calendar feature currenty allows users to add and view events in the calendar, the days of the calendar which have events being shown in green. One can only add events which start and end on the same day. The events support an optional priority level, contian a status (whether the event has passed or not, or is curently active), start date, end date, and optional description. The calendar provides an organized system for keeping track of a user's events and schedule.
+The Calendar feature currently allows users to add, remove, and view events in the calendar, the days of the calendar which have events being shown in green (with days that have conflicting events showing in red). One can only add events which start and end on the same day. The events support an optional priority level, contain a status (whether the event has passed or not, or is curently active), start date, end date, and optional description. The calendar provides an organized system for keeping track of a user's events and schedule.
 
 ## Clean Architecture.
 As a team, we have tried our very best to make sure that Clean Architecture is followed and enforced by all group members. 

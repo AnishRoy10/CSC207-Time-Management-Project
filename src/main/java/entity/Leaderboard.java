@@ -1,7 +1,6 @@
 package entity;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  *  The Leaderboard class represents a leaderboard that users can view their scores
@@ -9,17 +8,18 @@ import java.util.Map;
  */
 
 public abstract class Leaderboard {
-    //Name of the leaderboard
-    private String name;
-
-    // A HashMap to store users scores
-
-    protected Map<String, Integer> scores;
+    private String name; // name of the leaderboard
+    protected Map<String, Integer> scores; // a HashMap to store users' scores
+    protected List<Map.Entry<String, Integer>> sortedScores; // a List to store sorted scores
 
     public Leaderboard(String name) {
         this.name = name;
-        this.scores = new HashMap<>() ;
+        this.scores = new HashMap<>();
+        this.sortedScores = new ArrayList<>();
     }
+
+    public abstract String getType();
+
 
     /**
      * Adds a user score to the leaderboard.
@@ -27,7 +27,9 @@ public abstract class Leaderboard {
      * @param score The score to add.
      */
     public void addScore(String username, int score) {
-        scores.put(username, score);
+        int currentScore = scores.getOrDefault(username, 0);
+        scores.put(username, currentScore + score);
+        sortScores();
     }
 
     /**
@@ -36,6 +38,7 @@ public abstract class Leaderboard {
      */
     public void removeScore(String username) {
         scores.remove(username);
+        sortScores();
     }
 
     /**
@@ -45,12 +48,15 @@ public abstract class Leaderboard {
      */
     public void updateScore(String username, int newScore) {
         scores.put(username, newScore);
+        sortScores();
     }
 
     /**
      * Clears all scores from the leaderboard.
      */    public void clearScores() {
         scores.clear();
+        sortedScores.clear();
+
     }
 
     /**
@@ -77,17 +83,36 @@ public abstract class Leaderboard {
     /**
      * Checks if the tasks is completed to add scores. If completed, adds a certain score.
      * @param username The username of the user.
-     * @param task The task to check.
+     * @param points The amount of points to change.
      */
-    public void taskCompleted(String username, Task task) {
-        if (task.isCompleted()) {
-            int score = scores.get(username);
-            updateScore(username, 500 + score);
-        }
+    public void taskCompleted(String username, int points) {
+        int currentScore = scores.getOrDefault(username, 0);
+        scores.put(username, currentScore + points);
+        sortScores(); // Sort the scores after adding a new score
+        System.out.println("Scores after task completed: " + scores);
     }
 
-    //TODO: automatically arranges in ascending order.
+
+    /**
+     * Sorts the scores list to ensure it is sorted by scores in ascending order.
+     */
+    private void sortScores() {
+        sortedScores = new ArrayList<>(scores.entrySet());
+        sortedScores.sort((e1, e2) -> {
+            int scoreComparison = Integer.compare(e1.getValue(), e2.getValue());
+            if (scoreComparison == 0) {
+                return e1.getKey().compareTo(e2.getKey());
+            }
+            return scoreComparison;
+        });
+        // Debug print statement to verify sorting
+        System.out.println("Sorted scores: " + sortedScores);
+    }
 
 
+    // A method to get the sorted scores
+    public List<Map.Entry<String, Integer>> getSortedScores() {
+        return sortedScores;
+    }
 
 }

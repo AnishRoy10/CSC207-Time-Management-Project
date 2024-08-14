@@ -1,8 +1,11 @@
 package entity;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The CalendarEvent class represents an event in the calendar of the user.
@@ -75,9 +78,13 @@ public class CalendarEvent implements Serializable{
             this.duration = null;
         }
 
-        if (LocalDateTime.now().isBefore(this.startDate)) {this.status = "Upcoming";}
-        else if (LocalDateTime.now().isBefore(this.endDate)) {this.status = "In Progress";}
-        else {this.status = "Finished";}
+        if (LocalDateTime.now().isBefore(this.startDate)) {
+            this.status = "Upcoming";
+        } else if (this.endDate != null && LocalDateTime.now().isBefore(this.endDate)) {
+            this.status = "In Progress";
+        } else {
+            this.status = "Finished";
+        }
     }
     // Getter method for the event name
     public String getName() {
@@ -163,7 +170,7 @@ public class CalendarEvent implements Serializable{
      */
 
     public static List<CalendarEvent> eventsBetweenDates(LocalDateTime dateOne, LocalDateTime dateTwo, List<CalendarEvent> eventList) {
-        List<CalendarEvent> includedEventList = new ArrayList<CalendarEvent>();
+        List<CalendarEvent> includedEventList = new ArrayList<>();
         for (CalendarEvent event : eventList) {
             boolean conditionOne = dateOne.isBefore(event.getStartDate());
             boolean conditionTwo =
@@ -171,6 +178,33 @@ public class CalendarEvent implements Serializable{
             if (conditionOne && conditionTwo){includedEventList.add(event);}
         }
         return includedEventList;
+    }
+
+    /**
+     * Checks that events start and end on the same day.
+     * @return
+     */
+    public boolean startEndOnSameDay() {
+        boolean conditionOne = this.endDate.getYear() == this.startDate.getYear();
+        boolean conditionTwo = this.startDate.getMonth() == this.endDate.getMonth();
+        boolean conditionThree = this.startDate.getDayOfMonth() == this.endDate.getDayOfMonth();
+        return conditionOne && conditionTwo && conditionThree;
+    }
+
+    /**
+     * Checks if the priority level is valid. A priority level is
+     * valid if and only if it is a string "High", "Low", or "Normal"
+     * @return
+     */
+    public boolean priorityLevelIsValid() {
+        boolean conditionOne = (priorityLevel.equals("Low"));
+        boolean conditionTwo = (priorityLevel.equals( "Normal"));
+        boolean conditionThree = (priorityLevel.equals("High"));
+        return conditionOne || conditionTwo || conditionThree;
+    }
+
+    public boolean startBeforeEnd() {
+        return startDate.isBefore(endDate);
     }
 
     /**
@@ -185,5 +219,31 @@ public class CalendarEvent implements Serializable{
                 ", Priority Level: " + priorityLevel +
                 ", Start Date: " + startDate.toString() +
                 ", End Date: " + (endDate != null ? endDate.toString() : "N/A");
+    }
+
+    /**
+     * overrides the default equals method to set two calendar events
+     * equal if and only if they have the same
+     * start and end date, name, description, priority level, and status
+     * @param o
+     * @return
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CalendarEvent that = (CalendarEvent) o;
+        return hasEndDate == that.hasEndDate &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(status, that.status) &&
+                Objects.equals(priorityLevel, that.priorityLevel) &&
+                Objects.equals(startDate, that.startDate) &&
+                Objects.equals(endDate, that.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, status, priorityLevel, startDate, endDate, hasEndDate);
     }
 }

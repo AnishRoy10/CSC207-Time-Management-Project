@@ -7,16 +7,17 @@ import java.io.IOException;
 
 /**
  * Interactor class for the user login use case.
+ * This class implements the business logic for authenticating a user based on their username and password.
  */
 public class UserLoginUseCase implements UserLoginInputBoundary {
     private final UserRepository userRepository;
     private final UserLoginOutputBoundary userLoginOutputBoundary;
 
     /**
-     * Constructor for UserLoginUseCase.
+     * Constructs a {@code UserLoginUseCase} with the specified repositories and output boundary.
      *
-     * @param userRepository           The repository for user data access.
-     * @param userLoginOutputBoundary  The output boundary for user login response.
+     * @param userRepository          The repository for accessing user data.
+     * @param userLoginOutputBoundary The output boundary for handling the login response.
      */
     public UserLoginUseCase(UserRepository userRepository, UserLoginOutputBoundary userLoginOutputBoundary) {
         this.userRepository = userRepository;
@@ -24,9 +25,10 @@ public class UserLoginUseCase implements UserLoginInputBoundary {
     }
 
     /**
-     * Executes the user login process.
+     * Executes the user login process using the provided request model.
+     * This involves checking the provided credentials against stored user data and returning a response model.
      *
-     * @param requestModel The request model containing login details.
+     * @param requestModel The request model containing login details such as username and password.
      */
     @Override
     public void login(UserLoginRequestModel requestModel) {

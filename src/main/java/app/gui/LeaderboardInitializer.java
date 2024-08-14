@@ -1,6 +1,8 @@
 package app.gui;
 
-import data_access.LeaderboardDataAccessObject;
+import data_access.SQLDatabaseHelper;
+import data_access.SQLLeaderboardDAO;
+import data_access.LeaderboardResetScheduler;
 import entity.AllTimeLeaderboard;
 import entity.DailyLeaderboard;
 import entity.Leaderboard;
@@ -15,21 +17,35 @@ import use_case.LeaderboardUseCases.remove_score.*;
 import use_case.LeaderboardUseCases.update_score.*;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Map;
 
 /**
- * Initializer class for the leaderboard system.
+ * Initializer class for the leaderboard system. This class sets up and initializes the leaderboard system, controllers,
+ * views, and reset scheduler.
  */
 public class LeaderboardInitializer {
+    /**
+     * Initializes the leaderboard system.
+     * This method sets up the leaderboard.
+     */
     public static void LeaderboardInitializer() {
         LocalDate today = LocalDate.now();
         LocalDate thisMonth = LocalDate.now().withDayOfMonth(1);
 
-        Leaderboard monthlyLeaderboard = new MonthlyLeaderboard("Monthly Leaderboard", thisMonth);
-        Leaderboard allTimeLeaderboard = new AllTimeLeaderboard("All-Time Leaderboard");
-        Leaderboard dailyLeaderboard = new DailyLeaderboard("Daily Leaderboard", today);
+        SQLDatabaseHelper dbHelper = new SQLDatabaseHelper();
+        SQLLeaderboardDAO leaderboardDAO = new SQLLeaderboardDAO(dbHelper);
 
-        LeaderboardDataAccessObject leaderboardDAO = new LeaderboardDataAccessObject();
+        Map<String, Leaderboard> leaderboards = leaderboardDAO.readFromCache();
+
+        // Initialize the scheduler to auto-reset leaderboards
+        LeaderboardResetScheduler resetScheduler = new LeaderboardResetScheduler(leaderboards);
+        resetScheduler.checkAndResetLeaderboards();
+
+        Leaderboard monthlyLeaderboard = leaderboards.getOrDefault("MonthlyLeaderboard", new MonthlyLeaderboard("Monthly Leaderboard", thisMonth));
+        Leaderboard allTimeLeaderboard = leaderboards.getOrDefault("AllTimeLeaderboard", new AllTimeLeaderboard("All-Time Leaderboard"));
+        Leaderboard dailyLeaderboard = leaderboards.getOrDefault("DailyLeaderboard", new DailyLeaderboard("Daily Leaderboard", today));
 
         LeaderboardPresenter monthlyPresenter = new LeaderboardPresenter(monthlyLeaderboard);
         LeaderboardPresenter allTimePresenter = new LeaderboardPresenter(allTimeLeaderboard);
@@ -51,30 +67,16 @@ public class LeaderboardInitializer {
         ClearScoresInputBoundary allTimeClearScoresUseCase = new ClearScoresUseCase(allTimeLeaderboard, allTimePresenter, leaderboardDAO);
         ClearScoresInputBoundary dailyClearScoresUseCase = new ClearScoresUseCase(dailyLeaderboard, dailyPresenter, leaderboardDAO);
 
-        LeaderboardController monthlyController = new LeaderboardController(
-                monthlyAddScoreUseCase,
-                monthlyRemoveScoreUseCase,
-                monthlyUpdateScoreUseCase,
-                monthlyClearScoresUseCase,
-                monthlyPresenter
-        );
+        LeaderboardController monthlyController = new LeaderboardController(monthlyAddScoreUseCase, monthlyRemoveScoreUseCase, monthlyUpdateScoreUseCase, monthlyClearScoresUseCase, monthlyPresenter);
+        LeaderboardController allTimeController = new LeaderboardController(allTimeAddScoreUseCase, allTimeRemoveScoreUseCase, allTimeUpdateScoreUseCase, allTimeClearScoresUseCase, allTimePresenter);
+        LeaderboardController dailyController = new LeaderboardController(dailyAddScoreUseCase, dailyRemoveScoreUseCase, dailyUpdateScoreUseCase, dailyClearScoresUseCase, dailyPresenter);
 
-        LeaderboardController allTimeController = new LeaderboardController(
-                allTimeAddScoreUseCase,
-                allTimeRemoveScoreUseCase,
-                allTimeUpdateScoreUseCase,
-                allTimeClearScoresUseCase,
-                allTimePresenter
-        );
+        LeaderboardView leaderboardView = new LeaderboardView(monthlyController, allTimeController, dailyController);
 
-        LeaderboardController dailyController = new LeaderboardController(
-                dailyAddScoreUseCase,
-                dailyRemoveScoreUseCase,
-                dailyUpdateScoreUseCase,
-                dailyClearScoresUseCase,
-                dailyPresenter
-        );
-
-        SwingUtilities.invokeLater(() -> new LeaderboardView(monthlyController, allTimeController, dailyController));
+        JFrame frame = new JFrame("Leaderboards");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.add(leaderboardView);
+        frame.setVisible(true);
     }
 }

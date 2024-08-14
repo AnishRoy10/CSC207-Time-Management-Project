@@ -1,0 +1,27 @@
+{
+  "username": {
+    "username": "username",
+    "password": "password1",
+    "friends": {
+      "friends": []
+    },
+    "courses": [
+      {
+        "name": "CSC207",
+        "description": "Software Design",
+        "users": [],
+        "todo": {
+          "tasks": []
+        }
+      }
+    ],
+    "todo": {
+      "tasks": []
+    },
+    "score": 0,
+    "aNumber": 5,
+    "calendar": {
+      "events": {}
+    }
+  }
+}

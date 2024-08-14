@@ -15,6 +15,11 @@ public class DailyLeaderboard extends Leaderboard {
     }
 
     @Override
+    public String getType() {
+        return "DailyLeaderboard";
+    }
+
+    @Override
     public void displayLeaderboard() {
         System.out.println("Daily Leaderboard");
     }

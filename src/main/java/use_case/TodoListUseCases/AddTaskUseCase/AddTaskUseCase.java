@@ -1,37 +1,61 @@
 package use_case.TodoListUseCases.AddTaskUseCase;
 
 import entity.Task;
-import entity.User;
+import repositories.TaskRepository;
 import repositories.UserRepository;
-import use_case.TaskData;
+import use_case.TodoListUseCases.TaskData;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Use case for adding a task to the to-do list.
+ * The {@code AddTaskUseCase} class implements the use case for adding a task to the to-do list.
+ * It validates the input data, creates a new task, and interacts with the repository to save the task.
  */
 public class AddTaskUseCase implements AddTaskInputBoundary {
     private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
     private final AddTaskOutputBoundary addTaskOutputBoundary;
 
-    public AddTaskUseCase(UserRepository userRepository, AddTaskOutputBoundary addTaskOutputBoundary) {
+    /**
+     * Constructs a new {@code AddTaskUseCase} with the specified repositories and output boundary.
+     *
+     * @param userRepository         The repository for user data.
+     * @param taskRepository         The repository for task data.
+     * @param addTaskOutputBoundary  The output boundary for presenting the result of the use case.
+     */
+    public AddTaskUseCase(UserRepository userRepository, TaskRepository taskRepository, AddTaskOutputBoundary addTaskOutputBoundary) {
         this.userRepository = userRepository;
+        this.taskRepository = taskRepository;
         this.addTaskOutputBoundary = addTaskOutputBoundary;
     }
 
+    /**
+     * Executes the add task use case by validating the input, creating a new task,
+     * and saving it to the appropriate to-do list. If any required fields are missing,
+     * it returns an error message.
+     *
+     * @param requestModel The {@link AddTaskRequestModel} containing the data needed to add a task.
+     */
     @Override
     public void execute(AddTaskRequestModel requestModel) {
         try {
-            // Load the user
-            User user = userRepository.findByUsername(requestModel.getUsername());
-            if (user == null) {
-                throw new RuntimeException("User not found");
+            // Validate the required fields
+            if (requestModel.getTitle() == null || requestModel.getTitle().isEmpty() ||
+                    requestModel.getDescription() == null || requestModel.getDescription().isEmpty() ||
+                    requestModel.getStartDate() == null ||
+                    requestModel.getDeadline() == null ||
+                    requestModel.getCourse() == null || requestModel.getCourse().isEmpty()) {
+
+                // Return an error response with a message
+                String errorMessage = "All fields (title, description, start date, deadline, course) must be provided.";
+                addTaskOutputBoundary.presentError(errorMessage);
+                return;
             }
 
-            // Add the task to the user's to-do list
+            // Create a new Task entity with the validated data
             Task newTask = new Task(
+                    requestModel.getUsername(),
                     requestModel.getTitle(),
                     requestModel.getDescription(),
                     requestModel.getStartDate(),
@@ -39,12 +63,22 @@ public class AddTaskUseCase implements AddTaskInputBoundary {
                     requestModel.getCourse()
             );
 
-            user.getTodoList().addTask(newTask);
-            userRepository.WriteToCache(user);
+            // Save the task in the appropriate to-do list (personal or course-specific)
+            if (requestModel.getCourseName() != null) {
+                taskRepository.WriteToCache(newTask, requestModel.getUsername(), requestModel.getCourseName());
+            } else {
+                taskRepository.WriteToCache(newTask, requestModel.getUsername());
+            }
 
-            List<TaskData> tasks = user.getTodoList().getTasks().stream()
+            // Retrieve all tasks after addition and map them to TaskData
+            List<Task> tasks = requestModel.getCourseName() != null ?
+                    taskRepository.getAllTasks(requestModel.getUsername(), requestModel.getCourseName()) :
+                    taskRepository.getAllTasks(requestModel.getUsername());
+
+            List<TaskData> taskDataList = tasks.stream()
                     .map(task -> new TaskData(
                             task.getId(),
+                            task.getUsername(),
                             task.getTitle(),
                             task.getDescription(),
                             task.getStartDate(),
@@ -55,10 +89,12 @@ public class AddTaskUseCase implements AddTaskInputBoundary {
                     ))
                     .collect(Collectors.toList());
 
-            AddTaskResponseModel responseModel = new AddTaskResponseModel(tasks, newTask.getTitle());
+            // Prepare and present the response model
+            AddTaskResponseModel responseModel = new AddTaskResponseModel(taskDataList, newTask.getTitle());
             addTaskOutputBoundary.present(responseModel);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException("Failed to add task: " + e.getMessage());
         }
     }
 }

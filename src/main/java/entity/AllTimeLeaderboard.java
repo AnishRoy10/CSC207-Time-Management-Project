@@ -14,4 +14,10 @@ public class AllTimeLeaderboard extends Leaderboard {
     public void displayLeaderboard() {
         System.out.println("All Time Leaderboard");
     }
+
+    @Override
+    public String getType() {
+        return "AllTimeLeaderboard";
+    }
 }
+

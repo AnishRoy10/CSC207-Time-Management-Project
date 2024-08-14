@@ -14,7 +14,10 @@ public class SetTimerViewModel extends ViewModel {
 
     public static final String SET_TIMER_BUTTON_LABEL = "Set Timer";
 
-
+    /**
+     * SetTimerViewModel constructor.
+     * @param viewName name of the view
+     */
     public SetTimerViewModel(String viewName) {
         super(viewName);
     }

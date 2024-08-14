@@ -8,6 +8,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+/**
+ * This class represents the page allowing the user to set a timer.
+ */
 public class SetTimerView extends JFrame{
     public final String viewName = "set timer";
 
@@ -21,15 +24,21 @@ public class SetTimerView extends JFrame{
 
     private final JButton setTimerButton;
 
-    public SetTimerView(TimerController setTimerController,
+    /**
+     * Constructor for SetTimerView. Sets up the UI components for this page.
+     * @param timerController controller for timer use cases
+     * @param setTimerViewModel view model for SetTimerView
+     * @param runningTimerViewModel view model for RunningTimerView
+     */
+    public SetTimerView(TimerController timerController,
                         SetTimerViewModel setTimerViewModel,
                         RunningTimerViewModel runningTimerViewModel) {
-        this.timerController = setTimerController;
+        this.timerController = timerController;
         this.setTimerViewModel = setTimerViewModel;
         this.runningTimerViewModel = runningTimerViewModel;
 
         setTitle(SetTimerViewModel.TITLE_LABEL);
-        setSize(1200, 720);
+        setSize(300, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -60,6 +69,13 @@ public class SetTimerView extends JFrame{
         add(setTimerPanel, BorderLayout.CENTER);
     }
 
+    /**
+     * Creates a labeled component for the UI.
+     *
+     * @param label     the label text
+     * @param component the component to be labeled
+     * @return the panel containing the labeled component
+     */
     private Component createLabeledComponent(String label, Component component) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JLabel(label), BorderLayout.NORTH);
@@ -69,6 +85,9 @@ public class SetTimerView extends JFrame{
         return panel;
     }
 
+    /**
+     * Executes the set timer use case using the text from the input fields.
+     */
     private void setTimer() {
         String hours = hoursInputField.getText();
         String minutes = minutesInputField.getText();
@@ -89,6 +108,9 @@ public class SetTimerView extends JFrame{
         clearInputFields();
     }
 
+    /**
+     * Clears all input fields.
+     */
     private void clearInputFields() {
         hoursInputField.setText("");
         minutesInputField.setText("");

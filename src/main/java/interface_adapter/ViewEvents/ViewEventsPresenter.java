@@ -1,8 +1,8 @@
 package interface_adapter.ViewEvents;
 
 import entity.CalendarEvent;
-import use_case.ViewEventsUseCase.ViewEventsOutputBoundary;
-import use_case.ViewEventsUseCase.ViewEventsOutputData;
+import use_case.CalendarUseCases.ViewEventsUseCase.ViewEventsOutputBoundary;
+import use_case.CalendarUseCases.ViewEventsUseCase.ViewEventsOutputData;
 
 import java.util.List;
 

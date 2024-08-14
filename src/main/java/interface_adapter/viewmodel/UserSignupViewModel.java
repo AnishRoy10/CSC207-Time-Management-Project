@@ -1,11 +1,13 @@
 package interface_adapter.viewmodel;
 
 /**
- * View model for user signup.
+ * The UserSignupViewModel class serves as the ViewModel for the user signup process.
+ * It provides a structure to hold both the success status and the message resulting
+ * from a signup attempt, which the user interface can then display to the user.
  */
 public class UserSignupViewModel {
-    private boolean signupSuccess;
-    private String message;
+    private boolean signupSuccess; // Indicates whether the signup was successful
+    private String message; // Message resulting from the signup attempt, to be displayed to the user
 
     /**
      * Checks if the signup was successful.
@@ -26,18 +28,18 @@ public class UserSignupViewModel {
     }
 
     /**
-     * Gets the signup message.
+     * Retrieves the message resulting from the signup attempt.
      *
-     * @return The signup message.
+     * @return The signup message as a string.
      */
     public String getMessage() {
         return message;
     }
 
     /**
-     * Sets the signup message.
+     * Sets the message resulting from the signup attempt.
      *
-     * @param message The signup message.
+     * @param message The signup message as a string.
      */
     public void setMessage(String message) {
         this.message = message;

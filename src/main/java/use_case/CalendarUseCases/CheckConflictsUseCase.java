@@ -21,7 +21,7 @@ public class CheckConflictsUseCase {
 
     // Helper function for conflictChecker and showConflicts that returns the events in the order of start date.
     // If the start dates are the same, return in the order they come in.
-    private static ArrayList<CalendarEvent> comesFirst(CalendarEvent eventOne, CalendarEvent eventTwo) {
+    protected static ArrayList<CalendarEvent> comesFirst(CalendarEvent eventOne, CalendarEvent eventTwo) {
         if (eventTwo.getStartDate().isBefore(eventOne.getStartDate())) {
             ArrayList<CalendarEvent> orderedArray = new ArrayList<CalendarEvent>(2);
             orderedArray.add(eventTwo);
@@ -37,7 +37,7 @@ public class CheckConflictsUseCase {
     }
 
     // Helper method for showConflicts that says whether two events conflict
-    private static boolean conflictChecker(CalendarEvent eventOne, CalendarEvent eventTwo) {
+    protected static boolean conflictChecker(CalendarEvent eventOne, CalendarEvent eventTwo) {
         if (eventOne.getStartDate() == eventTwo.getStartDate()) {return true;}
         else {
             CalendarEvent firstEvent = comesFirst(eventOne, eventTwo).get(0);

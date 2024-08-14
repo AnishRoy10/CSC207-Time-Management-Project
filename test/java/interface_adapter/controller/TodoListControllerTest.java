@@ -323,4 +323,127 @@ public class TodoListControllerTest {
                         request.getUsername().equals(requestModel2.getUsername())
         ));
     }
+
+    @Test
+    public void testAddTaskWithCourseName() {
+        // Arrange
+        String title = "Title";
+        String description = "Description";
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime deadline = LocalDateTime.now().plusDays(1);
+        String course = "Course";
+        String username = "user1";
+        String courseName = "CourseName";
+        AddTaskRequestModel expectedRequest = new AddTaskRequestModel(title, description, startDate, deadline, course, username, courseName);
+
+        // Act
+        controller.addTask(title, description, startDate, deadline, course, username, courseName);
+
+        // Assert
+        verify(addTaskUseCase).execute(argThat(request ->
+                request.getTitle().equals(expectedRequest.getTitle()) &&
+                        request.getDescription().equals(expectedRequest.getDescription()) &&
+                        request.getStartDate().equals(expectedRequest.getStartDate()) &&
+                        request.getDeadline().equals(expectedRequest.getDeadline()) &&
+                        request.getCourse().equals(expectedRequest.getCourse()) &&
+                        request.getUsername().equals(expectedRequest.getUsername()) &&
+                        request.getCourseName().equals(expectedRequest.getCourseName())
+        ));
+    }
+
+    @Test
+    public void testRemoveTaskWithCourseName() {
+        // Arrange
+        UUID taskId = UUID.randomUUID();
+        String username = "user1";
+        String courseName = "CourseName";
+        RemoveTaskRequestModel expectedRequest = new RemoveTaskRequestModel(taskId, username, courseName);
+
+        // Act
+        controller.removeTask(taskId, username, courseName);
+
+        // Assert
+        verify(removeTaskUseCase).execute(argThat(request ->
+                request.getTaskId().equals(expectedRequest.getTaskId()) &&
+                        request.getUsername().equals(expectedRequest.getUsername()) &&
+                        request.getCourseName().equals(expectedRequest.getCourseName())
+        ));
+    }
+
+    @Test
+    public void testCompleteTaskWithCourseName() {
+        // Arrange
+        UUID taskId = UUID.randomUUID();
+        String username = "user1";
+        String courseName = "CourseName";
+        CompleteTaskRequestModel expectedRequest = new CompleteTaskRequestModel(taskId, username, courseName);
+
+        // Act
+        controller.toggleTaskCompletion(taskId, username, courseName);
+
+        // Assert
+        verify(completeTaskUseCase).execute(argThat(request ->
+                request.getTaskId().equals(expectedRequest.getTaskId()) &&
+                        request.getUsername().equals(expectedRequest.getUsername()) &&
+                        request.getCourseName().equals(expectedRequest.getCourseName())
+        ));
+    }
+
+    @Test
+    public void testSortTasksWithCourseName() {
+        // Arrange
+        String criterion = "deadline";
+        boolean ascending = true;
+        String username = "user1";
+        String courseName = "CourseName";
+        SortTasksRequestModel expectedRequest = new SortTasksRequestModel(criterion, ascending, username, courseName);
+
+        // Act
+        controller.sortTasks(criterion, ascending, username, courseName);
+
+        // Assert
+        verify(sortTasksUseCase).execute(argThat(request ->
+                request.getCriteria().equals(expectedRequest.getCriteria()) &&
+                        request.isAscending() == expectedRequest.isAscending() &&
+                        request.getUsername().equals(expectedRequest.getUsername()) &&
+                        request.getCourseName().equals(expectedRequest.getCourseName())
+        ));
+    }
+
+    @Test
+    public void testFilterTasksWithCourseName() {
+        // Arrange
+        boolean showCompleted = true;
+        String username = "user1";
+        String courseName = "CourseName";
+        FilterTasksRequestModel expectedRequest = new FilterTasksRequestModel(showCompleted, username, courseName);
+
+        // Act
+        controller.filterTasks(showCompleted, username, courseName);
+
+        // Assert
+        verify(filterTasksUseCase).execute(argThat(request ->
+                request.isHideCompleted() == expectedRequest.isHideCompleted() &&
+                        request.getUsername().equals(expectedRequest.getUsername()) &&
+                        request.getCourseName().equals(expectedRequest.getCourseName())
+        ));
+    }
+
+    @Test
+    public void testLoadTodoListWithCourseName() {
+        // Arrange
+        String username = "user1";
+        String courseName = "CourseName";
+        LoadTodoListRequestModel expectedRequest = new LoadTodoListRequestModel(username, courseName);
+
+        // Act
+        controller.loadTodoList(username, courseName);
+
+        // Assert
+        verify(loadTodoListUseCase).execute(argThat(request ->
+                request.getUsername().equals(expectedRequest.getUsername()) &&
+                        request.getCourseName().equals(expectedRequest.getCourseName())
+        ));
+    }
+
 }

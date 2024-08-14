@@ -101,19 +101,19 @@ public class MainPageView extends JFrame {
      * Placeholder method to open the Calendar feature.
      * This method should be implemented to open the Calendar view of the application.
      */
-    private void openCalendar() {CalendarInitializer.initializeCalendar(username);}
+    protected void openCalendar() {CalendarInitializer.initializeCalendar(username);}
 
     /**
      * Placeholder method to open the Leaderboard feature.
      * This method should be implemented to open the Leaderboard view of the application.
      */
-    private void openLeaderboard() {LeaderboardInitializer.LeaderboardInitializer();}
+    protected void openLeaderboard() {LeaderboardInitializer.LeaderboardInitializer();}
 
     /**
      * Opens the To-do List feature of the application.
      * This method is responsible for initializing and displaying the To-do List view.
      */
-    private void openTodoList() {
+    protected void openTodoList() {
         TodoListInitializer.initializeTodoList(username);
     }
 
@@ -121,21 +121,21 @@ public class MainPageView extends JFrame {
      * Placeholder method to open the Timer feature.
      * This method should be implemented to open the Timer view of the application.
      */
-    private void openTimer() {
+    protected void openTimer() {
         TimerInitializer.initializeTimer();
     }
 
     /**
      * Opens the friends list feature of the application
      */
-    private void openFriendsList() {
+    protected void openFriendsList() {
         FriendsListInitializer.InitializeFriendsList(username);
     }
 
     /**
      * Visualize the course view.
      */
-    private void openCourseView() {
+    protected void openCourseView() {
         CourseInitializer.initializeView(username);
     }
 }

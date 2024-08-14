@@ -4,6 +4,10 @@ import interface_adapter.AddEvent.AddEventPresenter;
 
 import java.io.IOException;
 
+/**
+ * The interactor for the add event use case. Adds an event to the user's calendar and
+ * lets the presenter know to begin the process of updating the view.
+ */
 public class AddEventUseCaseInteractor implements AddEventInputBoundary{
     private AddEventDataAccessInterface calendarDataAccessObject;
     private AddEventPresenter addEventPresenter;

@@ -6,6 +6,11 @@ import use_case.CalendarUseCases.RemoveEventUseCase.RemoveEventInputData;
 
 import java.io.IOException;
 
+/**
+ * Controller for remove event use case. Sends the event to be deleted to the remove event
+ * use case interactor via the execute button, storing it in an instance of the
+ * RemoveEventInputData class
+ */
 public class RemoveEventController {
     private RemoveEventInputBoundary removeEventUseCaseInteractor;
 

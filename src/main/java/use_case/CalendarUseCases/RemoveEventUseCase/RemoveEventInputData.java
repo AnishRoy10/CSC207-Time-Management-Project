@@ -2,6 +2,9 @@ package use_case.CalendarUseCases.RemoveEventUseCase;
 
 import entity.CalendarEvent;
 
+/**
+ * Stores the event to be removed for the remove event use case
+ */
 public class RemoveEventInputData {
     private CalendarEvent event;
 

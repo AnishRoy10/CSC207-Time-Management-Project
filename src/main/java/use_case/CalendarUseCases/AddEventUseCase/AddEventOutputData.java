@@ -1,5 +1,9 @@
 package use_case.CalendarUseCases.AddEventUseCase;
 
+/**
+ * Stores the kind of errors that the user may make when adding an event, and whether the
+ * user made each kind of error.
+ */
 public class AddEventOutputData {
     private boolean startEndError;
     private boolean priorityLevelError;

@@ -128,7 +128,8 @@ public class CalendarView {
         frame.setVisible(true);
     }
 
-    // Makes sure that days with events on them are highlighted in the calendar representation
+    // Makes sure that days with events on them are highlighted in the calendar representation (green or red
+    // depending on if there is conflicting events on that day or not)
     private static class EventHighlightPolicy implements DateHighlightPolicy {
         private EventHighlightPolicy() {
         }
@@ -233,6 +234,12 @@ public class CalendarView {
         {System.out.println("IOException or ClassNotFoundException; Thrown");}
     }
 
+    /**
+     * The method called when the remove button is pressed on an event's
+     * event card. It removes the user's event and updates the display according to the
+     * remove event use case
+     * @param event
+     */
     private void removeEvent(CalendarEvent event) {
         try {
         removeEventController.execute(event);

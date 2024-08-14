@@ -9,6 +9,10 @@ import java.time.LocalDateTime;
 
 import java.util.List;
 
+/**
+ * Interactor for the view events use case. Passes the events the user has on the day that they
+ * chose to the presenter by calling appropriate data access objects and via the controller
+ */
 public class ViewEventsUseCaseInteractor implements ViewEventsInputBoundary{
     private ViewEventsDataAccessInterface calendarDataAccessObject;
     private ViewEventsPresenter viewEventsPresenter;

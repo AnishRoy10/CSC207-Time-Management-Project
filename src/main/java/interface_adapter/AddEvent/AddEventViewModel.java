@@ -1,5 +1,9 @@
 package interface_adapter.AddEvent;
 
+/**
+ * The view accesses the view model's getter method to determine which error window
+ * to display or whether to display one at all
+ */
 public class AddEventViewModel {
     private boolean startEndError = false;
     private boolean priorityLevelError = false;

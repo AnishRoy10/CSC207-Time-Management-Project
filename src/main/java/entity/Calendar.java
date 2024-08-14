@@ -1,12 +1,9 @@
 package entity;
 
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.HashMap;
-import entity.CalendarEvent;
 import java.io.Serializable;
 import java.util.Objects;
 /**
@@ -139,6 +136,12 @@ public class Calendar implements Serializable{
         return sb.toString();
     }
 
+    /**
+     * overrides the default equals method to set calendars equal if and only
+     * if their events are equal
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

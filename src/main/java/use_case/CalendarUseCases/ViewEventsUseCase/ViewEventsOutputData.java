@@ -1,10 +1,11 @@
 package use_case.CalendarUseCases.ViewEventsUseCase;
 
 import entity.CalendarEvent;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Stores the up to date events on the user has on the day to be displayed to the user
+ */
 public class ViewEventsOutputData {
     private List<CalendarEvent> eventList;
 

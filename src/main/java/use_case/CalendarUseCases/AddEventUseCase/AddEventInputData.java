@@ -2,6 +2,9 @@ package use_case.CalendarUseCases.AddEventUseCase;
 
 import entity.CalendarEvent;
 
+/**
+ * Stores the event that is being added for the add event use case inside of it
+ */
 public class AddEventInputData {
     private CalendarEvent eventToBeAdded;
 

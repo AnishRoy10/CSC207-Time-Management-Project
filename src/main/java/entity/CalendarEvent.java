@@ -176,6 +176,10 @@ public class CalendarEvent implements Serializable{
         return includedEventList;
     }
 
+    /**
+     * Checks that events start and end on the same day.
+     * @return
+     */
     public boolean startEndOnSameDay() {
         boolean conditionOne = this.endDate.getYear() == this.startDate.getYear();
         boolean conditionTwo = this.startDate.getMonth() == this.endDate.getMonth();
@@ -183,6 +187,11 @@ public class CalendarEvent implements Serializable{
         return conditionOne && conditionTwo && conditionThree;
     }
 
+    /**
+     * Checks if the priority level is valid. A priority level is
+     * valid if and only if it is a string "High", "Low", or "Normal"
+     * @return
+     */
     public boolean priorityLevelIsValid() {
         boolean conditionOne = (priorityLevel.equals("Low"));
         boolean conditionTwo = (priorityLevel.equals( "Normal"));
@@ -208,6 +217,13 @@ public class CalendarEvent implements Serializable{
                 ", End Date: " + (endDate != null ? endDate.toString() : "N/A");
     }
 
+    /**
+     * overrides the default equals method to set two calendar events
+     * equal if and only if they have the same
+     * start and end date, name, description, priority level, and status
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

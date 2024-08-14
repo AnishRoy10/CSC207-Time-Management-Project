@@ -4,7 +4,7 @@ import entity.Calendar;
 import entity.CalendarEvent;
 
 import java.util.ArrayList;
- // Not yet implemented
+
 public class CheckConflictsUseCase {
     private Calendar calendar;
 
@@ -13,7 +13,8 @@ public class CheckConflictsUseCase {
      *
      * @param calendar The calendar which is checked for conflicts
      *
-     * Not an implemented use case yet, nor does it adhear to clean architecture at this stage.
+     * Not a real use case, it just helps calculate whether a list of events conflict. Used by the
+     * CalendarView to display conflicting dates in red.
      */
 
     public CheckConflictsUseCase(Calendar calendar) {this.calendar = calendar;}

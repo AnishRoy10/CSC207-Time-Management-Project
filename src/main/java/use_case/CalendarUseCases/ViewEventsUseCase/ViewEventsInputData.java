@@ -1,7 +1,11 @@
 package use_case.CalendarUseCases.ViewEventsUseCase;
-import java.time.*;
+
 import java.time.LocalDateTime;
 
+/**
+ * Stores the start and end of the day on which events are to be viewed as
+ * LocalDateTime objects
+ */
 public class ViewEventsInputData {
     private LocalDateTime start;
     private LocalDateTime end;

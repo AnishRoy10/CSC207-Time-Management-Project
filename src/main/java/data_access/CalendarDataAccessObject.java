@@ -29,6 +29,13 @@ public class CalendarDataAccessObject
         this.userDAO = new UserDAO(dbHelper);
     }
 
+    /**
+     *
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * Gets the user's calendar
+     */
     @Override
     public Calendar getCalendar() throws IOException, ClassNotFoundException {
         Calendar calendar = new Calendar();
@@ -58,6 +65,13 @@ public class CalendarDataAccessObject
         return calendar;
     }
 
+    /**
+     *
+     * @param event
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * Adds an event to the user's calendar
+     */
     @Override
     public void addEvent(CalendarEvent event) throws IOException, ClassNotFoundException {
         String sql = "INSERT INTO CalendarEvents(username, name, description, status, priorityLevel, startDate, endDate) VALUES(?, ?, ?, ?, ?, ?, ?) " +
@@ -84,6 +98,12 @@ public class CalendarDataAccessObject
         }
     }
 
+    /**
+     *
+     * @param event
+     * @throws IOException
+     * Removes an event from the user's calendar
+     */
     @Override
     public void removeEvent(CalendarEvent event) throws IOException {
         String sql = "DELETE FROM CalendarEvents WHERE username = ? AND name = ? AND startDate = ?";

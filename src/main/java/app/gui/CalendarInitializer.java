@@ -17,6 +17,10 @@ import use_case.CalendarUseCases.ViewEventsUseCase.ViewEventsUseCaseInteractor;
 
 import java.io.IOException;
 
+/**
+ * Initializes the calendar view with all the
+ * calendar's use cases, controllers, presenters, and view models.
+ */
 public class CalendarInitializer {
     public static void initializeCalendar(String username) {
         try {

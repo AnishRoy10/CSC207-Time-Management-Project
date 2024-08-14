@@ -36,6 +36,11 @@ public class TodoListPresenter implements AddTaskOutputBoundary, RemoveTaskOutpu
     }
 
     @Override
+    public void presentError(String errorMessage) {
+        viewModel.setErrorMessage(errorMessage); // Pass the error message to the ViewModel
+    }
+
+    @Override
     public void present(RemoveTaskResponseModel responseModel) {
         viewModel.setTasks(responseModel.getTasks());
         responseModel.getTasks().forEach(task -> System.out.println("Task removed: " + task.getTitle()));

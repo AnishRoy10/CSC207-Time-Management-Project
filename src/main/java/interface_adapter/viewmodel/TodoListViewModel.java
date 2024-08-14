@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class TodoListViewModel {
     private List<TaskData> tasks;
+    private String errorMessage;
 
     public TodoListViewModel() {
         this.tasks = new ArrayList<>();
@@ -21,5 +22,13 @@ public class TodoListViewModel {
 
     public void setTasks(List<TaskData> tasks) {
         this.tasks = tasks;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }

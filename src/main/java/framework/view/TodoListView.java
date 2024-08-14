@@ -172,6 +172,14 @@ public class TodoListView extends JFrame {
         LocalDateTime startDate = startDatePicker.getDateTimeStrict();
         LocalDateTime deadline = deadlinePicker.getDateTimeStrict();
         String course = courseField.getText();
+
+        // Validate required fields
+        if (title.isEmpty() || description.isEmpty() || startDate == null || deadline == null || course.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "All fields must be filled out.", "Error", JOptionPane.ERROR_MESSAGE);
+            return; // Exit the method if validation fails
+        }
+
+        // If validated, then add tasks.
         if (courseName == null) {
             controller.addTask(title, description, startDate, deadline, course, username); // User's personal to-do list
         } else {

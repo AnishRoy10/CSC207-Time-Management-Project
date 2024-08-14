@@ -78,9 +78,13 @@ public class CalendarEvent implements Serializable{
             this.duration = null;
         }
 
-        if (LocalDateTime.now().isBefore(this.startDate)) {this.status = "Upcoming";}
-        else if (LocalDateTime.now().isBefore(this.endDate)) {this.status = "In Progress";}
-        else {this.status = "Finished";}
+        if (LocalDateTime.now().isBefore(this.startDate)) {
+            this.status = "Upcoming";
+        } else if (this.endDate != null && LocalDateTime.now().isBefore(this.endDate)) {
+            this.status = "In Progress";
+        } else {
+            this.status = "Finished";
+        }
     }
     // Getter method for the event name
     public String getName() {

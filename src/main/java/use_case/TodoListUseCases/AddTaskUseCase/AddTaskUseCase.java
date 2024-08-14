@@ -25,6 +25,20 @@ public class AddTaskUseCase implements AddTaskInputBoundary {
     @Override
     public void execute(AddTaskRequestModel requestModel) {
         try {
+
+            // Validate the required fields
+            if (requestModel.getTitle() == null || requestModel.getTitle().isEmpty() ||
+                    requestModel.getDescription() == null || requestModel.getDescription().isEmpty() ||
+                    requestModel.getStartDate() == null ||
+                    requestModel.getDeadline() == null ||
+                    requestModel.getCourse() == null || requestModel.getCourse().isEmpty()) {
+
+                // Return an error response with a message
+                String errorMessage = "All fields (title, description, start date, deadline, course) must be provided.";
+                addTaskOutputBoundary.presentError(errorMessage);
+                return;
+            }
+
             Task newTask = new Task(requestModel.getUsername(), requestModel.getTitle(), requestModel.getDescription(), requestModel.getStartDate(), requestModel.getDeadline(), requestModel.getCourse());
 
             if (requestModel.getCourseName() != null) {
